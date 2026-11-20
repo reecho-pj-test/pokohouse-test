@@ -188,6 +188,8 @@ label.fl input{display:none}
 
 
 <script>
+const TEST_BUILD=true;   // 正式版は false。テスト用サイトだけ true にする（早送り・?debug を使えるのはテスト版だけ）
+
 // ================= 共通 =================
 const $=id=>document.getElementById(id);
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
@@ -541,9 +543,9 @@ const ANA=(()=>{
   const CK='pokohouse_consent';            // 同意の記録（セーブデータとは別の場所）
   let consent=null, loaded=false;
   try{consent=localStorage.getItem(CK)}catch(e){}
-  // テスト用：URLに ?debug&ga=G-XXXX を付けたときだけ、仮のIDで動かせる
+  // テスト用：テスト版（TEST_BUILD）で URLに ?debug&ga=G-XXXX を付けたときだけ、仮のIDで動かせる
   let ID=GA_MEASUREMENT_ID;
-  try{const q=new URLSearchParams(location.search);if(q.has('debug')&&q.get('ga'))ID=q.get('ga')}catch(e){}
+  try{const q=new URLSearchParams(location.search);if(TEST_BUILD&&q.has('debug')&&q.get('ga'))ID=q.get('ga')}catch(e){}
   const configured=()=>/^G-[A-Z0-9]{4,20}$/i.test(ID||'');
   const enabled=()=>configured()&&consent==='granted';
   function load(){
@@ -892,7 +894,8 @@ const K=(()=>{
     let held=0;
     got.forEach(k=>{ if(hasIT(k)) IT[k].d?add(S.decor,k):add(S.inv,k); else { if(!Array.isArray(S.hold))S.hold=[]; S.hold.push(k); held++; } });
     ANA.track('explore_end',{place:E.p,items:got.length});
-    S.explore=null; S.lucky=false; S.justBack=true; EX=null; x=34; save(); SND.sfx.ding(); setTimeout(()=>speak(lineOf('back'),'happy'),400);
+    S.explore=null; S.lucky=false; S.justBack=true; EX=null; x=34; save();
+    say('おかえり！');   // 探検中の案内（光・おまけ・ダッシュ・あと○分など）は、帰ったら残さない SND.sfx.ding(); setTimeout(()=>speak(lineOf('back'),'happy'),400);
     modal(`<h2>${pl.e} ただいま！</h2><p>${esc(S.name)}が${pl.n}から帰ってきた！</p><div class="got">${got.map(k=>IT[k].e).join('')}</div>
       <p>${[...new Set(got)].map(k=>IT[k].n).join('、')}を拾ってきた${(E.bonus||[]).length?`<br>（すごろくや光るおまけで拾った ${E.bonus.length}個 込み）`:''}${held?`<br>（このバージョンで使えない物 ${held}個は、なくさないように保管しました）`:''}<br>「なでる」とおまけをくれるかも？</p><button class="pbtn" onclick="K.close()">やったね！</button>`);
   }
@@ -971,7 +974,7 @@ const K=(()=>{
   }
   // ---- 吹き出し（ぽこの声はここ。説明は下の枠） ----
   let bubShown=0, bubUntil=0, bubPending=null, nextIdle=Date.now()+15000;
-  const DEBUG=location.search.includes('debug');
+  const DEBUG=TEST_BUILD&&location.search.includes('debug');
   const idleGap=()=>DEBUG?(4000+Math.random()*2000):(S&&S.explore?(20000+Math.random()*20000):(45000+Math.random()*45000));
   const modalOpen=()=>['kmodal','ksetup','kconfirm'].some(id=>$(id).classList.contains('on'));
   function showBub(text,expr){
@@ -1148,7 +1151,7 @@ const K=(()=>{
   function mapUI(){
     const E=S.explore; if(PL(E.p).unknown){close();say('この場所のすごろくは、このバージョンでは遊べません');return} if(!E.map||!E.map.sq) E.map=makeMap(PLACES[E.p]);
     const M=E.map, order=[0,1,2,3,7,6,5,4,8,9,10,11,15,14,13,12];
-    let target=null, busyM=false, msg='サイコロを振ってね', talk=M.done?'楽しかった！':'サイコロ、振ってみて！', fe='normal'; charImg=charPic();
+    let target=null, busyM=false, msg=(M.done||M.rolls<=0)?'サイコロはもうないよ。続きは次の探検で！':'サイコロを振ってね', talk=M.done?'楽しかった！':'サイコロ、振ってみて！', fe='normal'; charImg=charPic();
     function render(){
       const left=Math.max(0,Math.ceil((E.end-now())/MIN));
       modal(`<h2>🎲 ${PL(E.p).n}すごろく</h2><p>サイコロ残り <b>${M.rolls}</b>回　帰りまで あと${left}分</p>
@@ -1834,7 +1837,7 @@ const K=(()=>{
 
 document.querySelectorAll('.kcard h2,#kmovein,#kset').forEach(h=>h.innerHTML=pixify(h.innerHTML));
 document.querySelectorAll('[data-ic]').forEach(e=>e.innerHTML=`<img class="pix bi" src="${ICON(e.dataset.ic)}">`);
-if(location.search.includes('debug'))$('kff').style.display='';
+if(TEST_BUILD&&location.search.includes('debug'))$('kff').style.display='';
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 K.open();
 </script>
