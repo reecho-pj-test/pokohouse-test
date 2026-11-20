@@ -24,8 +24,11 @@ canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 button{font-family:inherit;cursor:pointer}
 .ov{position:absolute;inset:0;display:none;z-index:20;background:rgba(30,20,45,.55);overflow-y:auto;padding:20px 16px}
 .ov.on{display:flex;align-items:center;justify-content:center}
-.savefail{position:absolute;left:8px;right:8px;top:8px;z-index:25;display:none;background:#fff3f3;border:3px solid #c0304a;color:#7a1830;font-size:13px;font-weight:700;padding:8px 10px;border-radius:10px;box-shadow:3px 3px 0 rgba(58,47,69,.35);line-height:1.5}
+.savefail{position:absolute;left:8px;right:8px;top:8px;max-height:45%;overflow-y:auto;z-index:25;display:none;background:#fff3f3;border:3px solid #c0304a;color:#7a1830;font-size:13px;font-weight:700;padding:8px 10px;border-radius:10px;box-shadow:3px 3px 0 rgba(58,47,69,.35);line-height:1.5}
 .savefail.on{display:block}
+.rotnote{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:#2e2438;color:#fff;text-align:center;padding:20px;font-size:16px;font-weight:700;line-height:1.6}
+.rotnote b{font-size:22px}
+@media (orientation:landscape) and (max-height:540px) and (hover:none){.rotnote{display:flex}}
 .savefail button{margin-top:6px;font:inherit;font-size:13px;padding:5px 10px;border:2px solid #3a2f45;border-radius:8px;background:#ffd84d;color:#2e2438}
 #klock{z-index:40}
 .rcv{border:2px solid #3a2f45;border-radius:10px;padding:8px;margin:8px 0;text-align:left;font-size:13px;background:#fbf8ff}
@@ -73,8 +76,8 @@ button{font-family:inherit;cursor:pointer}
 img.pix{image-rendering:pixelated;image-rendering:crisp-edges}
 .item em img.pix{width:34px;height:34px}
 .got img.pix{width:84px;height:84px}
-.mapg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
-.mt{aspect-ratio:1;border:3px solid #3a2f45;background:#8fd17a;font-size:26px;border-radius:8px;box-shadow:0 3px 0 #3a2f45;background-image:radial-gradient(#6fb85f 20%,transparent 22%);background-size:10px 10px}
+.mapg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:8px 0}
+.mt{min-width:0;padding:0;overflow:hidden;aspect-ratio:1;border:3px solid #3a2f45;background:#8fd17a;font-size:26px;border-radius:8px;box-shadow:0 3px 0 #3a2f45;background-image:radial-gradient(#6fb85f 20%,transparent 22%);background-size:10px 10px}
 .mt.open{background:#fff8ec}
 .mt.got{background:#ffe8a0;opacity:.75}
 .board{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:8px 0}
@@ -85,7 +88,7 @@ img.pix{image-rendering:pixelated;image-rendering:crisp-edges}
 .sq.tgt{opacity:1;box-shadow:0 0 0 3px #ff5f97;animation:hint .6s ease-in-out infinite}
 .sq .no{position:absolute;left:3px;top:1px;font-size:11px;color:#6a5a78}
 .sq img.me{width:80%;height:80%}
-.mapg.p3{grid-template-columns:repeat(3,1fr)}
+.mapg.p3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .mmsg{font-size:14px;color:#2e2438;min-height:2.4em}
 .got{font-size:30px;letter-spacing:4px;margin:8px 0}
 .foot{display:flex;justify-content:space-between;gap:6px;width:92%;max-width:360px;margin:12px auto 10px}
@@ -178,6 +181,7 @@ label.fl input{display:none}
   <div class="ov" id="kconfirm"><div class="kcard"><h2>最初からやり直す？</h2><p>今の子とはお別れになります</p><p style="font-size:12px">消す前に「設定 → ぽこのおひっこし → ファイルに保存する」でバックアップを残しておくと安心です</p>
     <button class="pbtn" id="kcy">最初から</button><button class="pbtn gray" id="kcn">やめる</button></div></div>
   <div class="savefail" id="ksavefail"></div>
+  <div class="rotnote" id="krot" aria-live="polite"><b>📱 スマホを縦にしてね</b><span>横向きだと、ぽこが見えません。<br>縦向きにすると、そのまま続きから遊べます。</span></div>
   <div class="ov" id="klock"><div class="kcard" id="klockbody"></div></div>
   <div class="toast" id="ktoast"></div>
 </div>
@@ -528,7 +532,7 @@ const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'
 function kfx(box,e,n=1,top=40){ for(let i=0;i<n;i++){const d=document.createElement('div');d.className='fx';
   if(e.startsWith('dish:')) d.innerHTML=`<img class="pix" src="${dishPix(e.slice(5))}">`; else d.innerHTML=pixify(e);
   d.style.left=(32+Math.random()*30)+'%';d.style.top=(top+Math.random()*14)+'%';d.style.animationDelay=(i*.12)+'s';box.appendChild(d);setTimeout(()=>d.remove(),1700+i*120)} }
-function ktoast(m){const t=$('ktoast');t.innerHTML=pixify(esc(m));t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1900)}
+let _toastT=0;function ktoast(m){const t=$('ktoast');t.innerHTML=pixify(esc(m));t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(()=>t.classList.remove('on'),Math.max(1900,Math.min(6000,String(m).length*90)))}
 // ===== プレイ分析（Google Analytics 4）=====
 // ▼ GA4の測定ID（「G-」で始まる文字）をここに入れてください。例： const GA_MEASUREMENT_ID='G-ABC123XYZ';
 //   空のままなら、分析は一切動かず、何も送信しません。
@@ -761,7 +765,7 @@ const K=(()=>{
     E.ev.forEach(v=>{ if(!v.got&&v.t-t<8000&&!EX.marks.some(m=>m.v===v)) EX.marks.push({v,x:8+Math.floor(Math.random()*48)}); });
     // 光るおまけ
     if(!EX.spark&&!PL(E.p).walk&&!PL(E.p).unknown&&(E.sparkN||0)<3&&t>EX.nextSpark){const L=Math.round(camX)+6,Rr=Math.round(camX)+cv.width-6;const lo=x-16-L, hi=Rr-(x+16); let sx; if(lo<0&&hi<0) sx=x-L>Rr-x?L:Rr; else if(lo>=hi) sx=L+Math.floor(Math.random()*(lo+1)); else sx=x+16+Math.floor(Math.random()*(hi+1));EX.spark={x:sx,until:t+20000};say('何か光ってる！ 光っている所をタップしてみよう');speak(lineOf('spark'))}
-    if(EX.spark&&t>EX.spark.until&&!EX.run){EX.spark=null;EX.nextSpark=t+15000+Math.random()*15000}
+    if(EX.spark&&t>EX.spark.until&&!EX.run){EX.spark=null;EX.nextSpark=t+15000+Math.random()*15000;if(($('kmsg').textContent||'').includes('光っている所をタップ'))say('光が消えちゃった。また光るかも？')}
     // 行き先
     let tx=null;
     if(EX.run&&EX.spark) tx=EX.spark.x; else if(EX.spark){tx=x;face=EX.spark.x>x?1:-1} else if(EX.marks.length) tx=EX.marks[0].x;
@@ -1457,13 +1461,15 @@ const K=(()=>{
   });
   // ===== 保存失敗の帯・ロック画面 =====
   let LOCK=null, saveFailed=false;
-  const SAVED_NOTE='ファイルの保存を開始しました。保存されたか確認してください';
+  const SAVED_NOTE='ファイルの保存を開始しました。iPhoneは「ファイル」アプリの「ダウンロード」で、保存できたか確認してください';
+  function placeSF(){const el=$('ksavefail');if(!el||!el.classList.contains('on'))return;try{const p=el.offsetParent||el.parentElement,pr=p.getBoundingClientRect(),cr=cv.getBoundingClientRect();el.style.top=Math.max(8,Math.round(cr.top-pr.top+6))+'px'}catch(e){}}
+  window.addEventListener('resize',()=>placeSF());
   function setSaveFail(on){
     saveFailed=on; const want=on||latestFailed, el=$('ksavefail');
     if(!want){el.classList.remove('on');el.dataset.k='';return}
     const k=on?'main':'latest'; if(el.classList.contains('on')&&el.dataset.k===k)return; el.dataset.k=k;
     el.innerHTML=(on?'⚠ 保存できませんでした。ブラウザの保存がいっぱいか、使えない状態かもしれません。':'⚠ 予備の保存ができませんでした（本体は保存できています）。')+'今のうちにバックアップファイルを保存してください。<br><button id="sfbk">バックアップを保存</button>';
-    el.classList.add('on'); $('sfbk').onclick=()=>{try{downloadBackup(S);ktoast(SAVED_NOTE)}catch(e){ktoast('保存を開始できませんでした')}};
+    el.classList.add('on'); placeSF(); $('sfbk').onclick=()=>{try{downloadBackup(S);ktoast(SAVED_NOTE)}catch(e){ktoast('保存を開始できませんでした')}};
   }
   const ymd=()=>{const d=new Date();return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`};
   function downloadText(body,name,type){
@@ -1643,7 +1649,7 @@ const K=(()=>{
     $('rdcode').onclick=()=>{try{confirmRestore(readCode($('codein').value),'code')}catch(e){msg('⚠ '+e.message+'。今のデータはそのままです')}};
     if(S)$('svfile').onclick=()=>{
       try{downloadBackup(S);
-        msg('ファイルの保存を開始しました。保存されたか確認してください（下の説明を見てね）');ANA.track('backup_save')}catch(e){msg('保存できませんでした')}};
+        msg('ファイルの保存を開始しました。まだ保存できたとは限りません。iPhoneは「ファイル」アプリの「ダウンロード」に pokohouse_backup_（日付）.json があるか確認してください（くわしくは上の説明）');{const dd=$('kmbody').querySelector('details.dsc');if(dd)dd.open=true}ANA.track('backup_save')}catch(e){msg('保存できませんでした')}};
     $('ldfile').onchange=ev=>{const f=ev.target.files[0];ev.target.value='';if(!f)return;
       if(f.size>MAX_IMPORT){msg('⚠ ファイルが大きすぎます。今のデータはそのままです');return}
       const r=new FileReader();r.onload=()=>{try{confirmRestore(readBackup(String(r.result)),'file')}catch(e){msg('⚠ '+e.message+'。今のデータはそのままです')}};
