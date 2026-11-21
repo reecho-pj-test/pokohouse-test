@@ -381,8 +381,8 @@ const SND=(()=>{
       mel:[12,_,11,9, 7,_,9,_, 4,_,7,_, 9,_,_,_, 12,_,14,12, 11,_,9,_, 7,_,4,_, 7,_,_,_],
       bass:[-12,-5,0,-5, -12,-5,0,-5, -15,-8,-3,-8, -15,-8,-3,-8, -17,-10,-5,-10, -17,-10,-5,-10, -12,-5,0,-5, -12,_,_,_]},
     // お散歩：てくてく歩くような、のんびりした曲（オリジナル）
-    sanpo:{bpm:88,wave:'triangle',v:.065,
-      mel:[4,_,5,7, _,_,4,_, 2,_,4,_, 0,_,_,_, 5,_,7,9, _,_,7,_, 5,4,2,4, 7,_,_,_],
+    sanpo:{bpm:88,wave:'triangle',v:.06,   // メロディーは1オクターブ上（スマホのスピーカーで小さく聞こえないように。伴奏は同じ）
+      mel:[16,_,17,19, _,_,16,_, 14,_,16,_, 12,_,_,_, 17,_,19,21, _,_,19,_, 17,16,14,16, 19,_,_,_],
       bass:[-12,_,-8,_, -5,_,-8,_, -15,_,-10,_, -7,_,-10,_, -10,_,-7,_, -3,_,-7,_, -5,_,-8,_, -12,_,-5,_]},
     yama:{bpm:120,wave:'square',v:.045,
       mel:[0,_,0,4, 7,_,7,_, 5,4,2,_, 7,_,_,_, 0,_,0,4, 7,_,12,_, 11,9,7,5, 4,_,_,_],
@@ -1865,7 +1865,7 @@ if(TEST_BUILD&&location.search.includes('debug'))$('kff').style.display='';
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 K.open();
 </script>
-<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v1.9＋修正#5〜7</div>
+<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v1.9＋修正#5〜7（音量調整）</div>
 <button id="tst_btn" style="position:fixed;right:4px;bottom:4px;z-index:99999;font:bold 12px sans-serif;background:#e0457b;color:#fff;border:0;border-radius:8px;padding:6px 8px">🧪</button>
 <div id="tst_pan" style="display:none;position:fixed;inset:8px;z-index:100000;background:#fff;border:3px solid #e0457b;border-radius:10px;padding:10px;overflow:auto;font:14px/1.5 sans-serif;color:#333">
 <b>🧪 テスト用パネル（テスト版だけ）</b><br><small>ここで変えるのはテスト用サイトの保存だけです。ボタンを押すと、自動で読み直します。</small>
