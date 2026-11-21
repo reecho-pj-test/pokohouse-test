@@ -64,6 +64,8 @@ button{font-family:inherit;cursor:pointer}
 img.apic{width:44px;height:44px;image-rendering:pixelated;flex:none}
 img.apicl{width:96px;height:96px;image-rendering:pixelated;display:block;margin:6px auto}
 .atbl{width:100%;font-size:14px;text-align:left;border-collapse:collapse;margin-top:6px}.atbl td{padding:3px 4px;border-bottom:1px dashed #cbb}
+.atbl td:first-child{white-space:nowrap;width:1%;vertical-align:top}.atbl td+td{overflow-wrap:anywhere;word-break:break-word}   /* 見出しは1行、長い文は右の列の中で折り返す */
+.atbl td.dt{white-space:nowrap}@media(max-width:360px){.atbl{font-size:13px}}
 .pbtn.red{background:#ffb3b3}
 .items{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
 .item{border:3px solid #ddd;background:#fff;padding:6px 2px;font-size:12px;text-align:center;line-height:1.3;color:#2e2438}
@@ -147,6 +149,7 @@ label.fl input{display:none}
 #kbub{position:absolute;left:50%;top:40%;transform:translate(-50%,-100%);max-width:78%;width:max-content;background:#fff;border:3px solid #3a2f45;border-radius:14px;
   padding:5px 10px;font-size:15px;font-weight:900;line-height:1.35;color:#2e2438;box-shadow:2px 3px 0 rgba(58,47,69,.35);opacity:0;transition:opacity .25s;pointer-events:none;z-index:5;text-align:center}
 #kbub.on{opacity:1}
+#kbub .who{display:block;font-size:11px;line-height:1.2;color:#7a6a8a;margin-bottom:1px}   /* 2匹のとき、だれのセリフか */
 #kbub:after{content:"";position:absolute;left:var(--tail,50%);bottom:-11px;margin-left:-8px;border:8px solid transparent;border-top:10px solid #3a2f45;border-bottom:0}
 #kbub:before{content:"";position:absolute;left:var(--tail,50%);bottom:-6px;margin-left:-5px;border:5px solid transparent;border-top:7px solid #fff;border-bottom:0;z-index:1}
 .talk{display:flex;align-items:center;gap:8px;margin:6px 0 4px;text-align:left}
@@ -892,7 +895,7 @@ const K=(()=>{
     favBusy=Date.now()+1200; favN++;
     kfx($('kov'),'💗',1); SND.cry(f.form);
     const t=FAV_LINES[favN%FAV_LINES.length].replaceAll('{n}',S.name);
-    showMsg(`⭐${f.name}：${favN%2?'なでなで…えへへ。':''}${t}`); msgLock=Date.now()+6000; draw();
+    bubShown=0; bubPending=null; speak(`${favN%2?'なでなで…えへへ。':''}${t}`,null,'fav'); draw();   // さわったらすぐ答える
     return true;
   }
 
@@ -1033,51 +1036,79 @@ const K=(()=>{
   const DEBUG=TEST_BUILD&&location.search.includes('debug');
   const idleGap=()=>DEBUG?(4000+Math.random()*2000):(S&&S.explore?(20000+Math.random()*20000):(45000+Math.random()*45000));
   const modalOpen=()=>['kmodal','ksetup','kconfirm'].some(id=>$(id).classList.contains('on'));
-  function showBub(text,expr){
-    const el=$('kbub'); el.innerHTML=pixify(esc(text)); el.classList.add('on');
-    bubShown=Date.now(); bubUntil=bubShown+Math.max(3500,1500+text.length*120);
-    if(expr&&!busy&&!S.sleep){busy=expr;setTimeout(()=>{if(busy===expr)busy=null},1400)}
+  // 長いセリフは、吹き出し2行に入るところで区切って、順番に出す（区切りは「。！？…、」の後を優先）
+  let bubQueue=[], bubWho='pet';
+  const bubFont=()=>parseFloat(getComputedStyle($('kbub')).fontSize)||15;
+  function bubLinesFit(text){   // 2行に入るか（実際の吹き出しの幅で測る）
+    const el=$('kbub'), keep=[el.innerHTML,el.style.maxWidth,el.style.fontSize,el.className];
+    el.style.fontSize=''; el.style.maxWidth=''; el.classList.remove('sl','sr'); el.innerHTML=pixify(esc(text));
+    const lh=bubFont()*1.35, ok=el.offsetHeight<=Math.ceil(lh*2)+16+3;   // 2行＋上下の余白・枠（四捨五入の分のゆとり）
+    [el.innerHTML,el.style.maxWidth,el.style.fontSize,el.className]=keep; return ok;
+  }
+  function splitBub(text){
+    if(!cv.clientWidth||bubLinesFit(text))return [text];
+    // 文の終わり（。！？…）で区切る。1文が2行に入らないときだけ「、」でも区切る
+    const parts=[]; for(const sen of (text.match(/[^。！？!?…]+[。！？!?…]*/g)||[text])){ if(bubLinesFit(sen))parts.push(sen); else parts.push(...(sen.match(/[^、]+、*/g)||[sen])) }
+    const out=[]; let cur='';
+    for(const pc of parts){
+      if(cur&&!/[。！？!?…]\s*$/.test(cur)&&bubLinesFit(cur+pc)){cur+=pc;continue}   // 文の途中（、で区切った所）だけ、続きをつなげる
+      if(cur&&/[。！？!?…]\s*$/.test(cur)&&bubLinesFit(cur+pc)&&/[。！？!?…]\s*$/.test(pc)){cur+=pc;continue}   // 短い文どうしは、まるごと入るならまとめる
+      if(cur)out.push(cur); cur=pc;
+      while(!bubLinesFit(cur)&&cur.length>2){   // 区切りがなくて長いときは文字数で切る
+        let n=cur.length-1; while(n>1&&!bubLinesFit(cur.slice(0,n)))n--; out.push(cur.slice(0,n)); cur=cur.slice(n);
+      }
+    }
+    if(cur)out.push(cur); return out.slice(0,4);
+  }
+  function showBub(text,expr,who){
+    const el=$('kbub'); bubWho=who||'pet';
+    const nm=favHere()?(bubWho==='fav'?'⭐'+favRec().name:S.name):'';
+    el.innerHTML=(nm?`<span class="who">${esc(nm)}</span>`:'')+pixify(esc(text)); el.classList.add('on');
+    bubShown=Date.now(); bubUntil=bubShown+Math.max(3000,1500+text.length*130);
+    if(bubWho==='pet'&&expr&&!busy&&!S.sleep){busy=expr;setTimeout(()=>{if(busy===expr)busy=null},1400)}
     placeBub();
   }
-  // 最低3秒は次のセリフで上書きしない（新しいセリフは待たせる）
-  function speak(text,expr){
+  // 最低3秒は次のセリフで上書きしない（新しいセリフは待たせる）。長いセリフは区切って続けて出す
+  function speak(text,expr,who){
     if(!text||!S||S.stage==='seed')return;
-    if(Date.now()-bubShown<3000&&Date.now()<bubUntil){bubPending={text,expr};return}
-    showBub(text,expr);
+    const ch=splitBub(text); who=who||'pet';
+    if(Date.now()-bubShown<3000&&Date.now()<bubUntil){bubPending={text:ch[0],expr,who};bubQueue=ch.slice(1).map(t=>({text:t,who}));return}
+    bubQueue=ch.slice(1).map(t=>({text:t,who})); showBub(ch[0],expr,who);
   }
   function placeBub(){
     const el=$('kbub'); if(!el.classList.contains('on'))return;
-    const sp=SPR[ckey()]||SPR.baby, cw=cv.clientWidth, ch=cv.clientHeight; if(!cw)return;
-    const sc=cw/cv.width, scy=ch/cv.height, sx=(x-Math.round(camX))*sc, M=4, T=12;
-    const headTop=(47-sp.h+(cv.height-48)-(sp.face&&sp.face.quirk==='hair'?3:0))*scy;
-    const above=()=>{ // 頭の上（入らなければ画面の上端に寄せる）
-      el.classList.remove('sl','sr'); el.style.maxWidth='';
+    const f=bubWho==='fav'?favHere():null; if(bubWho==='fav'&&!f){el.classList.remove('on');return}
+    const sp=f?(SPR[f.form]||SPR_Q):(SPR[ckey()]||SPR.baby), px=f?favX():x, cw=cv.clientWidth, ch=cv.clientHeight; if(!cw)return;
+    const sc=cw/cv.width, scy=ch/cv.height, sx=(px-Math.round(camX))*sc, M=4, T=12;
+    const topOf=s2=>(47-s2.h+(cv.height-48)-(s2.face&&s2.face.quirk==='hair'?3:0))*scy;
+    // 2匹のときは、背の高い方の頭より上に出す（もう1匹の顔にもかからないように）
+    const other=favHere()?(f?(SPR[ckey()]||SPR.baby):(SPR[favHere().form]||SPR_Q)):null;
+    const headTop=Math.min(topOf(sp),other?topOf(other):Infinity);
+    const above=()=>{ el.classList.remove('sl','sr'); el.style.maxWidth='';
       const w=el.offsetWidth,h=el.offsetHeight,lx=Math.max(w/2+M,Math.min(cw-w/2-M,sx));
-      el.style.left=lx+'px'; el.style.top=Math.max(h+M,Math.min(ch-M,headTop-T-2))+'px';
+      el.style.left=lx+'px'; el.style.top=Math.max(h+M,headTop-T-2)+'px';
       el.style.setProperty('--tail',Math.max(14,Math.min(w-14,sx-lx+w/2))+'px');
-      return h<=ch-2*M;
-    };
-    const side=()=>{ // 頭の上に入らないときだけ、広い方の横に出す
-      const half=sp.w/2*sc, lr=sx-half, rr=cw-(sx+half), right=rr>=lr, room=Math.max(lr,rr)-T-M;
-      if(room<72) return above(); // 横もせまいときは画面内の上に出す
+      return headTop-T-2-h>=M; };
+    const side=()=>{ // 頭の上に入らないときだけ、広い方の横に出す（もう1匹がいる側には出さない）
+      const half=sp.w/2*sc, lr=sx-half, rr=cw-(sx+half), oSide=favHere()?(f?'left':'right'):null;
+      const right=oSide==='right'?false:oSide==='left'?true:rr>=lr, room=(right?rr:lr)-T-M;
+      if(room<72) return false;
       el.classList.remove('sl','sr'); el.classList.add(right?'sr':'sl'); el.style.maxWidth=Math.floor(room)+'px';
       const w=el.offsetWidth,h=el.offsetHeight;
       let left=right?sx+half+T:sx-half-T-w; left=Math.max(M,Math.min(cw-w-M,left));
-      const cy=Math.max(h/2+M,Math.min(ch-h/2-M,headTop+h/2+2));
+      const cy=Math.max(h/2+M,Math.min(ch-h/2-M,topOf(sp)+h/2+2));
       el.style.left=left+'px'; el.style.top=cy+'px';
-      el.style.setProperty('--tailY',Math.max(10,Math.min(h-10,headTop+4*scy-(cy-h/2)))+'px');
-      return h<=ch-2*M;
-    };
-    // 長いセリフで画面に入りきらないときは、文字を少しずつ小さくする
-    for(const fs of ['','13px','11px']){
-      el.style.fontSize=fs; el.classList.remove('sl','sr'); el.style.maxWidth='';
-      const fitsAbove=headTop-T-2-el.offsetHeight>=M;
-      if(fitsAbove?above():side()) return;
-    }
+      el.style.setProperty('--tailY',Math.max(10,Math.min(h-10,topOf(sp)+4*scy-(cy-h/2)))+'px');
+      return h<=ch-2*M; };
+    // 頭の上 → 少し小さい文字で頭の上 → 横 の順。どれも入らないときだけ、いちばん小さい文字で頭の上（画面の上端に寄せる）
+    for(const fs of ['','13px','11px']){el.style.fontSize=fs; if(above())return}
+    for(const fs of ['','13px']){el.style.fontSize=fs; if(side())return}
+    el.style.fontSize='11px'; above();
   }
   function bubTick(){
     const t=Date.now();
-    if(bubPending&&t-bubShown>=3000){const p=bubPending;bubPending=null;showBub(p.text,p.expr)}
+    if(bubPending&&t-bubShown>=3000){const p=bubPending;bubPending=null;showBub(p.text,p.expr,p.who)}
+    else if(!bubPending&&bubQueue.length&&t-bubShown>=2600&&t>=bubUntil-400){const q=bubQueue.shift();showBub(q.text,null,q.who)}
     if(t>bubUntil)$('kbub').classList.remove('on');
     if(S&&S.stage==='seed')$('kbub').classList.remove('on');
     placeBub();
@@ -1933,7 +1964,7 @@ const K=(()=>{
     const isFav=S.fav===id;
     modal(`<h2>${isFav?'⭐ ':''}${esc(r.name)}</h2><img class="pix apicl" src="${formPic(r.form)}">
       <table class="atbl"><tr><td>姿</td><td>${fnm(r.form)}</td></tr><tr><td>気質</td><td>${tnm(r.temper)}</td></tr><tr><td>なかよし</td><td>${r.aff}</td></tr>
-      <tr><td>生まれた日</td><td>${dstr(r.born)}${r.bornGuess?'ごろ':''}</td></tr><tr><td>大人になった日</td><td>${dstr(r.adultAt)}</td></tr><tr><td>アルバムに入った日</td><td>${dstr(r.archivedAt)}</td></tr>
+      <tr><td>生まれた日</td><td class="dt">${dstr(r.born)}${r.bornGuess?'ごろ':''}</td></tr><tr><td>大人になった日</td><td class="dt">${dstr(r.adultAt)}</td></tr><tr><td>アルバムに入った日</td><td class="dt">${dstr(r.archivedAt)}</td></tr>
       ${r.memo?`<tr><td>メモ</td><td>${esc(r.memo)}</td></tr>`:''}</table>
       <button class="pbtn" id="alfav">${isFav?'お気に入りをやめる':'⭐ お気に入りにする（一緒に暮らす）'}</button>
       <button class="pbtn red" id="alrm">アルバムから外す</button>
@@ -2235,7 +2266,7 @@ if(TEST_BUILD&&location.search.includes('debug'))$('kff').style.display='';
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 K.open();
 </script>
-<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v2.0 アルバム・図鑑（修正1）</div>
+<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v2.0 アルバム・図鑑（修正2）</div>
 <button id="tst_btn" style="position:fixed;right:4px;bottom:4px;z-index:99999;font:bold 12px sans-serif;background:#e0457b;color:#fff;border:0;border-radius:8px;padding:6px 8px">🧪</button>
 <div id="tst_pan" style="display:none;position:fixed;inset:8px;z-index:100000;background:#fff;border:3px solid #e0457b;border-radius:10px;padding:10px;overflow:auto;font:14px/1.5 sans-serif;color:#333">
 <b>🧪 テスト用パネル（テスト版だけ）</b><br><small>ここで変えるのはテスト用サイトの保存だけです。ボタンを押すと、自動で読み直します。</small>
