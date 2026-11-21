@@ -352,9 +352,11 @@ const SND=(()=>{
   function ctx(){
     if(!ac){ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null;
       ac=new AC(); master=ac.createGain(); master.gain.value=0.22; master.connect(ac.destination); }
-    if(ac.state==='suspended') ac.resume();
+    if(ac.state!=='running'&&ac.state!=='closed') tryResume();
     return ac;
   }
+  // 再開を試す（ブラウザが断っても例外を出さない。断られたら次のタップで unlock がもう一度試す）
+  function tryResume(){ try{ const r=ac&&ac.resume&&ac.resume(); if(r&&r.catch) r.catch(()=>{}); }catch(e){} }
   const hz=n=>261.63*Math.pow(2,n/12); // 0 = ド(C4)
   function tone(f,d,type='square',v=0.12,t0=0,slide=0){
     if(!on) return; const a=ctx(); if(!a||a.state!=='running') return;
@@ -378,6 +380,10 @@ const SND=(()=>{
     umi:{bpm:96,wave:'sine',v:.08,
       mel:[12,_,11,9, 7,_,9,_, 4,_,7,_, 9,_,_,_, 12,_,14,12, 11,_,9,_, 7,_,4,_, 7,_,_,_],
       bass:[-12,-5,0,-5, -12,-5,0,-5, -15,-8,-3,-8, -15,-8,-3,-8, -17,-10,-5,-10, -17,-10,-5,-10, -12,-5,0,-5, -12,_,_,_]},
+    // お散歩：てくてく歩くような、のんびりした曲（オリジナル）
+    sanpo:{bpm:88,wave:'triangle',v:.065,
+      mel:[4,_,5,7, _,_,4,_, 2,_,4,_, 0,_,_,_, 5,_,7,9, _,_,7,_, 5,4,2,4, 7,_,_,_],
+      bass:[-12,_,-8,_, -5,_,-8,_, -15,_,-10,_, -7,_,-10,_, -10,_,-7,_, -3,_,-7,_, -5,_,-8,_, -12,_,-5,_]},
     yama:{bpm:120,wave:'square',v:.045,
       mel:[0,_,0,4, 7,_,7,_, 5,4,2,_, 7,_,_,_, 0,_,0,4, 7,_,12,_, 11,9,7,5, 4,_,_,_],
       bass:[-12,_,-5,_, -12,_,-5,_, -14,_,-7,_, -17,_,-10,_, -12,_,-5,_, -12,_,-5,_, -10,_,-17,_, -12,_,_,_]},
@@ -419,10 +425,13 @@ const SND=(()=>{
   let unlocked=false;
   const unlock=()=>{
     const a=ctx(); if(!a) return;
-    if(a.state!=='running') a.resume();
+    if(a.state!=='running') tryResume();
     if(!unlocked){ try{ const b=a.createBuffer(1,1,22050), src=a.createBufferSource(); src.buffer=b; src.connect(a.destination); src.start(0); unlocked=true; }catch(e){} }
   };
   ['touchend','click','pointerup','keydown'].forEach(ev=>document.addEventListener(ev,unlock,{passive:true}));
+  // 画面に戻ったとき：音がONで、すでに音の部品があるときだけ再開を試す（iPhoneは断ることがある→次のタップで再開）
+  const wake=()=>{ if(!on||!ac||document.visibilityState==='hidden') return; if(ac.state!=='running'&&ac.state!=='closed') tryResume(); };
+  document.addEventListener('visibilitychange',wake); window.addEventListener('pageshow',wake); window.addEventListener('focus',wake);
   return { bgm, cry, sfx,
     get on(){return on},
     toggle(){ on=!on; try{localStorage.setItem('poko_snd',on?'1':'0')}catch(e){} if(on) ctx(); return on; } };
@@ -620,6 +629,13 @@ const K=(()=>{
   // このバージョンで知らない場所：IDはそのまま、表示だけ「？？？」。報酬は勝手に作らない
   const PLACE_UNKNOWN={e:'❓',n:'？？？',need:0,min:0,t:[],unknown:true};
   const PL=p=>PLACES[p]||PLACE_UNKNOWN;
+  // ===== ID管理（W2）：一度使ったIDは変えない・消さない・別の意味で使い直さない =====
+  // 廃止するときは、表から行を消さずに RETIRED に足す（表示・保存データはそのまま、新しく手に入らなくなるだけ）。
+  // 台帳 ids/ledger.json と自動テスト tests/w2_ids.py で、重複・再利用・消し忘れを確認する。
+  const ID_NS=['item','dish','recipe','place','form','stage','temper','tag','line','species','karte','gene','minigame','material','decor','event'];
+  const RETIRED={};   // 例：{item:['kutsu']}。いまは廃止なし
+  const isRetired=(ns,id)=>!!(RETIRED[ns]&&RETIRED[ns].includes(id));
+  const canGet=k=>!!k&&!isRetired('item',k);   // 新しく手に入れてよいアイテムか（廃止は不可）
   const R={ // 2つの組み合わせ → りょうり
     'kinomi+kinomi':{k:'juice',e:'🧃',n:'木の実ジュース',g:1,a:2,tag:'fruit'},
     'kinomi+ringo':{k:'salad',e:'🥗',n:'フルーツサラダ',g:2,a:3,tag:'fruit'},
@@ -779,8 +795,9 @@ const K=(()=>{
       busy='happy';setTimeout(()=>busy=null,900);kfx($('kov'),it.e,1,40);SND.sfx.pick();setTimeout(()=>SND.cry(ckey()),250);say(`{n}は${it.e}${it.n}を見つけた！`);speak(lineOf('find'),'happy');save();
     }
     if(EX.run&&EX.spark&&Math.abs(EX.spark.x-x)<1){
-      const k=wpick(PL(E.p).t);(E.bonus=E.bonus||[]).push(k);E.sparkN=(E.sparkN||0)+1;EX.spark=null;EX.run=false;EX.nextSpark=t+20000+Math.random()*15000;
-      busy='happy';setTimeout(()=>busy=null,900);kfx($('kov'),IT[k].e,2,40);SND.sfx.pick();setTimeout(()=>SND.cry(ckey()),250);say(`{n}が${IT[k].e}${IT[k].n}を拾った！（おまけ）`);save();
+      const k=wpick(PL(E.p).t);if(k)(E.bonus=E.bonus||[]).push(k);E.sparkN=(E.sparkN||0)+1;EX.spark=null;EX.run=false;EX.nextSpark=t+20000+Math.random()*15000;
+      if(!k){say('光っていた所には、何もなかった…');save();}
+      else{busy='happy';setTimeout(()=>busy=null,900);kfx($('kov'),IT[k].e,2,40);SND.sfx.pick();setTimeout(()=>SND.cry(ckey()),250);say(`{n}が${IT[k].e}${IT[k].n}を拾った！（おまけ）`);save();}
     }
   }
   function drawStage(){
@@ -887,14 +904,14 @@ const K=(()=>{
     if(S.sleep)S.genki=clamp(S.genki+dt/20,0,5); else if(!S.explore)S.genki=clamp(S.genki-dt/60,0,5);
     if(S.explore&&t>=S.explore.end)backHome();
   }
-  function wpick(t){const sum=t.reduce((a,b)=>a+b[1],0);let r=Math.random()*sum;for(const [k,w] of t){if((r-=w)<0)return k}return t[0][0]}
+  function wpick(t){t=t.filter(x=>canGet(x[0]));if(!t.length)return null;const sum=t.reduce((a,b)=>a+b[1],0);let r=Math.random()*sum;for(const [k,w] of t){if((r-=w)<0)return k}return t[0][0]}
   function backHome(){
     const E=S.explore, pl=PL(E.p);
-    const got=(E.ev&&E.ev.length?E.ev.map(v=>v.k):(pl.t.length?Array.from({length:3},()=>wpick(pl.t)):[])).concat(E.bonus||[]);
+    const got=(E.ev&&E.ev.length?E.ev.map(v=>v.k):(pl.t.length?Array.from({length:3},()=>wpick(pl.t)):[])).concat(E.bonus||[]).filter(canGet);
     let held=0;
     got.forEach(k=>{ if(hasIT(k)) IT[k].d?add(S.decor,k):add(S.inv,k); else { if(!Array.isArray(S.hold))S.hold=[]; S.hold.push(k); held++; } });
     ANA.track('explore_end',{place:E.p,items:got.length});
-    S.explore=null; S.lucky=false; S.justBack=true; EX=null; x=34; save();
+    S.explore=null; S.lucky=false; S.justBack=true; if(pl.walk)S.backFrom='walk'; else if(!pl.unknown)S.backFrom='explore'; else delete S.backFrom; EX=null; x=34; save();
     say('おかえり！');   // 探検中の案内（光・おまけ・ダッシュ・あと○分など）は、帰ったら残さない SND.sfx.ding(); setTimeout(()=>speak(lineOf('back'),'happy'),400);
     modal(`<h2>${pl.e} ただいま！</h2><p>${esc(S.name)}が${pl.n}から帰ってきた！</p><div class="got">${got.map(k=>IT[k].e).join('')}</div>
       <p>${[...new Set(got)].map(k=>IT[k].n).join('、')}を拾ってきた${(E.bonus||[]).length?`<br>（すごろくや光るおまけで拾った ${E.bonus.length}個 込み）`:''}${held?`<br>（このバージョンで使えない物 ${held}個は、なくさないように保管しました）`:''}<br>「なでる」とおまけをくれるかも？</p><button class="pbtn" onclick="K.close()">やったね！</button>`);
@@ -1049,7 +1066,7 @@ const K=(()=>{
     if(k==='cook')return cookUI();
     if(S.explore){ if(k==='explore'&&!PL(S.explore.p).walk&&!PL(S.explore.p).unknown) return mapUI(); return away(); }
     if(k==='walk'){ if(S.sleep)return sleepNG();
-      ANA.track('walk_start');const st=now(),pl=PLACES.sanpo; S.explore={p:'sanpo',start:st,end:st+pl.min*MIN,bonus:[],ev:[{t:st+60000,k:wpick(pl.t)}]};S.justBack=false;EX=null;x=4;save();ui();
+      ANA.track('walk_start');const st=now(),pl=PLACES.sanpo; S.explore={p:'sanpo',start:st,end:st+pl.min*MIN,bonus:[],ev:[{t:st+60000,k:wpick(pl.t)}].filter(v=>v.k)};S.justBack=false;delete S.backFrom;EX=null;x=4;save();ui();
       say('{n}はお散歩に出かけた！ 2分で帰ってきます');setTimeout(()=>speak(lineOf('walk')),600);return }
     if(k==='sleep'){S.sleep=!S.sleep;ANA.track('sleep',{state:S.sleep?'sleep':'wake'});say(S.sleep?'{n}が寝た。寝ている間に元気が戻ります':'{n}が起きた！');speak(lineOf(S.sleep?'sleep':'wake'));save();ui();draw();return}
     if(S.sleep)return sleepNG();
@@ -1057,8 +1074,10 @@ const K=(()=>{
     if(k==='fish')return fishUI();
     if(k==='feed')return feedUI();
     if(k==='pet'){
-      if(S.justBack){S.justBack=false;const k2=pick(['kinomi','ringo','kinoko','komugi']);add(S.inv,k2);ANA.track('pet',{bonus:true});addAff(2);busy='happy';kfx($('kov'),'💗',2);SND.cry(ckey());
-        speak(lineOf('pet'));say(`{n}が${IT[k2].e}${IT[k2].n}をくれた！ 探検おつかれさま`)}
+      if(S.justBack){const bf=S.backFrom;S.justBack=false;delete S.backFrom;
+        const c2=['kinomi','ringo','kinoko','komugi'].filter(canGet),k2=c2.length?pick(c2):null;if(k2)add(S.inv,k2);ANA.track('pet',{bonus:true});addAff(2);busy='happy';kfx($('kov'),'💗',2);SND.cry(ckey());
+        const bm=bf==='walk'?'お散歩たのしかったね！':bf==='explore'?'探検おつかれさま！':'おかえりなさい！';   // 種類が分からない古いセーブは、どちらとも決めない
+        speak(lineOf('pet'));say(k2?`{n}が${IT[k2].e}${IT[k2].n}をくれた！ ${bm}`:`{n}がうれしそうにすりよってきた！ ${bm}`)}
       else{const t=now();if(t-(S.petAt||0)>10*MIN){S.petAt=t;S.petN=0}S.petN++;
         if(S.petN<=3){ANA.track('pet');addAff(1);busy='happy';kfx($('kov'),'💗');SND.cry(ckey());speak(lineOf('pet'));say('なでた！ なかよし +1')}else{busy='normal';say('{n}はもう満足そう。少し時間をおいてね')}}
       setTimeout(()=>busy=null,1200);save();ui();
@@ -1070,7 +1089,7 @@ const K=(()=>{
       return `<button class="place" ${lock?'disabled':''} data-p="${k}"><em>${lock?'🔒':p.e}</em><span>${p.n}（${p.min}分）<small>${lock?`なかよし${p.need}で解放`:p.t.slice(0,3).map(([i])=>IT[i].e).join(' ')+' など'}</small></span></button>`}).join('');
     modal(`<h2>🗺️ どこへ行く？</h2><p>元気を♥1つ使います${S.lucky?'<br>🍀 ラッキー！ いつもよりたくさん拾える':''}</p>${html}<button class="pbtn gray" onclick="K.close()">やめる</button>`);
     $('kmbody').querySelectorAll('.place').forEach(b=>b.onclick=()=>{const p=PLACES[b.dataset.p];
-      ANA.track('explore_start',{place:b.dataset.p});S.genki-=1;{const st=now(),dur=p.min*MIN,n=2+Math.floor(Math.random()*3)+(S.lucky?1:0);S.explore={p:b.dataset.p,start:st,end:st+dur,bonus:[],map:makeMap(p),ev:Array.from({length:n},(_,i)=>({t:st+dur*(i+0.5+(Math.random()-.5)*.6)/n,k:wpick(p.t)}))}};EX=null;x=4;S.justBack=false;if(S.tut===3){S.tut=0;setTimeout(()=>say(TUT[4]),2600)}save();close();say(`{n}は${p.n}へ出かけた！「すごろく」で遊ぶと、おまけや近道が見つかるよ`);setTimeout(()=>speak(lineOf('go')),600)});
+      ANA.track('explore_start',{place:b.dataset.p});S.genki-=1;{const st=now(),dur=p.min*MIN,n=2+Math.floor(Math.random()*3)+(S.lucky?1:0);S.explore={p:b.dataset.p,start:st,end:st+dur,bonus:[],map:makeMap(p),ev:Array.from({length:n},(_,i)=>({t:st+dur*(i+0.5+(Math.random()-.5)*.6)/n,k:wpick(p.t)})).filter(v=>v.k)}};EX=null;x=4;S.justBack=false;delete S.backFrom;if(S.tut===3){S.tut=0;setTimeout(()=>say(TUT[4]),2600)}save();close();say(`{n}は${p.n}へ出かけた！「すごろく」で遊ぶと、おまけや近道が見つかるよ`);setTimeout(()=>speak(lineOf('go')),600)});
   }
   function cookUI(){
     let sel=[];
@@ -1083,7 +1102,7 @@ const K=(()=>{
       $('kmbody').querySelectorAll('.item').forEach(b=>b.onclick=()=>{const k=b.dataset.i;if(sel.length<2&&left(k)>0){sel.push(k);render()}});
       $('kclr').onclick=()=>{if(sel.length){sel=[];render()}else close()};
       $('kcook').onclick=()=>{
-        const key=[...sel].sort().join('+'), d=R[key]||FUSHIGI, isNew=!S.recipes.includes(d.k);
+        const key=[...sel].sort().join('+'), d=(R[key]&&!isRetired('dish',R[key].k)?R[key]:null)||FUSHIGI, isNew=!S.recipes.includes(d.k);
         sel.forEach(k=>add(S.inv,k,-1)); ANA.track('cook',{recipe:d.k,is_new:isNew}); if(S.tut===1)setTut(2); SND.sfx.ding(); if(S.stage!=='seed'&&!S.explore) speak(lineOf('cook')); add(S.dishes,d.k); if(isNew)S.recipes.push(d.k); save();
         modal(`<h2>${isNew?'🎉 新しいレシピ！':'できた！'}</h2><div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b><br>元気 +${d.g}　なかよし +${d.a}</p>
           <button class="pbtn" onclick="K.close()">OK</button>`);
@@ -1123,8 +1142,9 @@ const K=(()=>{
     };
     const done=(ok,m)=>{ANA.track('fish',{result:ok?'catch':'miss'});
       F.ph='done'; S.fishN=(S.fishN||0)+1; let txt=m;
-      if(ok){const k=wpick([['sakana',60],['oosakana',15],['kutsu',15],['takara',10]]);
-        if(k==='takara'){add(S.decor,'takara');add(S.inv,'hoshi');txt='🎁 宝箱！ 中に⭐星のかけらが入っていた！'}
+      const fk=ok?wpick([['sakana',60],['oosakana',15],['kutsu',15],['takara',10]]):null; if(ok&&!fk){ok=false;txt='…何もかからなかった';}
+      if(ok){const k=fk;
+        if(k==='takara'){add(S.decor,'takara');if(canGet('hoshi'))add(S.inv,'hoshi');txt='🎁 宝箱！ 中に⭐星のかけらが入っていた！'}
         else{IT[k].d?add(S.decor,k):add(S.inv,k);txt=k==='kutsu'?'👢 長ぐつ… 飾りにしちゃおう':`${IT[k].e} ${IT[k].n}が釣れた！`}
         if(k!=='kutsu'){S.lucky=true;txt+='　🍀次の探検はラッキー'}
         kfx($('kmbody'),'💦',2,20);SND.sfx.splash();$('ftalk').innerHTML=talkRow(k==='kutsu'?'…長ぐつ？ なんで？':k==='takara'?'宝箱だ！':k==='oosakana'?'大物だ〜！':lineOf('fish'),k==='kutsu'?'normal':'happy')} else {SND.sfx.miss();$('ftalk').innerHTML=talkRow(pick(['逃げられた〜。','早かったかな…']),'sad')}
@@ -1140,7 +1160,7 @@ const K=(()=>{
   const SQ={start:{e:'🏠',n:'スタート'},short:{e:'⏩',n:'近道'},treasure:{e:'🎁',n:'宝箱'},event:{e:'❓',n:'イベント'},puzzle:{e:'🃏',n:'パズル'},goal:{e:'🏁',n:'ゴール'}};
   function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
   function makeMap(p){
-    const mid=[];for(let i=0;i<7;i++)mid.push({t:'item',k:wpick(p.t)});
+    const mid=[];for(let i=0;i<7;i++){const k=wpick(p.t);mid.push(k?{t:'item',k}:{t:'event'})}
     mid.push({t:'short'},{t:'short'},{t:'treasure'},{t:'puzzle'},{t:'puzzle'},{t:'event'},{t:'event'});
     return {sq:[{t:'start'}].concat(shuffle(mid),[{t:'goal'}]),pos:0,rolls:6,done:false,seen:[0]};
   }
@@ -1176,9 +1196,10 @@ const K=(()=>{
     }
     function land(){
       const q=M.sq[M.pos]; if(!M.seen.includes(M.pos))M.seen.push(M.pos);
-      if(q.t==='item'){E.bonus.push(q.k);msg=`${IT[q.k].e}${IT[q.k].n}を拾った！`;talk=lineOf('find');fe='happy';SND.sfx.pick();SND.cry(ckey())}
+      if(q.t==='item'&&!canGet(q.k)&&hasIT(q.k)){msg='ここには何もなかった…';talk='…あれ？ なくなってる。';fe='normal'}
+      else if(q.t==='item'){E.bonus.push(q.k);msg=`${IT[q.k].e}${IT[q.k].n}を拾った！`;talk=lineOf('find');fe='happy';SND.sfx.pick();SND.cry(ckey())}
       else if(q.t==='short'){E.end=Math.max(now()+5000,E.end-2*MIN);msg='⏩ 近道！ 帰りが2分早くなった';talk=pick(['こっちが近道！','近道、発見！']);fe='happy';SND.sfx.ding()}
-      else if(q.t==='treasure'){const r=pick(['hoshi','hoshi','ishi','takara']);E.bonus.push(r);msg=`🎁 宝箱！ ${IT[r].e}${IT[r].n}が入っていた！`;talk='わあ、宝箱！';fe='happy';SND.sfx.fanfare()}
+      else if(q.t==='treasure'){const tl=['hoshi','hoshi','ishi','takara'].filter(canGet);const r=tl.length?pick(tl):null;if(r)E.bonus.push(r);msg=r?`🎁 宝箱！ ${IT[r].e}${IT[r].n}が入っていた！`:'🎁 宝箱！ …からっぽだった';talk='わあ、宝箱！';fe='happy';SND.sfx.fanfare()}
       else if(q.t==='event'){
         const ev=pick(['jump','friend','nothing','friend','jump']);
         if(ev==='jump'&&M.pos<15){msg='❓ 追い風！ 2マス進む';talk='追い風だー！ 飛ばされる〜！';fe='happy';save();render();setTimeout(()=>move(Math.min(15,M.pos+2)),700);return}
@@ -1187,13 +1208,15 @@ const K=(()=>{
       }
       else if(q.t==='puzzle'){save();return puzzle()}
       else if(q.t!=='goal'&&q.t!=='start'){msg='❓ ？？？のマス（このバージョンでは何も起きません）';talk='…なんだろう？';fe='normal'}
-      else if(q.t==='goal'){const a=wpick(PL(E.p).t),b2=wpick(PL(E.p).t);E.bonus.push(a,b2);E.end=now()+4000;M.done=true;msg=`🏁 ゴール！ ${IT[a].e}${IT[b2].e}をもらった！ ${esc(S.name)}がもうすぐ帰ってくるよ`;talk='ゴール！ もうすぐ帰るね。';fe='happy';SND.sfx.fanfare()}
+      else if(q.t==='goal'){const gg=[wpick(PL(E.p).t),wpick(PL(E.p).t)].filter(Boolean);E.bonus.push(...gg);E.end=now()+4000;M.done=true;msg=`🏁 ゴール！ ${gg.length?gg.map(k=>IT[k].e).join('')+'をもらった！':'おみやげはなかった…'} ${esc(S.name)}がもうすぐ帰ってくるよ`;talk='ゴール！ もうすぐ帰るね。';fe='happy';SND.sfx.fanfare()}
       if(!M.done&&M.rolls<=0){M.done=true;msg+='<br>サイコロがなくなった。続きは次の探検で！'}
       save(); render();
     }
     // パズルマス：3ペアの神経衰弱（4回まで）
     function puzzle(){
-      const ks=[...new Set(PL(E.p).t.map(x=>x[0]))].slice(0,3), cards=shuffle(ks.concat(ks)); let open=[],got=[],tries=4,lock=false,pt='パズルだ！ そろえるぞ。',pf='normal';
+      const ks=[...new Set(PL(E.p).t.map(x=>x[0]))].filter(canGet).slice(0,3);
+      if(!ks.length){msg='🃏 パズルのカードがなかった…';talk='…あれ？';fe='normal';if(!M.done&&M.rolls<=0){M.done=true;msg+='<br>サイコロがなくなった'}save();return render()}
+      const cards=shuffle(ks.concat(ks)); let open=[],got=[],tries=4,lock=false,pt='パズルだ！ そろえるぞ。',pf='normal';
       function pr(m){
         modal(`<h2>🃏 パズルマス</h2><p>同じ物をそろえよう　のこり <b>${tries}</b>回</p>${talkRow(pt,pf)}
           <div class="mapg p3">${cards.map((k,i)=>`<button class="mt ${open.includes(i)||got.includes(i)?'open':''} ${got.includes(i)?'got':''}" data-i="${i}">${open.includes(i)||got.includes(i)?IT[k].e:''}</button>`).join('')}</div>
@@ -1206,7 +1229,7 @@ const K=(()=>{
       function flip(i){
         if(lock||open.includes(i)||got.includes(i)||tries<=0)return; SND.sfx.btn(); open.push(i); pr();
         if(open.length<2)return; tries--; const [a,b2]=open;
-        if(cards[a]===cards[b2]){got.push(a,b2);open=[];SND.sfx.pick();pt=pick(['やった、そろった！','その調子！']);pf='happy';pr('そろった！');if(got.length===6||tries<=0)finish()}
+        if(cards[a]===cards[b2]){got.push(a,b2);open=[];SND.sfx.pick();pt=pick(['やった、そろった！','その調子！']);pf='happy';pr('そろった！');if(got.length===ks.length*2||tries<=0)finish()}
         else{lock=true;setTimeout(()=>{open=[];lock=false;pt=pick(['うーん、おしい！','次は当たる気がする。']);pf='normal';pr('ちがった…');if(tries<=0)finish()},700)}
       }
       pr();
@@ -1258,6 +1281,7 @@ const K=(()=>{
     capObj(d.tags,50,'食べた料理の記録');c.tags=counts(d.tags,k=>['fruit','fish','mush','sweet'].includes(k)||(lax&&okId(k)),'食べた料理の記録');
     if(d.hideDecor!==undefined){if(!isObj(d.hideDecor))bad('飾りの設定がおかしい');c.hideDecor={};for(const [k,v] of Object.entries(d.hideDecor)){if(!(hasIT(k)?IT[k].d:(lax&&okId(k))))bad('飾りの設定がおかしい');if(v)c.hideDecor[k]=true}}
     for(const k of ['sleep','lucky','justBack'])c[k]=!!d[k];
+    if(d.backFrom!==undefined)c.backFrom=(d.backFrom==='walk'||d.backFrom==='explore'||(lax&&okId(d.backFrom)))?d.backFrom:null;   // 帰ってきた活動（なければ項目を作らない。知らない種類は形式2なら残し、文言は中立）
     c.last=num(d.last??Date.now(),0,1e15,'時刻'); c.skew=num(d.skew??0,-1e13,1e13,'時刻');
     if(d.tut!==undefined)c.tut=int(d.tut,0,9,'チュートリアル');
     if(d.fishN!==undefined)c.fishN=int(d.fishN,0,99,'釣り');
@@ -1841,7 +1865,7 @@ if(TEST_BUILD&&location.search.includes('debug'))$('kff').style.display='';
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 K.open();
 </script>
-<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v1.9</div>
+<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v1.9＋修正#5〜7</div>
 <button id="tst_btn" style="position:fixed;right:4px;bottom:4px;z-index:99999;font:bold 12px sans-serif;background:#e0457b;color:#fff;border:0;border-radius:8px;padding:6px 8px">🧪</button>
 <div id="tst_pan" style="display:none;position:fixed;inset:8px;z-index:100000;background:#fff;border:3px solid #e0457b;border-radius:10px;padding:10px;overflow:auto;font:14px/1.5 sans-serif;color:#333">
 <b>🧪 テスト用パネル（テスト版だけ）</b><br><small>ここで変えるのはテスト用サイトの保存だけです。ボタンを押すと、自動で読み直します。</small>
