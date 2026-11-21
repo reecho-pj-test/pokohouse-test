@@ -855,7 +855,7 @@ const K=(()=>{
   }
   function draw(){
     fit(); g.setTransform(1,0,0,1,0,0); g.clearRect(0,0,cv.width,cv.height);
-    const VW=cv.width, want=VW<64&&S&&S.stage!=='seed'?Math.max(0,Math.min(64-VW,x-VW/2)):(64-VW)/2;
+    const VW=cv.width, want=VW<64&&S&&S.stage!=='seed'&&!favHere()?Math.max(0,Math.min(64-VW,x-VW/2)):(64-VW)/2;   // お気に入りがいるときは真ん中に固定（2匹とも入る範囲だけを歩く）
     camX+=(want-camX)*0.08; const cx=Math.round(camX);
     skyTop(); g.setTransform(1,0,0,1,-cx,cv.height-48);
     drawMain(); g.setTransform(1,0,0,1,0,0);
@@ -871,7 +871,13 @@ const K=(()=>{
   // ===== AL6：お気に入りと2匹暮らし（お世話なし・なかよしは変えない・セーブは書かない）=====
   let favBusy=0, favN=0;
   const favHere=()=>S&&S.stage!=='seed'&&!S.explore?favRec():null;
-  const favX=()=>Math.min(50,Math.round(x)+14);
+  const favGap=()=>{const f=favHere();if(!f)return 0;const cw=(SPR[ckey()]||SPR_Q).w,fw=(SPR[f.form]||SPR_Q).w;return Math.ceil(cw/2+fw/2)+2};   // 2匹が重ならない間隔（体の大きさから）
+  const favX=()=>Math.round(x)+favGap();
+  // お気に入りがいるとき、今の子が歩ける範囲（2匹とも画面の中に入るように）
+  // カメラを動かさなくても2匹とも画面に入る範囲にする（画面の幅 VW は縦横・機種で 50〜64）
+  const walkRange=()=>{const f=favHere();if(!f)return [24,44];const cw=(SPR[ckey()]||SPR_Q).w,fw=(SPR[f.form]||SPR_Q).w,VW=cv.width,g2=favGap();
+    const lo=Math.max(Math.ceil(cw/2)+1,Math.ceil(32-VW/2+cw/2)+1), hi=Math.min(Math.floor(63-fw/2-g2),Math.floor(32+VW/2-fw/2-g2)-1);
+    return lo<=hi?[lo,hi]:[Math.round((lo+hi)/2),Math.round((lo+hi)/2)]};
   function favDraw(){
     const f=favHere(); if(!f)return;
     const sp=SPR[f.form]||SPR_Q, bob=(frame+2)%4<2?0:1, ox=Math.round(favX()-sp.w/2);
@@ -924,7 +930,7 @@ const K=(()=>{
     if(S.stage==='baby'&&S.aff>=15)grow('child');
     else if(S.stage==='child'&&S.aff>=60){
       S.form=baseForm(S.tags);S.adultAt=now();ensureIntegrity(S);grow('adult')}
-    if(S.stage==='adult'&&!(S.album||[]).some(r=>r&&r.id===S.id)){ensureIntegrity(S);const nw=!(DEXS&&DEXS.sp[S.form]);dexAddPet(S,false);if(nw)setTimeout(()=>{if(!dexDirty&&!dexFail)ktoast(`📖 キャラ図鑑に「${fnm(S.form)}」が登録されたよ！`)},2600)}   // AL3：大人になった直後に、アルバムの目印・たね（1匹1回：seedGiven）・図鑑の記録を付ける
+    if(S.stage==='adult'&&!(S.album||[]).some(r=>r&&r.id===S.id)){ensureIntegrity(S);const nw=!(DEXS&&DEXS.sp[S.form]);dexAddPet(S,false);if(nw){const fm=S.form;setTimeout(()=>newFormUI(fm),2400)}}   // AL3：大人になった直後に、アルバムの目印・たね（1匹1回：seedGiven）・図鑑の記録を付ける
   }
   function grow(st){
     S.stage=st; let n=0; SND.sfx.fanfare(); ANA.track('grow',{stage:st,form:st==='adult'?S.form:'none'});
@@ -1969,6 +1975,18 @@ const K=(()=>{
     $('nxy').onclick=()=>go(true); $('nxn').onclick=()=>go(false);
   }
   // ===== AL5：キャラ図鑑・発見記録 =====
+  // はじめての姿のお祝い（保存できた記録にあるときだけ。保存がまだなら少し待つ）
+  function newFormUI(fm,tries=0){
+    if(LOCK||!S)return;
+    const D=dexSaved(); if(!D.sp[fm]){ if(tries<10)setTimeout(()=>newFormUI(fm,tries+1),1500); return; }
+    const found=ZUKAN.filter(([k])=>D.sp[k]).length, left=ZUKAN.length-found;
+    if($('kmodal').classList.contains('on'))close();
+    modal(`<h2>✨ 新しい子が<br>キャラ図鑑に登録されたよ！</h2><img class="pix apicl" src="${formPic(fm)}"><p><b>${fnm(fm)}</b></p>
+      <p>見つけた姿 ${found} / ${ZUKAN.length}</p>
+      <p class="tleft">${left?`あと${left}種類！ どんな姿がいるかな？<br>いろんなごはんを食べさせて、集めてみてね`:'全部の姿を見つけたよ！ すごい！'}</p>
+      <button class="pbtn" id="nfback">戻る</button>`);
+    $('nfback').onclick=()=>{close();say('📖 キャラ図鑑で、また見られるよ！');setTimeout(()=>speak('図鑑にのったよ、うれしいな','happy'),400)};
+  }
   const ZUKAN=[['hana','くだものが大好きな子は、どんな姿になるのかな…'],['umi','海の幸をたくさん食べた子は…？'],['mori','森のめぐみ（きのこ）をよく食べた子は…？'],['okashi','あまいものばかり食べていると…？']];   // 今の版で見つけられる姿（隠し・特殊は、その版まで出さない）
   const shadowPic=k=>{const sp=SPR[k]||SPR.child,c=document.createElement('canvas');c.width=sp.w+2;c.height=sp.h+2;const g=c.getContext('2d');drawSprite(g,sp,1,1,'normal',false);g.globalCompositeOperation='source-in';g.fillStyle='#3a2f45';g.fillRect(0,0,c.width,c.height);return c.toDataURL()};
   const dexNow=()=>DEXS||dexRead()||dexNew();             // 判断用（メモリの未保存分も含む：戻す質問で外した子を出さないため）
@@ -1978,7 +1996,7 @@ const K=(()=>{
     modal(`<h2>📖 キャラ図鑑</h2><p>見つけた姿 ${found} / ${ZUKAN.length}（${Math.floor(found/ZUKAN.length*100)}%）</p>
       ${ZUKAN.map(([k,h])=>{const f=D.sp[k];if(!f)return `<div class="place"><img class="pix apic" src="${shadowPic(k)}"><span>？？？<small>${h}</small></span></div>`;
         const by=f.by&&D.pets[f.by]?D.pets[f.by].name:null, n=pets.filter(([,v])=>v.form===k).length;
-        return `<div class="place"><img class="pix apic" src="${formPic(k)}"><span>${fnm(k)}<small>はじめて：${f.at?dstr(f.at):'？'}${f.pre?'（図鑑ができる前）':''}${by?`・${esc(by)}`:''}<br>この姿になった子：${n}匹</small></span></div>`}).join('')}
+        return `<div class="place"><img class="pix apic" src="${formPic(k)}"><span>${fnm(k)}<small>はじめて：${f.at?dstr(f.at):'？'}${by?`・${esc(by)}`:''}<br>この姿になった子：${n}匹</small></span></div>`}).join('')}
       <button class="pbtn" id="zkpets">💭 大人になった子の思い出（${pets.length}匹）</button>
       <p class="tleft"><small>キャラ図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</small></p>
       <button class="pbtn gray" onclick="K.close()">とじる</button>`);
@@ -2079,11 +2097,12 @@ const K=(()=>{
     $('kmbody').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const s=L[+b.dataset.r];
       let next; try{const d=repairSave(clone(s.d)); next=(typeof d.ver==='number'&&d.ver>=2)?ensureIntegrity(d):ensureIntegrity(upgrade(d))}catch(e){recoverUI('⚠ このデータは戻せませんでした。今のデータはそのままです');return}
       modal(`<h2>🛟 このデータに戻す？</h2><p>戻すデータ<br><b>${summary(next)}</b></p><p>いまのデータ<br>${summary(S)}</p>
-        <p>いまのデータは「復旧する前のデータ」として、この端末に残ります。</p>
+        ${S&&next&&S.id!==next.id?`<p class="tleft"><b>いま育てている「${esc(S.name)}」（${stageName(S)}）は、このデータにはいません。</b></p>`:''}
+        <p>いまのデータは「復旧する前のデータ」として、この端末に残ります。あとで、また戻せます。</p>
         <button class="pbtn" id="rcok">戻す</button><button class="pbtn gray" id="rcng">やめる</button>`);
       $('rcng').onclick=()=>recoverUI('やめました。今のデータはそのままです');
       $('rcok').onclick=()=>{ if(!applySave(next,KEY+'_before_recover_'+Date.now())){if(LOCK)return;recoverUI('⚠ 戻せませんでした（保存に失敗）。今のデータはそのままです');return}
-        $('ksetup').classList.remove('on'); close(); tick(); save(); ui(); draw(); say('前のデータに戻しました'); };
+        $('ksetup').classList.remove('on'); close(); tick(); save(); ui(); draw(); say('前のデータに戻しました（戻す前のデータは「復旧する前のデータ」に残しています）'); };
     });
   }
   function analyticsUI(first){
@@ -2199,7 +2218,8 @@ const K=(()=>{
     else{tick();save();ui();if(!$('kmodal').classList.contains('on'))say(S.stage==='seed'?'種をタップして、芽を出させよう':S.explore?'{n}は探検中…':'おかえり！');if(S.stage!=='seed')setTimeout(()=>S&&!LOCK&&speak(lineOf(S.explore?(PL(S.explore.p).walk?'sanpo':S.explore.p):per())),1200)}
     draw()}
   setInterval(()=>{if(!$('kid').classList.contains('on'))return;frame++;
-    if(S&&present()&&!S.sleep&&!busy&&Math.random()<.18){const nx=x+(Math.random()<.5?-1:1);if(nx>=(favHere()?20:24)&&nx<=(favHere()?36:44)){face=nx>x?1:-1;x=nx}}
+    if(S&&favHere()){const [lo,hi]=walkRange();if(x>hi)x=hi;if(x<lo)x=lo}
+    if(S&&present()&&!S.sleep&&!busy&&Math.random()<.18){const nx=x+(Math.random()<.5?-1:1),[lo,hi]=walkRange();if(nx>=lo&&nx<=hi){face=nx>x?1:-1;x=nx}}
     if(S&&S.explore&&!$('kmodal').classList.contains('on'))exStep();
     if(S){idleTalk();bubTick();}
     SND.bgm(!S||S.stage==='seed'?'home':S.explore?(PLACES[S.explore.p]?S.explore.p:'mori'):(S.sleep||per()==='night')?'night':'home');
@@ -2215,7 +2235,7 @@ if(TEST_BUILD&&location.search.includes('debug'))$('kff').style.display='';
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 K.open();
 </script>
-<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v2.0 アルバム・図鑑</div>
+<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v2.0 アルバム・図鑑（修正1）</div>
 <button id="tst_btn" style="position:fixed;right:4px;bottom:4px;z-index:99999;font:bold 12px sans-serif;background:#e0457b;color:#fff;border:0;border-radius:8px;padding:6px 8px">🧪</button>
 <div id="tst_pan" style="display:none;position:fixed;inset:8px;z-index:100000;background:#fff;border:3px solid #e0457b;border-radius:10px;padding:10px;overflow:auto;font:14px/1.5 sans-serif;color:#333">
 <b>🧪 テスト用パネル（テスト版だけ）</b><br><small>ここで変えるのはテスト用サイトの保存だけです。ボタンを押すと、自動で読み直します。</small>
