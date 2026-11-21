@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>【テスト】ぽこのおうち v1.9</title>
+<title>【テスト】ぽこのおうち v2.0</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -58,6 +58,13 @@ button{font-family:inherit;cursor:pointer}
 .kbtns img.bi{width:30px;height:30px;image-rendering:pixelated}
 .kbtns button:active{transform:translateY(3px);box-shadow:0 1px 0 #3a2f45}
 #kid .foot{width:auto;margin:10px 12px}
+.kbtns2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 12px 0}
+.kbtns2 button{border:3px solid #3a2f45;background:#fff;border-radius:12px;padding:6px 2px;font-size:14px;font-weight:900;color:#2e2438;box-shadow:0 3px 0 #3a2f45}
+.kbtns2 button:active{transform:translateY(2px);box-shadow:0 1px 0 #3a2f45}
+img.apic{width:44px;height:44px;image-rendering:pixelated;flex:none}
+img.apicl{width:96px;height:96px;image-rendering:pixelated;display:block;margin:6px auto}
+.atbl{width:100%;font-size:14px;text-align:left;border-collapse:collapse;margin-top:6px}.atbl td{padding:3px 4px;border-bottom:1px dashed #cbb}
+.pbtn.red{background:#ffb3b3}
 .items{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
 .item{border:3px solid #ddd;background:#fff;padding:6px 2px;font-size:12px;text-align:center;line-height:1.3;color:#2e2438}
 .item em{display:block;font-size:24px;font-style:normal}
@@ -168,6 +175,7 @@ label.fl input{display:none}
     <button data-k="sleep"><em data-ic="sleep"></em>寝る</button>
     <button id="kbag"><em data-ic="bag"></em>持ち物</button>
   </div>
+  <div class="kbtns2"><button id="kalbum">📒 アルバム</button><button id="kzukan">📖 キャラ図鑑</button></div>
   <div class="foot"><button id="kset">⚙️ 設定</button><button id="ksnd">🔊 音あり</button><button id="kff" style="display:none">⏩ テスト</button><button id="kreset">最初から</button></div>
   <div class="ov" id="ksetup"><div class="kcard">
     <h2>🌱 ふしぎな種を拾った！</h2>
@@ -178,7 +186,7 @@ label.fl input{display:none}
     <button class="pbtn gray" id="kmovein">📦 おひっこしコードで続きから</button>
   </div></div>
   <div class="ov" id="kmodal"><div class="kcard" id="kmbody"></div></div>
-  <div class="ov" id="kconfirm"><div class="kcard"><h2>最初からやり直す？</h2><p>今の子とはお別れになります</p><p style="font-size:12px">消す前に「設定 → ぽこのおひっこし → ファイルに保存する」でバックアップを残しておくと安心です</p>
+  <div class="ov" id="kconfirm"><div class="kcard"><h2>全部消して最初から？</h2><p>今の子・アルバム・持ち物などが消えます</p><p style="font-size:12px"><b>キャラ図鑑（発見記録・思い出）は消えずに残ります。</b></p><p style="font-size:12px">消す前に「設定 → ぽこのおひっこし → ファイルに保存する」でバックアップを残しておくと安心です</p>
     <button class="pbtn" id="kcy">最初から</button><button class="pbtn gray" id="kcn">やめる</button></div></div>
   <div class="savefail" id="ksavefail"></div>
   <div class="rotnote" id="krot" aria-live="polite"><b>📱 スマホを縦にしてね</b><span>横向きだと、ぽこが見えません。<br>縦向きにすると、そのまま続きから遊べます。</span></div>
@@ -858,12 +866,33 @@ const K=(()=>{
     if(S.explore){drawStage();return}
     let ex='normal';
     if(busy)ex=busy; else if(S.sleep)ex='sleep'; else if(S.genki<1)ex='sad'; else if(frame%10===0)ex='happy';
-    pet(ex);
+    pet(ex); favDraw();
+  }
+  // ===== AL6：お気に入りと2匹暮らし（お世話なし・なかよしは変えない・セーブは書かない）=====
+  let favBusy=0, favN=0;
+  const favHere=()=>S&&S.stage!=='seed'&&!S.explore?favRec():null;
+  const favX=()=>Math.min(50,Math.round(x)+14);
+  function favDraw(){
+    const f=favHere(); if(!f)return;
+    const sp=SPR[f.form]||SPR_Q, bob=(frame+2)%4<2?0:1, ox=Math.round(favX()-sp.w/2);
+    const ex=Date.now()<favBusy?'happy':S.sleep?'sleep':(frame+5)%12===0?'happy':'normal';
+    footShadow(sp,ox,bob); drawSprite(g,sp,ox,47-sp.h-bob,ex,true);
+  }
+  const FAV_LINES=['いっしょにいられて、うれしいな','{n}、大きくなったね！','なでなで、ありがと〜','今日はなにして遊ぶ？','おうちって、いいね','{n}のこと、見てるよ'];
+  function favTap(e){   // お気に入りの子をさわったら true（なでる・話す。なかよしは変えない）
+    const f=favHere(); if(!f||S.sleep)return false;
+    const sp=SPR[f.form]||SPR_Q, gx=Math.round(camX)+e.offsetX/cv.clientWidth*cv.width, gy=e.offsetY/cv.clientHeight*cv.height-(cv.height-48);
+    if(Math.abs(gx-favX())>sp.w/2+1||gy<47-sp.h-2)return false;
+    favBusy=Date.now()+1200; favN++;
+    kfx($('kov'),'💗',1); SND.cry(f.form);
+    const t=FAV_LINES[favN%FAV_LINES.length].replaceAll('{n}',S.name);
+    showMsg(`⭐${f.name}：${favN%2?'なでなで…えへへ。':''}${t}`); msgLock=Date.now()+6000; draw();
+    return true;
   }
 
   // ---- 状態 ----
   const save=()=>{if(LOCK||!S)return false;let txt;try{txt=JSON.stringify(S)}catch(e){setSaveFail(true);return false}
-    const r=writeMain(txt); if(r.why==='conflict'||r.why==='lock')return false; setSaveFail(!r.ok); return r.ok};
+    const r=writeMain(txt); if(r.why==='conflict'||r.why==='lock')return false; setSaveFail(!r.ok); if(r.ok&&dexDirty)dexFlush(); return r.ok};
   const showMsg=t=>{$('kmsg').innerHTML=pixify(esc(t.replaceAll('{n}',S?S.name:'ぽこ'))).replace(/\n/g,'<br>')};
   const say=t=>{msgLock=Date.now()+20000; showMsg(t)};
   const cnt=(o,k)=>o[k]||0;
@@ -886,12 +915,16 @@ const K=(()=>{
      const want=onMap?'sugoroku':'explore'; if(eb.dataset.cur!==want){eb.dataset.cur=want;eb.innerHTML=`<em><img class="pix bi" src="${ICON(want)}"></em>${onMap?'すごろく':'探検'}`;} if(onMap)eb.classList.add('hint');}
     $('kzz').textContent=S.sleep&&present()?(frame%4<2?'Z z':'z Z'):'';
   }
+  // W3：大人になるときの姿（基本の進化先）を決める。v1.9 の判定をそのまま移したもの（docs/spec.md「進化の決まり」）
+  // 食べた料理のタグの回数がいちばん多いタグの姿。同じ回数なら先に記録されたタグ、ただし fruit（花の子）と同じ回数なら fruit。何もなければ花の子
+  function baseForm(tags){const t=tags;let best='fruit';Object.keys(t).forEach(k=>{if(TAG2FORM[k]&&t[k]>(t[best]||0))best=k});return TAG2FORM[best]}
   function addAff(n){
     const b=S.aff; S.aff+=n; if(!Array.isArray(S.unlocked))S.unlocked=[];
     Object.entries(PLACES).forEach(([k,p])=>{if(p.need>0&&b<p.need&&S.aff>=p.need&&!S.unlocked.includes(k)){S.unlocked.push(k);setTimeout(()=>{say(`新しい場所「${p.n}」に行けるようになった！`);ktoast(`${p.e} ${p.n} 解放！`)},1600)}});
     if(S.stage==='baby'&&S.aff>=15)grow('child');
     else if(S.stage==='child'&&S.aff>=60){
-      const t=S.tags;let best='fruit';Object.keys(t).forEach(k=>{if(TAG2FORM[k]&&t[k]>(t[best]||0))best=k});S.form=TAG2FORM[best];S.adultAt=now();ensureIntegrity(S);grow('adult')}
+      S.form=baseForm(S.tags);S.adultAt=now();ensureIntegrity(S);grow('adult')}
+    if(S.stage==='adult'&&!(S.album||[]).some(r=>r&&r.id===S.id)){ensureIntegrity(S);const nw=!(DEXS&&DEXS.sp[S.form]);dexAddPet(S,false);if(nw)setTimeout(()=>{if(!dexDirty&&!dexFail)ktoast(`📖 キャラ図鑑に「${fnm(S.form)}」が登録されたよ！`)},2600)}   // AL3：大人になった直後に、アルバムの目印・たね（1匹1回：seedGiven）・図鑑の記録を付ける
   }
   function grow(st){
     S.stage=st; let n=0; SND.sfx.fanfare(); ANA.track('grow',{stage:st,form:st==='adult'?S.form:'none'});
@@ -1360,6 +1393,95 @@ const K=(()=>{
     if(d.fav!==null&&!d.album.some(r=>r&&r.id===d.fav))d.fav=null;
     return d;
   }
+  // ===== 次の子を育てる（AL3）：今の大人をアルバムへ → 新しいたね。おうちのもの（持ち物・料理・飾り・レシピ・行ける場所）は引き継ぐ =====
+  const PET_KEEP=['id','name','form','aff','tags','taps','born','bornGuess','temper','traitVer','adultAt','seedGiven','log','logFixed','persRule','pers','hidden','memo'];   // アルバムに入れる、その子だけのもの
+  const PET_RESET=['backFrom','petN','petAt','fishN','fishRest','idle','born','bornGuess','adultAt','seedGiven','persRule','pers','hidden','memo','temper','traitVer','id'];  // 次の子では作り直す（消して、ensureIntegrity が新しく付ける）
+  const albumSaved=d=>(Array.isArray(d.album)?d.album:[]).filter(r=>r&&!r.live);
+  function canNext(d){
+    d=d||S; if(LOCK)return {ok:false,why:'lock'}; if(!d)return {ok:false,why:'none'};
+    if(d.stage!=='adult')return {ok:false,why:'notadult'};
+    if(d.explore)return {ok:false,why:'explore'};
+    if(!(d.seeds>=1))return {ok:false,why:'seed'};
+    if(albumSaved(d).length>=ALBUM_MAX)return {ok:false,why:'full'};
+    if(albumSaved(d).some(r=>r.id===d.id))return {ok:false,why:'dup'};
+    return {ok:true};
+  }
+  function petRecord(d){   // アルバムに入れる記録（v1.9 の検査に合う形。設計書 Q-4）
+    const r={stage:'adult'};
+    for(const k of PET_KEEP)if(d[k]!==undefined)r[k]=clone(d[k]);
+    r.archivedAt=Date.now(); r.gen=typeof d.gen==='number'?d.gen:0;
+    return r;
+  }
+  // name：新しい子の名前。withFav：前の子と一緒に暮らすか（true のときだけお気に入りにする。false は今のお気に入りを変えない）
+  function nextPet(name,withFav){
+    const c=canNext(); if(!c.ok)return c;
+    if(conflict()){enterConflict();return {ok:false,why:'conflict'}}
+    const n=clone(S), rec=petRecord(S);
+    const i=n.album.findIndex(r=>r&&r.live&&r.id===S.id);
+    if(i>=0)n.album[i]=rec; else n.album.push(rec);
+    for(const k of PET_RESET)delete n[k];
+    Object.assign(n,{name:String(name||'').trim().slice(0,12)||'ぽこ',stage:'seed',taps:0,form:null,genki:3,aff:0,tags:{},log:{},logFixed:null,
+      explore:null,sleep:false,lucky:false,justBack:false,seeds:n.seeds-1});
+    n.id=newId(n);
+    if(withFav===true)n.fav=rec.id;
+    ensureIntegrity(n);
+    // 保存する前に、v1.9 と同じ厳しい検査に通す（通らなければ何も変えない）
+    try{ const chk=checkSave2(clone(n)); if(chk.album.filter(r=>!r.live).length!==albumSaved(n).length)throw 0; }catch(e){return {ok:false,why:'check'}}
+    if(new Set(allIds(n)).size!==allIds(n).length)return {ok:false,why:'dup'};
+    const r=commit(n,KEY+'_before_next_'+Date.now());   // 先に今のデータを退避（退避できなければ中止）→ 書いて確かめてから切り替え
+    if(!r.ok)return r;
+    dexAddPet(rec,false); dexFlush();
+    EX=null; x=34; busy=null;
+    return {ok:true,id:n.id,saved:rec.id};
+  }
+  // 今の子だけやり直す（AL7）：その子の記録だけ新しくする。アルバム・お気に入り・おうちのもの・たね・図鑑は残す。たねは使わない
+  function restartPet(name){
+    if(LOCK||!S)return {ok:false,why:'lock'}; if(conflict()){enterConflict();return {ok:false,why:'conflict'}}
+    if(S.explore)return {ok:false,why:'explore'};
+    const n=clone(S);
+    n.album=n.album.filter(r=>!(r&&r.live));   // 今の子の目印だけ外す（保存した子はそのまま）
+    for(const k of PET_RESET)delete n[k];
+    Object.assign(n,{name:String(name||'').trim().slice(0,12)||'ぽこ',stage:'seed',taps:0,form:null,genki:3,aff:0,tags:{},log:{},logFixed:null,explore:null,sleep:false,lucky:false,justBack:false});
+    n.id=newId(n); ensureIntegrity(n);
+    try{checkSave2(clone(n))}catch(e){return {ok:false,why:'check'}}
+    const r=commit(n,KEY+'_before_restart_'+Date.now()); if(r.ok){EX=null;x=34;busy=null} return r;
+  }
+  // アルバムの子を戻す（AL7）：退避の中にあって、今のアルバムにいない「保存した子」。本人が外した子・もう聞かないと決めた子は出さない
+  function lostPets(){
+    if(!S)return [];
+    const have=new Set(allIds(S)), D=dexNow(), skip=Object.assign({},isO(D.removed)?D.removed:{},isO(D.dismiss)?D.dismiss:{}), out=new Map();
+    try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||!k.startsWith(KEY+'_')||k.startsWith(DEXK))continue;
+      let o=null;try{o=JSON.parse(localStorage.getItem(k))}catch(e){} if(isO(o)&&isO(o.data)&&o.app==='pokohouse')o=o.data; if(!isO(o)||!Array.isArray(o.album))continue;
+      for(const r of o.album){if(!isO(r)||r.live||typeof r.id!=='string'||!ID_RE.test(r.id)||have.has(r.id)||skip[r.id]||out.has(r.id))continue;
+        try{const t=clone(S);t.album=[r];t.fav=null;checkSave2(t)}catch(e){continue}   // v1.9 の検査に通る記録だけ
+        out.set(r.id,clone(r))}}}catch(e){}
+    return [...out.values()];
+  }
+  function albumRestore(recs){
+    if(LOCK||!S)return {ok:false,why:'lock'}; if(conflict()){enterConflict();return {ok:false,why:'conflict'}}
+    const n=clone(S), room=ALBUM_MAX-albumSaved(n).length, have=new Set(allIds(n)); if(room<=0)return {ok:false,why:'full'};
+    const add=recs.filter(r=>!have.has(r.id)).slice(0,room); if(!add.length)return {ok:false,why:'none'};
+    n.album.push(...add.map(clone));
+    try{checkSave2(clone(n))}catch(e){return {ok:false,why:'check'}}
+    {const ids=[n.id,...albumSaved(n).map(r=>r.id)]; if(new Set(ids).size!==ids.length)return {ok:false,why:'dup'};}   // 今の子の目印（live）は同じIDなので数えない
+    const r=commit(n,KEY+'_before_album_restore_'+Date.now()); if(r.ok){add.forEach(x=>dexAddPet(x,true));dexFlush()} return Object.assign(r,{n:add.length});
+  }
+  function dexMark(field,ids){ if(!DEXS)DEXS=dexRead()||dexNew(); if(!isO(DEXS[field]))DEXS[field]={}; const t=Date.now(); ids.forEach(id=>{if(!DEXS[field][id])DEXS[field][id]=t}); dexDirty=true; return dexFlush(); }
+  // アルバムから外す（AL4）：先に退避。外した子も図鑑の発見と思い出には残る。お気に入りだった場合だけ、お気に入りもなくなる（画面で先に伝える）
+  function albumRemove(id){
+    if(LOCK)return {ok:false,why:'lock'}; if(conflict()){enterConflict();return {ok:false,why:'conflict'}}
+    const n=clone(S), i=n.album.findIndex(r=>r&&!r.live&&r.id===id); if(i<0)return {ok:false,why:'none'};
+    dexAddPet(n.album[i],true);
+    n.album.splice(i,1); if(n.fav===id)n.fav=null;
+    try{checkSave2(clone(n))}catch(e){return {ok:false,why:'check'}}
+    const r=commit(n,KEY+'_before_album_remove_'+Date.now()); if(r.ok)dexMark('removed',[id]); return r;
+  }
+  // お気に入りを選ぶ・やめる（AL4・AL6）。本人が選んだときだけ呼ぶ
+  function setFav(id){
+    if(LOCK)return {ok:false,why:'lock'}; if(conflict()){enterConflict();return {ok:false,why:'conflict'}}
+    if(id!==null&&!albumSaved(S).some(r=>r.id===id))return {ok:false,why:'none'};
+    const n=clone(S); n.fav=id; return commit(n);
+  }
   // 形式2の検査（引き継ぎコード・バックアップ用）。おかしければ例外。知らない項目は残す
   function keepExtra(src,dst){
     let n=0;
@@ -1476,6 +1598,69 @@ const K=(()=>{
     try{localStorage.setItem(LATEST,txt);if(readKey(LATEST)!==txt)throw 0;latestFailed=false}catch(e){latestFailed=true}
     setSaveFail(saveFailed);
   }
+  // ===== 発見記録（プレイヤー全体・別キー pokohouse_v1_dex）=====
+  // 増えるだけの記録。書く前に保存場所を読み直して合わせる（和集合）ので、2タブでも片方の発見が消えない。
+  // v1.9・v1.8 はこのキーを読まない・書かない・消さない（古い版の「最初から」でも残る）。止まっているタブ（LOCK）は書かない
+  const DEXK=KEY+'_dex', DEX_PETS_MAX=1000;
+  let DEXS=null, dexDirty=false, dexFail=false;
+  const dexNew=()=>({v:1,sp:{},pets:{},achv:{}});
+  const earlier=(a,b)=>typeof a!=='number'?b:typeof b!=='number'?a:Math.min(a,b);
+  function dexClean(o){
+    const d=dexNew(); if(!isO(o))return d;
+    for(const [k,v] of Object.entries(o))if(!(k in d)&&/^[A-Za-z_][A-Za-z0-9_]{0,30}$/.test(k))d[k]=v;   // 知らない項目（新しい版）は残す
+    if(isO(o.sp))for(const [k,v] of Object.entries(o.sp))if(KEY_RE.test(k)&&isO(v))d.sp[k]={...v,at:typeof v.at==='number'?v.at:null,by:typeof v.by==='string'?v.by:null};
+    if(isO(o.pets))for(const [k,v] of Object.entries(o.pets))if(ID_RE.test(k)&&isO(v))d.pets[k]={...v};
+    if(isO(o.achv))for(const [k,v] of Object.entries(o.achv))if(typeof k==='string'&&k.length<=60&&typeof v==='number')d.achv[k]=v;
+    return d;
+  }
+  function dexMerge(a,b){   // 和集合：どちらにある記録も残す。同じものは早い日付を残し、足りない項目を補う
+    const d=dexClean(a), e=dexClean(b);
+    for(const [k,v] of Object.entries(e))if(!(k in d))d[k]=v;
+    for(const [k,v] of Object.entries(e.sp)){const o=d.sp[k];if(!o){d.sp[k]=v;continue}
+      const first=typeof v.at==='number'&&(typeof o.at!=='number'||v.at<o.at)?v:o;d.sp[k]={...v,...o,at:first.at,by:first.by||o.by||v.by}}
+    for(const [k,v] of Object.entries(e.pets)){const o=d.pets[k];d.pets[k]=o?{...v,...o,at:earlier(o.at,v.at)}:v}
+    for(const [k,v] of Object.entries(e.achv))d.achv[k]=earlier(d.achv[k],v);
+    for(const f of ['removed','dismiss'])if(isO(e[f])){if(!isO(d[f]))d[f]={};for(const [k,v] of Object.entries(e[f]))d[f][k]=earlier(d[f][k],v)}
+    const ids=Object.keys(d.pets);
+    if(ids.length>DEX_PETS_MAX){ids.sort((x,y)=>(d.pets[x].at||0)-(d.pets[y].at||0)).slice(0,ids.length-DEX_PETS_MAX).forEach(k=>{const v=d.pets[k];d.pets[k]={name:v.name,form:v.form,small:true}})}   // 消さずに名前と姿だけに縮める
+    return d;
+  }
+  function dexRead(){
+    let raw=null; try{raw=localStorage.getItem(DEXK)}catch(e){return null}
+    if(raw===null)return dexNew();
+    let o=null; try{o=JSON.parse(raw)}catch(e){}
+    if(!isO(o)){ try{const bk=DEXK+'_broken_'+Date.now();localStorage.setItem(bk,raw)}catch(e){} return dexNew(); }   // 読めない記録は別名で残し、ほかの場所から集め直す
+    return dexClean(o);
+  }
+  // 大人の子を1匹、記録に入れる（姿の発見と思い出）。pre=true は「この版より前に大人になっていた子」
+  function dexAddPet(p,pre){
+    if(!p||p.live||p.stage!=='adult'&&!p.archivedAt||typeof p.form!=='string'||!KEY_RE.test(p.form)||typeof p.id!=='string'||!ID_RE.test(p.id))return false;
+    if(!DEXS)DEXS=dexNew();
+    const at=typeof p.adultAt==='number'?p.adultAt:null; let ch=false;
+    if(!DEXS.pets[p.id]){DEXS.pets[p.id]={name:String(p.name||'ぽこ').slice(0,20),form:p.form,adultAt:at,at:pre?null:Date.now(),...(pre?{pre:true}:{})};ch=true}
+    if(!DEXS.sp[p.form]){DEXS.sp[p.form]={at,by:p.id,...(pre?{pre:true}:{})};ch=true}
+    if(ch)dexDirty=true; return ch;
+  }
+  function dexFromSave(d,pre){ if(!isO(d))return; dexAddPet(d,pre); (Array.isArray(d.album)?d.album:[]).forEach(r=>dexAddPet(r,pre)); }
+  function dexFlush(){
+    if(LOCK||!DEXS||!dexDirty)return !dexDirty;
+    const cur=dexRead(); if(cur===null){dexFail=true;return false}
+    const m=dexMerge(cur,DEXS), txt=JSON.stringify(m);
+    try{localStorage.setItem(DEXK,txt); if(localStorage.getItem(DEXK)!==txt)throw 0}catch(e){dexFail=true;return false}   // 保存できなければ、メモリに残して次の保存で再挑戦
+    DEXS=m; dexDirty=false; dexFail=false; return true;
+  }
+  // 開いたとき：保存場所の記録＋今のデータ＋（初回だけ）退避の中の子 を合わせる
+  function dexOpen(){
+    DEXS=dexMerge(dexRead()||dexNew(),DEXS||dexNew());
+    dexFromSave(S,true);
+    if(!DEXS.scan){
+      try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||!k.startsWith(KEY+'_')||k.startsWith(DEXK))continue;
+        let o=null;try{o=JSON.parse(localStorage.getItem(k))}catch(e){} if(isO(o))dexFromSave(o.data&&isO(o.data)?o.data:o,true)}}catch(e){}
+      DEXS.scan=1; dexDirty=true;
+    }
+    dexFlush();
+  }
+  window.addEventListener('pagehide',()=>{try{dexFlush()}catch(e){}});
   function enterConflict(){
     if(LOCK==='conflict')return;
     let mem=null; try{mem=S?JSON.stringify(S):null}catch(e){}
@@ -1506,7 +1691,8 @@ const K=(()=>{
   // バックアップファイル（data の ver が形式になる。新しい版のデータは新しい版でしか読めない）
   function downloadBackup(data,suffix){
     const d=clone(data), ver=typeof d.ver==='number'?d.ver:1;
-    const body=JSON.stringify({app:'pokohouse',ver,at:Date.now(),crc:crc32(JSON.stringify(d)),data:d},null,1);
+    const dx=DEXS?clone(DEXS):null;
+    const body=JSON.stringify({app:'pokohouse',ver,at:Date.now(),crc:crc32(JSON.stringify(d)),data:d,...(dx?{dex:dx,dexcrc:crc32(JSON.stringify(dx))}:{})},null,1);
     downloadText(body,`pokohouse_backup_${ymd()}${suffix||''}.json`,'application/json');
   }
   function downloadRaw(raw){
@@ -1612,7 +1798,7 @@ const K=(()=>{
   }
   // 引き継ぎコード： POKO-<形式>-<データ>-<確認用の数字>
   function makeCode(){
-    const json=JSON.stringify({app:'pokohouse',ver:SAVE_FORMAT,at:Date.now(),data:S});
+    const json=JSON.stringify({app:'pokohouse',ver:SAVE_FORMAT,at:Date.now(),data:S,...(DEXS?{dex:DEXS}:{})});
     return `POKO-${SAVE_FORMAT}-${b64e(json)}-${crc32(json)}`;
   }
   function readCode(code){
@@ -1626,20 +1812,24 @@ const K=(()=>{
     if(crc32(json)!==m[3])throw new Error('コードがこわれています（文字が欠けているかも）');
     let obj; try{obj=JSON.parse(json)}catch(e){throw new Error('コードがこわれています')}
     if(!obj||obj.app!=='pokohouse')throw new Error('ぽこのおひっこしコードではないみたい');
+    IMPORT_DEX=isO(obj.dex)?obj.dex:null;   // 発見記録は、復元できたときに今の記録と合わせる（減らさない）
     return toCurrent({ver:+m[1],data:obj.data},true);
   }
+  let IMPORT_DEX=null;
   function readBackup(text){
     if(text.length>MAX_IMPORT)throw new Error('ファイルが大きすぎます');
     let obj; try{obj=JSON.parse(text)}catch(e){throw new Error('バックアップファイルではないみたい')}
     if(!obj||obj.app!=='pokohouse'||typeof obj.data!=='object')throw new Error('ぽこのバックアップファイルではないみたい');
     if(+obj.ver>SAVE_FORMAT)throw new Error('新しいバージョンのファイルです。ゲームを最新にしてから試してね');
     if(obj.crc!==crc32(JSON.stringify(obj.data)))throw new Error('ファイルがこわれています');
+    IMPORT_DEX=isO(obj.dex)&&obj.dexcrc===crc32(JSON.stringify(obj.dex))?obj.dex:null;
     return toCurrent({ver:+obj.ver,data:obj.data},false);
   }
   // 復元：保存できたのを確かめてから画面に反映。失敗したら元に戻す
   function applySave(clean,backupKey){
     const r=commit(clean,backupKey||(KEY+'_before_restore_'+Date.now()));
     if(!r.ok)return false;
+    try{DEXS=dexMerge(DEXS||dexNew(),IMPORT_DEX||dexNew());IMPORT_DEX=null;dexFromSave(S,true);dexDirty=true;dexFlush()}catch(e){}
     EX=null; x=34; busy=null; return true;
   }
   const stageName=d=>d.stage==='seed'?'種':fnm(d.stage==='adult'?d.form:d.stage);
@@ -1702,17 +1892,171 @@ const K=(()=>{
     modal(`<h2>⚙️ せってい</h2>
       <button class="place" id="stmove"><em>📦</em><span>ぽこのおひっこし<small>引き継ぎコード・バックアップ</small></span></button>
       <button class="place" id="strcv"><em>🛟</em><span>データの復旧<small>この端末に残っている前のデータに戻す</small></span></button>
+      <button class="place" id="ststo"><em>💾</em><span>保存の容量<small>使っている量・バックアップ・整理</small></span></button>
       <button class="place" id="stana"><em>📊</em><span>プレイ分析<small>${st}</small></span></button>
       <button class="place" id="stsnd"><em>${SND.on?'🔊':'🔇'}</em><span>音<small>${SND.on?'鳴らす':'鳴らさない'}</small></span></button>
       <button class="pbtn gray" onclick="K.close()">とじる</button>`);
     $('stmove').onclick=()=>moveUI();
     $('strcv').onclick=()=>recoverUI();
     $('stana').onclick=()=>analyticsUI();
+    $('ststo').onclick=()=>storageUI();
     $('stsnd').onclick=()=>{SND.toggle();sndLabel();settingsUI()};
   }
+  // ===== AL4：ぽこアルバム・次の子の流れ =====
+  const dstr=t=>{if(typeof t!=='number'||!isFinite(t))return '？';const d=new Date(t);return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`};
+  const formPic=(k,e='happy')=>{const sp=SPR[k]||SPR.child,c=document.createElement('canvas');c.width=sp.w+2;c.height=sp.h+2;drawSprite(c.getContext('2d'),sp,1,1,e);return c.toDataURL()};
+  const tnm=k=>(TEMPER[k]||{n:'？？？'}).n;
+  const NEXT_WHY={notadult:'大人になったら、アルバムに入れて次の子を育てられます',explore:'探検・お散歩から帰ってきてから、次の子を育てられます',
+    seed:'たねがありません（たねは、子が大人になると1つもらえます）。今の子とこのまま暮らせます。データは消えません。<br>もし大人になったのにたねがないときは、せっていの「ぽこのおひっこし」でバックアップファイルを保存しておいてね',full:`アルバムがいっぱいです（${ALBUM_MAX}匹）。外す子を選ぶと、次の子を育てられます`,dup:'この子はもうアルバムに入っています'};
+  const FAIL_MSG=r=>r.why==='conflict'||r.why==='lock'?'別のタブで開かれているため、何も変えていません':r.why==='backup'?'今のデータを退避できなかったので、何も変えていません（保存がいっぱいかもしれません）':'保存できなかったので、何も変えていません';
+  const favRec=()=>S&&S.fav?albumSaved(S).find(r=>r.id===S.fav):null;
+  function albumUI(note){
+    if(LOCK||!S)return;
+    const L=albumSaved(S).slice().reverse(), c=canNext(), fv=favRec();
+    modal(`<h2>📒 ぽこアルバム</h2><p>${L.length} / ${ALBUM_MAX}匹　🌱たね ${S.seeds||0}こ</p>${note?`<p class="tleft">${note}</p>`:''}
+      <div class="sbox tleft"><b>いま育てている子</b>
+        <div style="display:flex;gap:10px;align-items:center"><img class="pix apic" src="${charPic()}"><span>${esc(S.name)}（${S.stage==='seed'?'種':fnm(S.stage==='adult'?S.form:S.stage)}）</span></div>
+        ${c.ok?'<button class="pbtn" id="alnext">🌱 アルバムに入れて、次の子を育てる</button>':`<small>${NEXT_WHY[c.why]||''}</small>`}</div>
+      ${L.length?L.map(r=>`<button class="place" data-al="${esc(r.id)}"><img class="pix apic" src="${formPic(r.form)}"><span>${r.id===S.fav?'⭐ ':''}${esc(r.name)}<small>${fnm(r.form)}・${tnm(r.temper)}<br>生まれた日 ${dstr(r.born)}${r.bornGuess?'ごろ':''}・大人になった日 ${dstr(r.adultAt)}</small></span></button>`).join(''):'<p>まだアルバムに入った子はいません。<br>大人になった子を入れると、ここに並びます。</p>'}
+      <button class="pbtn gray" onclick="K.close()">とじる</button>`);
+    if($('alnext'))$('alnext').onclick=()=>nextUI1();
+    $('kmbody').querySelectorAll('[data-al]').forEach(b=>b.onclick=()=>albumDetail(b.dataset.al));
+  }
+  function albumDetail(id){
+    const r=albumSaved(S).find(x=>x.id===id); if(!r)return albumUI();
+    const isFav=S.fav===id;
+    modal(`<h2>${isFav?'⭐ ':''}${esc(r.name)}</h2><img class="pix apicl" src="${formPic(r.form)}">
+      <table class="atbl"><tr><td>姿</td><td>${fnm(r.form)}</td></tr><tr><td>気質</td><td>${tnm(r.temper)}</td></tr><tr><td>なかよし</td><td>${r.aff}</td></tr>
+      <tr><td>生まれた日</td><td>${dstr(r.born)}${r.bornGuess?'ごろ':''}</td></tr><tr><td>大人になった日</td><td>${dstr(r.adultAt)}</td></tr><tr><td>アルバムに入った日</td><td>${dstr(r.archivedAt)}</td></tr>
+      ${r.memo?`<tr><td>メモ</td><td>${esc(r.memo)}</td></tr>`:''}</table>
+      <button class="pbtn" id="alfav">${isFav?'お気に入りをやめる':'⭐ お気に入りにする（一緒に暮らす）'}</button>
+      <button class="pbtn red" id="alrm">アルバムから外す</button>
+      <button class="pbtn gray" id="alback">もどる</button>`);
+    $('alback').onclick=()=>albumUI();
+    $('alfav').onclick=()=>{const cur=favRec();
+      if(!isFav&&cur&&cur.id!==id){modal(`<h2>⭐ お気に入りを変える</h2><p class="tleft">いま一緒に暮らしている「${esc(cur.name)}」はアルバムで休み、「${esc(r.name)}」が一緒に暮らします。</p>
+        <button class="pbtn" id="fvok">変える</button><button class="pbtn gray" id="fvno">やめる</button>`);$('fvno').onclick=()=>albumDetail(id);$('fvok').onclick=()=>doFav(id);return}
+      doFav(isFav?null:id)};
+    $('alrm').onclick=()=>{
+      modal(`<h2>アルバムから外す</h2><img class="pix apic" src="${formPic(r.form)}"><p class="tleft">「${esc(r.name)}」をアルバムから外しますか？<br>キャラ図鑑の発見と、思い出（名前・姿）は残ります。${isFav?'<br><b>この子はお気に入りです。外すと、お気に入りもなくなります。</b>':''}</p>
+        <button class="pbtn red" id="rm1">外す</button><button class="pbtn gray" id="rmno">やめる</button>`);
+      $('rmno').onclick=()=>albumDetail(id);
+      $('rm1').onclick=()=>{modal(`<h2>本当に外しますか？</h2><p class="tleft">「${esc(r.name)}」はアルバムからいなくなります。<br>まちがえたときは、せっていの「データの復旧」で「アルバムから外す前のデータ」に戻せます。</p>
+        <button class="pbtn red" id="rm2">本当に外す</button><button class="pbtn gray" id="rmno2">やめる</button>`);
+        $('rmno2').onclick=()=>albumDetail(id);
+        $('rm2').onclick=()=>{const res=albumRemove(id); albumUI(res.ok?`「${esc(r.name)}」をアルバムから外しました。`:'⚠ '+FAIL_MSG(res)); if(res.ok){ui();draw()}}}};
+  }
+  function doFav(id){const r=setFav(id); if(!r.ok){albumUI('⚠ '+FAIL_MSG(r));return} ui();draw(); albumUI(id?'⭐ お気に入りにしました。おうちで一緒に暮らします。':'お気に入りをやめました。')}
+  function nextUI1(){
+    const c=canNext(); if(!c.ok)return albumUI(NEXT_WHY[c.why]);
+    modal(`<h2>🌱 次の子を育てる</h2><img class="pix apic" src="${charPic()}"><p class="tleft">「${esc(S.name)}」をアルバムに入れて、新しい子を育てます。<b>たねを1つ</b>使います（いま ${S.seeds}こ）。</p>
+      <table class="atbl"><tr><td>そのまま</td><td>持ち物・料理・飾り・レシピ・行ける場所・キャラ図鑑</td></tr><tr><td>新しく</td><td>名前・なかよし・元気・食べた記録・気質</td></tr></table>
+      <button class="pbtn" id="nx1">次へ</button><button class="pbtn gray" id="nxno">やめる</button>`);
+    $('nxno').onclick=()=>albumUI(); $('nx1').onclick=()=>nextUI2();
+  }
+  function nextUI2(){
+    modal(`<h2>🌱 新しい子の名前</h2><p>生まれてくる子に名前をつけてください（12文字まで）</p><input id="nxname" maxlength="12" placeholder="ぽこ" style="width:100%;font-size:18px;padding:8px;border:3px solid #3a2f45;border-radius:10px">
+      <button class="pbtn" id="nx2">次へ</button><button class="pbtn gray" id="nxno">やめる</button>`);
+    $('nxno').onclick=()=>albumUI(); $('nx2').onclick=()=>nextUI3(($('nxname').value||'').trim()||'ぽこ');
+  }
+  function nextUI3(name){
+    const cur=favRec();
+    modal(`<h2>🏠 一緒に暮らす？</h2><img class="pix apic" src="${charPic()}"><p class="tleft">「${esc(S.name)}」をお気に入りにして、新しい子と一緒におうちで暮らしますか？${cur?`<br>（いま一緒に暮らしている「${esc(cur.name)}」は、アルバムで休みます）`:''}<br>あとからアルバムで変えることもできます。</p>
+      <button class="pbtn" id="nxy">一緒に暮らす</button><button class="pbtn gray" id="nxn">${cur?`今のまま（「${esc(cur.name)}」と暮らす）`:'暮らさない'}</button><button class="pbtn gray" id="nxno">やめる</button>`);
+    $('nxno').onclick=()=>albumUI();
+    const go=fav=>{const prev=S.name, r=nextPet(name,fav); if(!r.ok){albumUI('⚠ '+(NEXT_WHY[r.why]||FAIL_MSG(r)));return}
+      close(); ui(); draw(); say(`「${prev}」はアルバムに入りました。新しいたねを植えたよ！ 種をタップして、芽を出させよう`)};
+    $('nxy').onclick=()=>go(true); $('nxn').onclick=()=>go(false);
+  }
+  // ===== AL5：キャラ図鑑・発見記録 =====
+  const ZUKAN=[['hana','くだものが大好きな子は、どんな姿になるのかな…'],['umi','海の幸をたくさん食べた子は…？'],['mori','森のめぐみ（きのこ）をよく食べた子は…？'],['okashi','あまいものばかり食べていると…？']];   // 今の版で見つけられる姿（隠し・特殊は、その版まで出さない）
+  const shadowPic=k=>{const sp=SPR[k]||SPR.child,c=document.createElement('canvas');c.width=sp.w+2;c.height=sp.h+2;const g=c.getContext('2d');drawSprite(g,sp,1,1,'normal',false);g.globalCompositeOperation='source-in';g.fillStyle='#3a2f45';g.fillRect(0,0,c.width,c.height);return c.toDataURL()};
+  const dexNow=()=>DEXS||dexRead()||dexNew();             // 判断用（メモリの未保存分も含む：戻す質問で外した子を出さないため）
+  const dexSaved=()=>dexRead()||dexNew();                  // 画面用：保存場所に実際に保存された記録だけ
+  function zukanUI(){
+    if(LOCK)return; const D=dexSaved(), found=ZUKAN.filter(([k])=>D.sp[k]).length, pets=Object.entries(D.pets);
+    modal(`<h2>📖 キャラ図鑑</h2><p>見つけた姿 ${found} / ${ZUKAN.length}（${Math.floor(found/ZUKAN.length*100)}%）</p>
+      ${ZUKAN.map(([k,h])=>{const f=D.sp[k];if(!f)return `<div class="place"><img class="pix apic" src="${shadowPic(k)}"><span>？？？<small>${h}</small></span></div>`;
+        const by=f.by&&D.pets[f.by]?D.pets[f.by].name:null, n=pets.filter(([,v])=>v.form===k).length;
+        return `<div class="place"><img class="pix apic" src="${formPic(k)}"><span>${fnm(k)}<small>はじめて：${f.at?dstr(f.at):'？'}${f.pre?'（図鑑ができる前）':''}${by?`・${esc(by)}`:''}<br>この姿になった子：${n}匹</small></span></div>`}).join('')}
+      <button class="pbtn" id="zkpets">💭 大人になった子の思い出（${pets.length}匹）</button>
+      <p class="tleft"><small>キャラ図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</small></p>
+      <button class="pbtn gray" onclick="K.close()">とじる</button>`);
+    $('zkpets').onclick=()=>memoryUI();
+  }
+  function memoryUI(){
+    const D=dexSaved(), inAlbum=new Set(S?albumSaved(S).map(r=>r.id):[]), L=Object.entries(D.pets).sort((a,b)=>(b[1].adultAt||0)-(a[1].adultAt||0));
+    const where=id=>S&&id===S.id?'いま育てている子':S&&id===S.fav?'⭐ 一緒に暮らしている':inAlbum.has(id)?'アルバム':'思い出';
+    modal(`<h2>💭 思い出</h2><p class="tleft"><small>大人になった子の記録です。アルバムから外した子も残ります。</small></p>
+      ${L.length?L.map(([id,v])=>`<div class="place"><img class="pix apic" src="${formPic(v.form)}"><span>${esc(v.name||'ぽこ')}<small>${fnm(v.form)}${v.adultAt?`・大人になった日 ${dstr(v.adultAt)}`:''}・${where(id)}</small></span></div>`).join(''):'<p>まだいません</p>'}
+      <button class="pbtn gray" id="mmback">もどる</button>`);
+    $('mmback').onclick=()=>zukanUI();
+  }
+  // ===== AL7：「最初から」の2択・アルバムの子を戻す・保存の容量 =====
+  function resetUI(){
+    if(LOCK)return; if(!S){$('kconfirm').classList.add('on');return}
+    modal(`<h2>最初から</h2><p class="tleft">どちらにしますか？ どちらも、始める前に今のデータを退避します（せってい → データの復旧 で戻せます）。</p>
+      <button class="place" id="rsone"><em>🌱</em><span>今の子だけやり直す<small>消える：今の子（${esc(S.name)}）の名前・なかよし・元気・食べた記録<br>残る：アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・キャラ図鑑</small></span></button>
+      <button class="place" id="rsall"><em>🧹</em><span>全部消して最初から<small>消える：今の子・アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね<br>残る：キャラ図鑑（発見記録・思い出）</small></span></button>
+      <button class="pbtn gray" onclick="K.close()">やめる</button>`);
+    $('rsone').onclick=()=>restartUI();
+    $('rsall').onclick=()=>{close();$('kconfirm').classList.add('on')};
+  }
+  function restartUI(){
+    if(S.explore){modal(`<h2>今の子だけやり直す</h2><p>探検・お散歩から帰ってきてからにしてね</p><button class="pbtn gray" onclick="K.close()">とじる</button>`);return}
+    const lost=S.stage==='adult'?'<br><b>この子はアルバムに入っていません。やり直すと、この子とはお別れになります（キャラ図鑑の思い出には残ります）。アルバムに入れたいときは「アルバム」から「次の子を育てる」を選んでね。</b>':'<br><b>今の子とはお別れになります。</b>';
+    modal(`<h2>🌱 今の子だけやり直す</h2><img class="pix apic" src="${charPic()}"><p class="tleft">「${esc(S.name)}」の名前・なかよし・元気・食べた記録が消えて、新しいたねから育てます（たねは使いません）。${lost}</p>
+      <input id="rsname" maxlength="12" placeholder="新しい子の名前（12文字まで）" style="width:100%;font-size:17px;padding:8px;border:3px solid #3a2f45;border-radius:10px">
+      <button class="pbtn red" id="rsgo">やり直す</button><button class="pbtn gray" onclick="K.close()">やめる</button>`);
+    $('rsgo').onclick=()=>{const nm=($('rsname').value||'').trim()||'ぽこ';
+      modal(`<h2>本当にやり直しますか？</h2><p class="tleft">「${esc(S.name)}」とはお別れになります。<br>アルバム・持ち物・キャラ図鑑は残ります。</p><button class="pbtn red" id="rsok">やり直す</button><button class="pbtn gray" onclick="K.close()">やめる</button>`);
+      $('rsok').onclick=()=>{const prev=S.name,r=restartPet(nm);if(!r.ok){modal(`<p>⚠ ${FAIL_MSG(r)}</p><button class="pbtn gray" onclick="K.close()">とじる</button>`);return}
+        close();ui();draw();say(`新しいたねを植えたよ！ 種をタップして、芽を出させよう`)}};
+  }
+  function lostAsk(){
+    if(LOCK||!S||$('kmodal').classList.contains('on'))return;
+    const L=lostPets(); if(!L.length)return;
+    const room=ALBUM_MAX-albumSaved(S).length;
+    modal(`<h2>📒 アルバムの子を戻しますか？</h2><p class="tleft">前のデータ（退避）に、今のアルバムにいない子が${L.length}匹います。古い版で「最初から」を押したときなどに、アルバムから消えた可能性があります。</p>
+      ${L.slice(0,8).map(r=>`<div class="place"><img class="pix apic" src="${formPic(r.form)}"><span>${esc(r.name)}<small>${fnm(r.form)}・大人になった日 ${dstr(r.adultAt)}</small></span></div>`).join('')}${L.length>8?`<p>ほか${L.length-8}匹</p>`:''}
+      ${room<L.length?`<p class="tleft"><small>アルバムの空きは${Math.max(0,room)}匹分です。入るだけ戻します。</small></p>`:''}
+      <button class="pbtn" id="lsyes">アルバムに戻す</button><button class="pbtn gray" id="lslater">今は戻さない</button><button class="pbtn gray" id="lsnever">もう聞かない</button>`);
+    $('lsyes').onclick=()=>{const r=albumRestore(L);albumUI(r.ok?`${r.n}匹をアルバムに戻しました。`:'⚠ '+(r.why==='full'?'アルバムがいっぱいです':FAIL_MSG(r)))};
+    $('lslater').onclick=()=>close();
+    $('lsnever').onclick=()=>{dexMark('dismiss',L.map(r=>r.id));close()};
+  }
+  // 保存の容量（AL7）：この端末の保存場所に入っている量（UTF-16 換算）。Safari は1サイト約5MBなので、その70%・85%で知らせる
+  const STORE_CAP=5*1024*1024;
+  function storeUse(){let n=0,list=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i),v=localStorage.getItem(k)||'';const b=(k.length+v.length)*2;n+=b;list.push({k,b,v})}}catch(e){}return {n,list}}
+  const kb=b=>b<1024*1024?Math.ceil(b/1024)+'KB':(b/1024/1024).toFixed(1)+'MB';
+  // 整理してよいもの：v1.8 選び直しの古い予備・中身がまったく同じ重複の退避（新しい方を1つ残す）・読めなかった発見記録の写し。大事な退避は対象にしない
+  function tidyList(){
+    const {list}=storeUse(), out=[], seen=new Map();
+    const bk=list.filter(x=>x.k.startsWith(KEY+'_')&&x.k!==LATEST&&x.k!==DEXK).sort((a,b)=>(+(b.k.match(/_(\d{10,})$/)||[])[1]||0)-(+(a.k.match(/_(\d{10,})$/)||[])[1]||0));
+    for(const x of bk){ if(x.k.startsWith(KEY+'_latest2_prev_')||x.k.startsWith(DEXK+'_broken_')){out.push(x);continue}
+      if(seen.has(x.v))out.push(Object.assign({dup:seen.get(x.v)},x)); else seen.set(x.v,x.k) }
+    return out;
+  }
+  function storageUI(){
+    const {n}=storeUse(), T=tidyList(), pc=Math.round(n/STORE_CAP*100);
+    modal(`<h2>💾 保存の容量</h2><p>この端末で使っている量：${kb(n)}（目安 ${kb(STORE_CAP)} の ${pc}%）</p>
+      ${pc>=85?'<p class="tleft"><b>⚠ 保存がいっぱいに近づいています。先にバックアップファイルを保存してね。</b></p>':pc>=70?'<p class="tleft">保存が多くなってきました。バックアップファイルを保存しておくと安心です。</p>':''}
+      <button class="pbtn" id="stbk">📄 バックアップファイルを保存する</button>
+      <p class="tleft"><small>整理してよいもの（同じ中身の重複・古い予備）だけを選んで消せます。大事な退避（更新・復元・最初から・次の子などの前のデータ）はここでは消しません。</small></p>
+      ${T.length?T.map((x,i)=>`<label class="place"><input type="checkbox" data-td="${i}"><span>${esc(x.k.replace(KEY,''))}<small>${kb(x.b)}${x.dup?'・同じ中身が残ります':''}</small></span></label>`).join('')+'<button class="pbtn red" id="sttidy">選んだものを消す</button>':'<p>整理できるものはありません</p>'}
+      <button class="pbtn gray" onclick="K.close()">とじる</button>`);
+    $('stbk').onclick=()=>{try{downloadBackup(S);ktoast(SAVED_NOTE)}catch(e){ktoast('保存を開始できませんでした')}};
+    if($('sttidy'))$('sttidy').onclick=()=>{const pick=[...document.querySelectorAll('[data-td]')].filter(c=>c.checked).map(c=>T[+c.dataset.td]);
+      if(!pick.length){ktoast('消すものを選んでね');return}
+      modal(`<h2>本当に消しますか？</h2><p class="tleft">${pick.map(x=>esc(x.k.replace(KEY,''))).join('<br>')}</p><button class="pbtn red" id="tdok">消す</button><button class="pbtn gray" id="tdno">やめる</button>`);
+      $('tdno').onclick=()=>storageUI();
+      $('tdok').onclick=()=>{let c=0;for(const x of pick){try{if(localStorage.getItem(x.k)===x.v){localStorage.removeItem(x.k);c++}}catch(e){}}storageUI();ktoast(`${c}こ消しました`)}};
+  }
+  function storeWarn(){ if(LOCK||!S)return; const pc=storeUse().n/STORE_CAP*100;
+    if(pc>=85)setTimeout(()=>{if(!$('kmodal').classList.contains('on'))storageUI()},3000); else if(pc>=70)setTimeout(()=>ktoast('保存が多くなってきました。せってい →「保存の容量」でバックアップを保存してね'),3000) }
   // ---- データの復旧（この端末に残っている退避データ） ----
   function snapshots(){
-    const L=[]; const lab=k=>k===KEY+'_before_v2'?'更新（v1.9）の前のデータ':k.startsWith(KEY+'_before_restore')?'おひっこし（復元）の前のデータ':k.startsWith(KEY+'_before_reset')?'「最初から」の前のデータ':k.startsWith(KEY+'_before_recover')?'復旧する前のデータ':k.startsWith(KEY+'_broken')?'読めなかったデータ':k.startsWith(KEY+'_v18over')?'古い画面（v1.8など）で上書きされたデータ':k===LATEST?'v1.9で最後に正しく保存したデータ（予備）':k.startsWith(KEY+'_latest2_prev')?'選び直す前のv1.9のデータ':null;
+    const L=[]; const lab=k=>k===KEY+'_before_v2'?'更新（v1.9）の前のデータ':k.startsWith(KEY+'_before_restore')?'おひっこし（復元）の前のデータ':k.startsWith(KEY+'_before_reset')?'「最初から」の前のデータ':k.startsWith(KEY+'_before_recover')?'復旧する前のデータ':k.startsWith(KEY+'_before_next_')?'次の子を育てる前のデータ':k.startsWith(KEY+'_before_album_remove_')?'アルバムから外す前のデータ':k.startsWith(KEY+'_before_restart_')?'今の子をやり直す前のデータ':k.startsWith(KEY+'_broken')?'読めなかったデータ':k.startsWith(KEY+'_v18over')?'古い画面（v1.8など）で上書きされたデータ':k===LATEST?'v1.9で最後に正しく保存したデータ（予備）':k.startsWith(KEY+'_latest2_prev')?'選び直す前のv1.9のデータ':null;
     try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||!k.startsWith(KEY+'_'))continue;const l=lab(k);if(!l)continue;
       const raw=localStorage.getItem(k);if(k===LATEST&&raw===readKey())continue;let d=null;try{d=JSON.parse(raw)}catch(e){}
       const t=+(k.match(/_(\d{10,})$/)||[])[1]||0; L.push({k,l,raw,d:isO(d)?d:null,t})}}catch(e){}
@@ -1798,10 +2142,13 @@ const K=(()=>{
     if(S.explore){exTap(e);return}
     if(S.stage==='seed'){S.taps++;
       if(S.taps>=5){let n=0;const iv=setInterval(()=>{g.fillStyle=n%2?'#fff':'#bfe8a0';g.fillRect(0,0,64,48);if(++n>6){clearInterval(iv);
-        S.stage='baby';S.last=now();if(typeof S.born!=='number'){S.born=Date.now();S.bornGuess=false}ANA.track('hatch');S.inv={kinomi:2};save();ui();draw();kfx($('kov'),'🎉',3,30);SND.sfx.fanfare();
-        say('種から{n}が生まれた！');setTut(1)}},120)}
+        S.stage='baby';S.last=now();if(typeof S.born!=='number'){S.born=Date.now();S.bornGuess=false}ANA.track('hatch');
+        const fresh=!Object.keys(S.inv||{}).length; if(fresh)S.inv={kinomi:2};   // AL4：はじめての子だけ木の実2つと案内（次の子では持ち物を上書きしない）
+        save();ui();draw();kfx($('kov'),'🎉',3,30);SND.sfx.fanfare();
+        say('種から{n}が生まれた！');if(fresh)setTut(1)}},120)}
       else {SND.sfx.pop();} if(S.taps<5) say(['ぴくっ…','動いた！','芽が出た！','もう少し…！'][S.taps-1]);save();draw();return}
     if(!present()||S.sleep)return;
+    if(favTap(e))return;
     speak(lineOf('tap'),'happy');SND.cry(ckey());
   };
   $('kstart').onclick=()=>{if(LOCK)return; if(BROKEN_KEPT&&!startConfirm){startConfirm=true;$('ksnote').innerHTML=pixify('⚠ 保管した読めないデータは、新しく始めても消えません。<br>本当に新しく始めるなら、もう一度「育てる！」を押してください');$('ksnote').style.display='block';return}
@@ -1811,10 +2158,13 @@ const K=(()=>{
     ensureIntegrity(S);
     $('ksetup').classList.remove('on');save();ui();draw();say('種をタップして、芽を出させよう')};
   $('kff').onclick=()=>{if(LOCK)return;if(!S||S.stage==='seed'){ktoast('先に種を育ててね');return}const st=S.explore?3:30;S.skew+=st*MIN;tick();save();ui();draw();ktoast(st+'分たった！')};
-  $('kreset').onclick=()=>{if(!LOCK)$('kconfirm').classList.add('on')};
+  $('kalbum').onclick=()=>{if(!LOCK&&S)albumUI()};
+  $('kzukan').onclick=()=>{if(!LOCK)zukanUI()};
+  $('kreset').onclick=()=>{if(!LOCK)resetUI()};
   $('kcn').onclick=()=>$('kconfirm').classList.remove('on');
   $('kcy').onclick=()=>{
     if(LOCK)return; if(conflict()){enterConflict();return}
+    try{if(S)dexMark('removed',albumSaved(S).map(r=>r.id))}catch(e){}   // AL7：全部消した子は「アルバムの子を戻す」に出さない（図鑑の思い出には残る）
     try{const r=localStorage.getItem(KEY);if(r&&r!=='null'){const bk=KEY+'_before_reset_'+Date.now();localStorage.setItem(bk,r);if(localStorage.getItem(bk)!==r)throw 0}}
     catch(e){$('kconfirm').classList.remove('on');ktoast('今のデータを退避できなかったので、やめました');setSaveFail(true);return}
     const wr=writeMain('null'); if(!wr.ok){$('kconfirm').classList.remove('on');if(wr.why!=='conflict'){ktoast('保存できなかったので、やめました');setSaveFail(true)}return}
@@ -1844,12 +2194,12 @@ const K=(()=>{
       if(!r.ok){ lockScreen(r.why==='backup'?'backup':r.why==='restorefail'?'storage':'migrate',raw); draw(); return; }
       S=r.data;
     } else if(S){ ensureIntegrity(S); }
-    if(S){ANA.track('game_start',{stage:S.stage}); setTimeout(maybeAskConsent,2500);}
+    if(S){try{dexOpen()}catch(e){} ANA.track('game_start',{stage:S.stage}); setTimeout(maybeAskConsent,2500); setTimeout(()=>{try{lostAsk()}catch(e){}},1200); try{storeWarn()}catch(e){}}
     if(!S){$('ksetup').classList.add('on')}
     else{tick();save();ui();if(!$('kmodal').classList.contains('on'))say(S.stage==='seed'?'種をタップして、芽を出させよう':S.explore?'{n}は探検中…':'おかえり！');if(S.stage!=='seed')setTimeout(()=>S&&!LOCK&&speak(lineOf(S.explore?(PL(S.explore.p).walk?'sanpo':S.explore.p):per())),1200)}
     draw()}
   setInterval(()=>{if(!$('kid').classList.contains('on'))return;frame++;
-    if(S&&present()&&!S.sleep&&!busy&&Math.random()<.18){const nx=x+(Math.random()<.5?-1:1);if(nx>=24&&nx<=44){face=nx>x?1:-1;x=nx}}
+    if(S&&present()&&!S.sleep&&!busy&&Math.random()<.18){const nx=x+(Math.random()<.5?-1:1);if(nx>=(favHere()?20:24)&&nx<=(favHere()?36:44)){face=nx>x?1:-1;x=nx}}
     if(S&&S.explore&&!$('kmodal').classList.contains('on'))exStep();
     if(S){idleTalk();bubTick();}
     SND.bgm(!S||S.stage==='seed'?'home':S.explore?(PLACES[S.explore.p]?S.explore.p:'mori'):(S.sleep||per()==='night')?'night':'home');
@@ -1865,13 +2215,16 @@ if(TEST_BUILD&&location.search.includes('debug'))$('kff').style.display='';
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 K.open();
 </script>
-<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v1.9＋修正#5〜7（音量調整）</div>
+<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v2.0 アルバム・図鑑</div>
 <button id="tst_btn" style="position:fixed;right:4px;bottom:4px;z-index:99999;font:bold 12px sans-serif;background:#e0457b;color:#fff;border:0;border-radius:8px;padding:6px 8px">🧪</button>
 <div id="tst_pan" style="display:none;position:fixed;inset:8px;z-index:100000;background:#fff;border:3px solid #e0457b;border-radius:10px;padding:10px;overflow:auto;font:14px/1.5 sans-serif;color:#333">
 <b>🧪 テスト用パネル（テスト版だけ）</b><br><small>ここで変えるのはテスト用サイトの保存だけです。ボタンを押すと、自動で読み直します。</small>
 <div style="display:grid;gap:6px;margin-top:8px">
 <button data-t="child">① v1.8形式の見本（子ども）を入れる</button>
 <button data-t="adult">② v1.8形式の見本（大人・海の子）を入れる</button>
+<button data-t="v2adult">⑨ v2見本：大人（たね1）＋アルバム3匹（花の子2匹）＋お気に入り</button>
+<button data-t="v2lost">⑩ v2見本：v1.9で「最初から」を押した後（アルバムは退避の中だけ）</button>
+<button data-t="v2pre">⑪ v2見本：子ども・なかよし59（なでると大人に）</button>
 <button data-t="newer">③ 新しい版のデータ（形式99）を入れる → 停止画面</button>
 <button data-t="broken">④ 壊れたデータを入れる → 停止画面</button>
 <button data-t="fill">⑤ 保存領域をいっぱいにする</button>
@@ -1881,12 +2234,15 @@ K.open();
 <button data-t="close">閉じる</button>
 </div><pre id="tst_out" style="white-space:pre-wrap;font-size:12px;background:#f6f6f6;padding:6px;margin-top:8px"></pre></div>
 <script>(()=>{const K='pokohouse_v1',SM={"child": {"name": "もち", "stage": "child", "form": null, "taps": 5, "genki": 4, "aff": 40, "inv": {"kinomi": 4, "sakana": 2, "kinoko": 2, "ringo": 2, "mitsu": 2, "komugi": 2}, "dishes": {"pie": 1}, "decor": {"hana": 1}, "recipes": ["pie"], "tags": {"fruit": 1}, "sleep": false, "lucky": false, "justBack": false, "last": 0, "skew": 0, "explore": null, "tut": 0, "petN": 0, "petAt": 0}, "adult": {"name": "もち", "stage": "adult", "form": "umi", "taps": 5, "genki": 4, "aff": 70, "inv": {"kinomi": 4, "sakana": 2, "kinoko": 2, "ringo": 2, "mitsu": 2, "komugi": 2}, "dishes": {"pie": 1}, "decor": {"hana": 1}, "recipes": ["pie"], "tags": {"fruit": 1}, "sleep": false, "lucky": false, "justBack": false, "last": 0, "skew": 0, "explore": null, "tut": 0, "petN": 0, "petAt": 0}},P=document.getElementById('tst_pan'),O=document.getElementById('tst_out');
-const go=()=>setTimeout(()=>location.reload(),300);
+const go=()=>setTimeout(()=>location.reload(),300);const V2={"v2adult": {"ver": 2, "name": "いまのこ", "stage": "adult", "form": "umi", "taps": 200, "genki": 4, "aff": 75, "inv": {"kinomi": 4, "sakana": 3, "ringo": 2, "mitsu": 2, "komugi": 2, "kinoko": 2}, "dishes": {"juice": 1, "pie": 1}, "decor": {}, "recipes": ["juice", "pie"], "tags": {"fish": 6, "fruit": 2}, "explore": null, "sleep": false, "lucky": false, "justBack": false, "last": 1795236563310, "skew": 0, "album": [{"id": "ptestalb0001", "name": "はなこ", "form": "hana", "stage": "adult", "aff": 70, "tags": {"fruit": 5}, "taps": 300, "born": 1794346563310, "bornGuess": false, "temper": "amaenbo", "traitVer": 1, "adultAt": 1794746563310, "seedGiven": true, "log": {}, "logFixed": null, "archivedAt": 1795146563310, "gen": 0}, {"id": "ptestalb0002", "name": "はなみ", "form": "hana", "stage": "adult", "aff": 88, "tags": {"fruit": 7}, "taps": 300, "born": 1794356563310, "bornGuess": false, "temper": "cool", "traitVer": 1, "adultAt": 1794756563310, "seedGiven": true, "log": {}, "logFixed": null, "archivedAt": 1795156563310, "gen": 0}, {"id": "ptestalb0003", "name": "もりお", "form": "mori", "stage": "adult", "aff": 66, "tags": {"mush": 4}, "taps": 300, "born": 1794366563310, "bornGuess": false, "temper": "kokishin", "traitVer": 1, "adultAt": 1794766563310, "seedGiven": true, "log": {}, "logFixed": null, "archivedAt": 1795166563310, "gen": 0}, {"id": "ptestcur0001", "live": true}], "unlocked": ["umi", "yama"], "seeds": 1, "fav": "ptestalb0001", "seen": {}, "book": {}, "id": "ptestcur0001", "born": 1794936563310, "bornGuess": false, "temper": "ottori", "traitVer": 1, "adultAt": 1795136563310, "seedGiven": true, "log": {}, "logFixed": null, "tut": 0}, "v2lost": {"ver": 2, "name": "ふるいばん", "stage": "baby", "form": null, "taps": 200, "genki": 4, "aff": 3, "inv": {"kinomi": 2}, "dishes": {}, "decor": {}, "recipes": [], "tags": {}, "explore": null, "sleep": false, "lucky": false, "justBack": false, "last": 1795236563310, "skew": 0, "album": [], "unlocked": ["umi", "yama"], "seeds": 0, "fav": null, "seen": {}, "book": {}, "id": "ptestnew0001", "born": 1794936563310, "bornGuess": false, "temper": "ottori", "traitVer": 1, "log": {}, "logFixed": null, "tut": 0}, "v2pre": {"ver": 2, "name": "いまのこ", "stage": "child", "form": null, "taps": 200, "genki": 4, "aff": 59, "inv": {"kinomi": 4, "sakana": 3, "ringo": 2, "mitsu": 2, "komugi": 2, "kinoko": 2}, "dishes": {"juice": 1, "pie": 1}, "decor": {}, "recipes": ["juice", "pie"], "tags": {"sweet": 3}, "explore": null, "sleep": false, "lucky": false, "justBack": false, "last": 1795236563310, "skew": 0, "album": [{"id": "ptestalb0001", "name": "はなこ", "form": "hana", "stage": "adult", "aff": 70, "tags": {"fruit": 5}, "taps": 300, "born": 1794346563310, "bornGuess": false, "temper": "amaenbo", "traitVer": 1, "adultAt": 1794746563310, "seedGiven": true, "log": {}, "logFixed": null, "archivedAt": 1795146563310, "gen": 0}], "unlocked": ["umi", "yama"], "seeds": 0, "fav": null, "seen": {}, "book": {}, "id": "ptestpre0001", "born": 1794936563310, "bornGuess": false, "temper": "ottori", "traitVer": 1, "log": {}, "logFixed": null, "tut": 0}};
 document.getElementById('tst_btn').onclick=()=>{P.style.display='block'};
 P.onclick=e=>{const t=e.target.dataset&&e.target.dataset.t;if(!t)return;try{
  if(t==='close'){P.style.display='none';return}
  if(t==='child'||t==='adult'){if(!confirm('今のテスト用データを、見本データで上書きします。よいですか？'))return;const d=JSON.parse(JSON.stringify(SM[t]));d.last=Date.now();
   Object.keys(localStorage).filter(k=>k.startsWith(K)).forEach(k=>localStorage.removeItem(k));localStorage.setItem(K,JSON.stringify(d));go();return}
+ if(V2[t]){if(!confirm('今のテスト用データを消して、見本を入れます（キャラ図鑑の記録も消えます）。よいですか？'))return;Object.keys(localStorage).filter(k=>k.startsWith(K)).forEach(k=>localStorage.removeItem(k));
+  const d=JSON.parse(JSON.stringify(V2[t]));d.last=Date.now();if(t==='v2lost'){const o=JSON.parse(JSON.stringify(V2.v2adult));localStorage.setItem(K+'_before_reset_'+(Date.now()-60000),JSON.stringify(o))}
+  localStorage.setItem(K,JSON.stringify(d));go();return}
  if(t==='newer'){if(!confirm('新しい版のデータで上書きします。よいですか？'))return;localStorage.setItem(K,JSON.stringify({ver:99,name:'みらい',stage:'baby'}));go();return}
  if(t==='broken'){if(!confirm('壊れたデータで上書きします。よいですか？'))return;localStorage.setItem(K,'{"name":"こわれ","stage":');go();return}
  if(t==='fill'){let n=0,s='x'.repeat(1<<20);while(s.length>=16){try{localStorage.setItem('tst_fill_'+n,s);n++}catch(e){s=s.slice(s.length/2)}}O.textContent='いっぱいにしました（'+n+'個）。ゲームで何か操作すると「保存できませんでした」が出るはずです。';return}
