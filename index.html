@@ -329,17 +329,23 @@ img.pcd{image-rendering:pixelated}
 #klbbtn{position:relative;flex:none;display:flex;align-items:center;gap:5px;min-height:44px;border:3px solid #3a2f45;border-radius:12px;background:#ffe3ee;color:#3a2f45;box-shadow:0 2px 0 #3a2f45;padding:2px 12px 2px 6px}
 #klbbtn:before{content:'';position:absolute;inset:-4px}   /* 押せる範囲を少し広く */
 #klbbtn img.pcd{width:22px;height:18px}
-#klbbtn .lbw{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1;text-align:left}
-#klbbtn .lbw small{font-size:11px;font-weight:900;color:#7a5a88;white-space:nowrap}
+#klbbtn .lbw{display:flex;flex-direction:column;align-items:flex-start;line-height:1.05;text-align:left}   /* v2.2b：「ログイン」「ボーナス」は同じ大きさ（上は色だけ少しうすく） */
+#klbbtn .lbw small{font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:400;font-size:16px;color:#7a5a88;white-space:nowrap}
 #klbbtn .lbw b{font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:400;font-size:16px;white-space:nowrap}
 #klbbtn:active{transform:translateY(2px);box-shadow:0 0 0 #3a2f45}
+#klbbtn.new{padding-right:16px}
 #klbbtn.new:after{content:'！';position:absolute;right:-10px;top:-11px;width:20px;height:20px;border-radius:50%;background:#ff4d6d;border:2px solid #fff;box-shadow:0 0 0 2px #3a2f45;
   color:#fff;font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:900;font-size:13px;line-height:16px;text-align:center}   /* 受け取っていないときだけ */
+/* v2.2b：下の部分を少しつめて、ゲーム画面（キャラが動く所）を広くする。並び・文字の大きさはそのまま、押せる高さは44px以上 */
+#kmsg{margin-top:6px;min-height:2.2em;padding:5px 10px}
+.kbtns{margin-top:7px;gap:6px}.kbtns button{padding:4px 2px}.kbtns button em{height:24px}.kbtns img.bi{width:24px;height:24px}
+.kcolb{margin-top:6px}.kcolb button{min-height:44px}
+#kid .foot{margin:6px 12px}
 @media (max-height:700px){   /* v2.2b：高さが低い画面（Safariのツールバー表示中・iPhone SE など）：余白とボタンを少しつめて、ゲーム画面と下のボタンを残す */
   .kprof{margin-top:6px;padding:5px 7px 5px 5px}.kpr3{margin-top:5px}
   #kmsg{margin-top:6px;min-height:2.2em;font-size:14px;padding:4px 10px;line-height:1.35}
   .kbtns{margin-top:7px;gap:6px}.kbtns button{padding:4px 2px;font-size:13px}.kbtns button em{height:24px}.kbtns img.bi{width:24px;height:24px}
-  .kcolb{margin-top:6px}.kcolb button{min-height:42px}
+  .kcolb{margin-top:6px}
   #kid .foot{margin:6px 12px 4px}
 }
 @media (max-height:520px){
@@ -347,12 +353,15 @@ img.pcd{image-rendering:pixelated}
   .knext{font-size:12px;padding:2px 6px}#klbbtn{min-height:40px}
   .kbtns{gap:5px}.kbtns button{padding:2px 1px;font-size:12.5px;white-space:nowrap;line-height:1.25}.kbtns button em{height:22px}.kbtns img.bi{width:22px;height:22px}
   #kmsg{min-height:2em;font-size:13px}
-  .kcolb button{min-height:40px;font-size:16px}
+  .kcolb button{font-size:16px}
   #kid .foot button{padding:4px 10px}
 }
+/* v2.2b：ノッチ・時計の帯があるスマホ（セーフエリアが0より大きいとき）だけ：上は帯の下のぼかしにかからないよう少しあけ、下はホームバーの余白があるのでゲーム側の余白をへらす */
+.sa-top .kprof{margin-top:16px}
+.sa-bot #kid .foot{margin-bottom:0;padding-bottom:2px}
 @media (max-width:359px){   /* 320px：ゲージは次の段に（文字・ゲージを小さくしない） */
   .kpaffl{display:none}.kpr2{gap:5px}.kbar{min-width:60px;margin-right:4px}   /* ゲージは同じ行のまま（「なかよし」の文字だけ省く。読み上げは aria-label） */
-  #klbbtn{padding:2px 8px 2px 5px}
+  #klbbtn{padding:2px 8px 2px 5px}#klbbtn.new{padding-right:11px}#klbbtn .lbw small,#klbbtn .lbw b{letter-spacing:-.5px}
 }
 .kcoinl{font-size:14px;font-weight:900;color:#5a4868;margin-top:4px}.kcoinl img.pcd{width:16px;height:16px;vertical-align:-3px}
 .kfind .kfc{display:block;margin-top:4px;font-size:13px;font-weight:900;color:#7a5a88}
@@ -3124,6 +3133,8 @@ document.querySelectorAll('[data-ic]').forEach(e=>e.innerHTML=`<img class="pix b
 if(TEST_BUILD&&location.search.includes('debug'))$('kff').style.display='';
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 K.open();
+// v2.2b：セーフエリアがあるか（body の余白が0より大きいか）を見て印を付ける。回転したときも見直す
+(function(){const f=()=>{try{const cs=getComputedStyle(document.body);document.documentElement.classList.toggle('sa-top',parseFloat(cs.paddingTop)>0);document.documentElement.classList.toggle('sa-bot',parseFloat(cs.paddingBottom)>0)}catch(e){}};f();window.addEventListener('resize',f);window.addEventListener('orientationchange',()=>setTimeout(f,300))})();
 // v2.2b：iPhone などの高精細の画面で、ドット絵の1マスがちょうど整数の画素になる大きさに合わせる（半端な倍率だと点がにじむ・ガタガタになる）。
 // 決めた大きさより大きくはしない。パソコンなど（devicePixelRatio が2より小さい）では何もしない（今までどおり）
 (function(){
