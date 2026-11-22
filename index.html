@@ -174,6 +174,121 @@ label.fl input{display:none}
 .zk .wq{font-size:16px;color:#9a8aa8}
 .zk .wlist{max-height:46vh;overflow-y:auto;border:3px solid #3a2f45;padding:2px 6px;margin-top:6px}
 .zk .sbox b{font-size:16px}
+/* ===== v2.1 ぽこコレクション（平成のプロフィール帳・シール帳風）。この画面の中だけ ===== */
+#kcol.ov{padding:calc(8px + 0px) 8px 8px;overflow:hidden}
+#kcol.on{display:flex;align-items:stretch;justify-content:center}
+.pcn{--ink:#4B345A;--pink:#F8C5D9;--mint:#C6E5CE;--soda:#C8DDF5;--paper:#FFF7E9;--yel:#FFE08A;--lpink:#E9CAD8;--tc:var(--pink);--tca:rgba(248,197,217,.6);
+  position:relative;width:100%;max-width:440px;height:100%;display:flex;flex-direction:column;color:var(--ink);
+  border:4px solid var(--ink);border-radius:18px;box-shadow:4px 5px 0 var(--ink);overflow:hidden;
+  background-color:#fff;background-image:linear-gradient(90deg,var(--tca) 50%,transparent 50%),linear-gradient(var(--tca) 50%,transparent 50%);background-size:14px 14px}
+.pcn.pc-zukan{--tc:var(--mint);--tca:rgba(198,229,206,.65)}.pcn.pc-kotoba{--tc:var(--soda);--tca:rgba(200,221,245,.65)}
+.pchead{position:relative;z-index:2;flex:none;padding:6px 8px 6px 22px;background:linear-gradient(#fff 0,#fff 70%,transparent);border-bottom:3px dashed var(--lpink)}
+.pcrow{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:4px}
+.pcrb{width:44px;height:44px;border-radius:50%;border:3px solid var(--ink);background:#fff;color:var(--ink);font-size:20px;font-weight:900;line-height:1;box-shadow:0 3px 0 var(--ink);display:flex;align-items:center;justify-content:center;padding:0}
+.pcrb:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}.pcrb:disabled{opacity:.4}
+#pctitle{font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif;font-size:16px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  background:#fff;border:3px solid var(--ink);border-radius:20px;padding:5px 6px;box-shadow:inset 0 -3px 0 var(--tc)}
+#pctabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.pctab{min-height:48px;border:3px solid var(--ink);border-radius:14px;font-size:16px;color:var(--ink);box-shadow:0 3px 0 var(--ink);padding:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  background:linear-gradient(#fff8 0,#fff8 35%,transparent 36%),var(--c)}
+.pctab img{width:20px;height:20px}
+.pctab[data-pt=album]{--c:#F8C5D9}.pctab[data-pt=zukan]{--c:#C6E5CE}.pctab[data-pt=kotoba]{--c:#C8DDF5}
+.pctab.on{box-shadow:0 0 0 3px #FFE08A,0 3px 0 3px var(--ink);transform:translateY(-1px)}
+.pcrings{position:absolute;left:-6px;top:14px;bottom:14px;width:26px;z-index:3;display:flex;flex-direction:column;justify-content:space-around;pointer-events:none}
+.pcrings i{position:relative;display:block;width:26px;height:12px;border:3px solid var(--ink);border-radius:8px;background:linear-gradient(#fff 0,#fff 40%,#c9c0d6)}
+.pcrings i:after{content:'';position:absolute;right:-1px;top:1px;width:5px;height:5px;border-radius:50%;background:var(--ink)}
+#pcbody{position:relative;z-index:1;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;margin:6px 6px 6px 18px;padding:8px 10px 14px;
+  background:var(--paper);border:3px solid var(--ink);border-radius:12px;background-image:repeating-linear-gradient(transparent 0 27px,#f3dfe6 27px 28px)}
+#pcfoot{flex:none;position:relative;z-index:2;padding:0 8px 8px 20px}
+.pcn img.pcd{width:18px;height:18px;vertical-align:-3px;image-rendering:pixelated}
+.pcsec{display:flex;justify-content:space-between;align-items:center;margin:12px 0 6px;padding:4px 10px;border-radius:16px;border:3px solid var(--ink);background:linear-gradient(#fff,#fff 60%,var(--tc))}
+.pcsec span{font-size:16px}.pcsec.keep{background:linear-gradient(#fff,#fff 60%,#F8C5D9)}.pcsec.mem{background:linear-gradient(#fff,#fff 60%,#C8DDF5);border-style:dashed}
+.pcsec:first-child,.pcnote+.pcsec{margin-top:2px}
+.pccard{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px;margin:6px 0;color:var(--ink);box-shadow:0 3px 0 var(--lpink),0 3px 0 1px var(--ink);min-height:64px}
+.pccard:active:not(.ro){transform:translateY(2px)}.pccard.ro{border-style:dashed;box-shadow:none;background:#fffdf8}
+.pcph{flex:none;width:56px;height:56px;border-radius:10px;background:radial-gradient(#fff 40%,var(--tc));display:flex;align-items:center;justify-content:center;border:2px solid var(--lpink)}
+.pcph img{width:48px;height:48px;image-rendering:pixelated}
+.pcci{flex:1;min-width:0;display:flex;flex-direction:column;overflow-wrap:anywhere}
+.pcci b{font-size:16px;font-weight:900}.pcci small{font-size:13px;font-weight:700;color:#5a4868;line-height:1.35}
+.pcgo{flex:none;font-size:24px;font-weight:900;color:#e0457b}
+.pcfav img{width:22px;height:22px}
+.pctag{flex:none;font-size:12px;font-weight:900;border:2px solid var(--ink);border-radius:12px;padding:3px 6px;white-space:nowrap;max-width:46%}
+.pctag.now{background:#d6f2d0}.pctag.fav{background:#FFE08A}.pctag.keep{background:#F8C5D9}.pctag.mem{background:#C8DDF5}
+.pcsub{font-size:13px;color:#5a4868;margin:2px 4px 4px;line-height:1.5}
+.pcempty{font-size:13px;color:#7a6a88;text-align:center;padding:10px 4px;border:2px dashed var(--lpink);border-radius:10px;background:#fff}
+.pcwhy{font-size:13px;color:#7a6a88;margin:4px}
+.pcnote{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:8px;font-size:14px;margin-bottom:6px;box-shadow:inset 0 -4px 0 #FFE08A}
+.pcbtn{display:block;width:100%;min-height:46px;margin-top:8px;padding:8px;font-size:16px;font-weight:900;color:var(--ink);border:3px solid var(--ink);border-radius:16px;box-shadow:0 4px 0 var(--ink);
+  background:linear-gradient(#fff9 0,#fff9 40%,transparent 41%),#fff}
+.pcbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.pcbtn.pink{background:linear-gradient(#fff9 0,#fff9 40%,transparent 41%),#F8C5D9}.pcbtn.red{background:linear-gradient(#fff9 0,#fff9 40%,transparent 41%),#ffb3b3}.pcbtn.yel{background:linear-gradient(#fff9 0,#fff9 40%,transparent 41%),#FFE08A}
+.pcbox{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px;text-align:center}
+.pcbox p{font-size:14px;line-height:1.6;margin:6px 0}
+.pcin{width:100%;font:inherit;font-size:18px;text-align:center;padding:8px;border:3px solid var(--ink);border-radius:12px;margin-top:6px}
+.pcprof{display:flex;gap:8px;align-items:flex-start}
+.pcphoto{position:relative;flex:none;width:104px;height:104px;background:#fff;border:3px solid var(--ink);border-radius:6px;padding:6px;box-shadow:3px 3px 0 var(--lpink);transform:rotate(-2deg)}
+.pcphoto img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;background:radial-gradient(#fff 35%,#F8C5D9);border-radius:4px}
+.pcphoto.big{width:150px;height:150px;margin:6px auto 10px}
+.tape{position:absolute;width:44px;height:14px;opacity:.85;border:1px solid #0001}
+.tape.t1{left:-14px;top:4px;transform:rotate(-35deg);background:repeating-linear-gradient(90deg,#F8C5D9 0 5px,#fff 5px 9px),#F8C5D9}
+.tape.t2{right:-14px;bottom:6px;transform:rotate(-35deg);background:radial-gradient(#fff 1.5px,transparent 2px) 0 0/6px 6px,#C8DDF5}
+.pcinfo{flex:1;min-width:0;background:#fff;border:3px solid var(--ink);border-radius:10px;padding:2px 8px}
+.pcir{padding:3px 0;border-bottom:1px dashed var(--lpink);display:flex;flex-direction:column}.pcir:last-child{border-bottom:0}
+.pcir span{font-size:16px;color:#6a5478;line-height:1.2}.pcir b{font-size:15px;font-weight:900;overflow-wrap:anywhere;line-height:1.35}.pcir b small{font-size:12px;font-weight:700}
+.pcbox2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.pcmini{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:6px 8px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.pch{display:flex;align-items:center;gap:4px}.pcmini .fd{font-size:16px}.pcmini b{font-size:15px;font-weight:900;overflow-wrap:anywhere}.pcmini b small{font-size:13px}
+.pckosei,.pcaff,.pcwords{position:relative;background:#fff;border:3px solid var(--ink);border-radius:12px;padding:16px 10px 8px;margin-top:16px}
+.pclab{position:absolute;left:8px;top:-13px;display:flex;align-items:center;gap:4px;background:#FFE08A;border:3px solid var(--ink);border-radius:12px;padding:0 8px;font-size:16px;line-height:1.4;white-space:nowrap;max-width:calc(100% - 16px)}
+.pckosei p{font-size:15px;line-height:1.6;font-weight:900;overflow-wrap:anywhere;white-space:pre-wrap}
+.pcaff{display:flex;align-items:center;gap:8px;padding-top:18px}.pcaff b{font-size:16px;white-space:nowrap}
+.pcbar{flex:1;height:14px;border:3px solid var(--ink);border-radius:9px;background:#fff;overflow:hidden;display:block}.pcbar i{display:block;height:100%;background:#f58bb0}
+.pcw{display:flex;gap:6px;align-items:flex-start;padding:5px 0;border-bottom:1px dashed var(--lpink);font-size:15px;font-weight:900}
+.pcw img{flex:none;margin-top:3px}.pcw span{min-width:0;overflow-wrap:anywhere}.pcw small{display:block;font-size:12px;font-weight:700;color:#7a6a88}
+.pcacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.pcpill{background:#fff;border:3px solid var(--ink);border-radius:22px;padding:6px 10px;text-align:center;font-size:16px;box-shadow:0 3px 0 var(--ink)}
+.pcgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.pcz{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;background:#fff;border:3px solid var(--ink);border-radius:12px;color:var(--ink);box-shadow:0 3px 0 var(--mint),0 3px 0 1px var(--ink);min-width:0}
+.pcz img{width:56px;height:56px;image-rendering:pixelated}.pcz span{font-size:16px;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcz.un{background:#f4f8f5}
+.pcbig{font-size:16px;margin:4px 0 8px}
+.pcpager{display:flex;justify-content:center;align-items:center;gap:14px;background:#fff;border:3px solid var(--ink);border-radius:22px;padding:2px}
+.pckt{position:sticky;top:-8px;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:-8px -10px 6px;padding:8px 8px 6px;background:var(--paper);border-bottom:3px dashed var(--lpink)}
+.pctb{min-height:44px;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);font-size:16px;line-height:1.1;padding:2px 0;white-space:nowrap}
+.pctb small{display:block;font-size:12px}.pctb.on{background:#FFE08A}
+.pcwl{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:2px 8px}
+.pcwr{display:flex;gap:8px;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--lpink)}
+.pcno{flex:none;font-size:16px;font-variant-numeric:tabular-nums}.pcwt{flex:1;min-width:0;font-size:15px;font-weight:900;overflow-wrap:anywhere}.pcwt small{display:block;font-size:12px;font-weight:700;color:#7a6a88}
+.pcq{flex:1;font-size:16px;color:#a898b8;letter-spacing:2px}.pchrt{flex:none}
+#pcfoot .pcpill{margin-top:0}
+.pcspk{display:flex;gap:2px;opacity:.95}
+.pcstrip{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 0 4px;pointer-events:none}
+.tp{display:inline-block;width:46px;height:14px;transform:rotate(-6deg);border:1px solid #0001}
+.tp.pk{background:repeating-linear-gradient(90deg,#F8C5D9 0 5px,#fff 5px 9px),#F8C5D9}.tp.bl{background:radial-gradient(#fff 1.5px,transparent 2px) 0 0/6px 6px,#C8DDF5;transform:rotate(6deg)}
+.tp.yl{background:repeating-linear-gradient(45deg,#FFE08A 0 5px,#fff4c4 5px 9px)}
+.pcpill{position:relative}.pcpill .tp.tl{position:absolute;left:-14px;top:-8px;transform:rotate(-25deg)}
+.pcz{position:relative}.pcz-st{position:absolute;right:-6px;top:-8px}.pcz-st img.pcd{width:20px;height:20px}
+.pcdeco{position:absolute;pointer-events:none;z-index:4;image-rendering:pixelated}
+#pctitle{color:#c23d72}.pc-zukan #pctitle{color:#2f7d4b}.pc-kotoba #pctitle{color:#2c5fa8}
+.pcban{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 0 6px}
+.pcban span{white-space:nowrap;font-family:'DotGothic16','Hiragino Kaku Gothic ProN',sans-serif;font-size:16px;letter-spacing:0;color:#fff;background:#f58bb0;border:3px solid var(--ink);border-radius:14px;padding:0 10px;text-shadow:1px 1px 0 var(--ink);transform:rotate(-3deg)}
+@media(max-width:350px){.pchead{padding-left:14px}#pctabs{gap:4px}.pctab{padding:2px 0;letter-spacing:-.5px}#pcfoot{padding-left:12px}.pcrib{display:none}.pcprof{flex-direction:column;align-items:center}.pcinfo{width:100%}.pctag{font-size:11px;padding:2px 4px}}
+.khead b{font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:900;font-size:18px}   /* v2.1：名前を太い丸ゴシックに（くっきり） */
+#kstage{font-size:14px}
+.kcolb{margin:8px 12px 0}
+.kcolb button{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:46px;border:3px solid #4B345A;border-radius:16px;font-size:17px;font-weight:900;color:#4B345A;
+  background:linear-gradient(#fff9 0,#fff9 40%,transparent 41%),#F8C5D9;box-shadow:0 4px 0 #4B345A}
+.kcolb button:active{transform:translateY(3px);box-shadow:0 1px 0 #4B345A}
+.kfind{position:absolute;left:50%;top:50%;z-index:40;width:min(300px,84%);max-height:70%;overflow:hidden;transform:translate(-50%,-50%) scale(.6);opacity:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(248,197,217,.55) 50%,transparent 50%) 0 0/12px 12px,linear-gradient(rgba(248,197,217,.55) 50%,transparent 50%) 0 0/12px 12px,#FFF7E9;
+  border:4px solid #4B345A;border-radius:20px;box-shadow:0 5px 0 #4B345A;padding:16px 14px 12px;text-align:center;color:#4B345A;transition:transform .25s cubic-bezier(.3,1.6,.5,1),opacity .2s}
+.kfind.on{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto;cursor:pointer}
+.kfind .kft{display:block;font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:400;font-size:16px;line-height:1.3;color:#fff;background:#f58bb0;border:3px solid #4B345A;border-radius:14px;padding:4px 8px;margin:0 auto 10px;width:fit-content;max-width:100%;text-shadow:1px 1px 0 #4B345A}
+.kfind .kfl{font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:900;font-size:17px;line-height:1.55;background:#fff;border:3px solid #4B345A;border-radius:12px;padding:10px 8px;overflow-wrap:anywhere;word-break:break-word}
+.kfind .kfs{display:block;margin-top:8px;font-size:13px;font-weight:900;color:#7a5a88}
+.kfind img.pcd{width:16px;height:16px;vertical-align:-3px;image-rendering:pixelated}
+.kfind .kfd{position:absolute}.kfind .kfd img.pcd{width:20px;height:20px}.kfd.d1{left:8px;top:8px}.kfd.d2{right:8px;top:8px}.kfd.d3{left:10px;bottom:10px}.kfd.d4{right:12px;bottom:12px}
+@media (prefers-reduced-motion:reduce){.kfind{transition:opacity .2s;transform:translate(-50%,-50%)}.kfind.on{transform:translate(-50%,-50%)}}
 </style>
 </head>
 <body>
@@ -194,8 +309,13 @@ label.fl input{display:none}
     <button data-k="sleep"><em data-ic="sleep"></em>寝る</button>
     <button id="kbag"><em data-ic="bag"></em>持ち物</button>
   </div>
-  <div class="kbtns2"><button id="kalbum">📒 アルバム</button><button id="kzukan">📖 進化図鑑</button></div>
+  <div class="kcolb"><button id="kcolbtn">ぽこコレクション</button></div>
   <div class="foot"><button id="kset">⚙️ 設定</button><button id="ksnd">🔊 音あり</button><button id="kff" style="display:none">⏩ テスト</button><button id="kreset">最初から</button></div>
+  <div class="ov" id="kcol"><div class="pcn zk pc-album" id="kcolnote">
+    <div class="pcrings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="pchead"><div class="pcrow"><button class="pcrb" id="pcback" aria-label="もどる">←</button><div id="pctitle"></div><button class="pcrb" id="pcx" aria-label="とじる">×</button></div>
+      <div id="pctabs"><button class="pctab fd" data-pt="album">❤アルバム</button><button class="pctab fd" data-pt="zukan">📖進化図鑑</button><button class="pctab fd" data-pt="kotoba">💬ことば図鑑</button></div></div>
+    <div id="pcbody"></div><div id="pcfoot"></div></div></div>
   <div class="ov" id="ksetup"><div class="kcard">
     <h2>🌱 ふしぎな種を拾った！</h2>
     <p>生まれてくる子に<br>名前をつけてください</p>
@@ -211,6 +331,7 @@ label.fl input{display:none}
   <div class="rotnote" id="krot" aria-live="polite"><b>📱 スマホを縦にしてね</b><span>横向きだと、ぽこが見えません。<br>縦向きにすると、そのまま続きから遊べます。</span></div>
   <div class="ov" id="klock"><div class="kcard" id="klockbody"></div></div>
   <div class="toast" id="ktoast"></div>
+  <div class="kfind" id="kfind" role="status" aria-live="polite"></div>
 </div>
 
 
@@ -1060,7 +1181,7 @@ const K=(()=>{
   // ---- モーダル ----
   let fishTimer=null;
   function modal(html){$('kmbody').innerHTML=pixify(html);$('kmodal').classList.add('on')}
-  function close(){$('kmodal').classList.remove('on');clearInterval(fishTimer);fishTimer=null;ui();draw()}
+  function close(){$('kmodal').classList.remove('on');$('kcol').classList.remove('on');clearInterval(fishTimer);fishTimer=null;ui();draw()}
 
   // ---- こうどう ----
   const ckey=()=>!S?'baby':S.stage==='adult'?S.form:S.stage;
@@ -1245,7 +1366,7 @@ const K=(()=>{
   let bubShown=0, bubUntil=0, nextIdle=Date.now()+15000;
   const DEBUG=TEST_BUILD&&location.search.includes('debug');
   const idleGap=()=>DEBUG?(4000+Math.random()*2000):(S&&S.explore?(20000+Math.random()*20000):(45000+Math.random()*45000));
-  const modalOpen=()=>['kmodal','ksetup','kconfirm'].some(id=>$(id).classList.contains('on'));
+  const modalOpen=()=>['kmodal','ksetup','kconfirm','kcol'].some(id=>$(id).classList.contains('on'));
   // ===== 吹き出しの改行・区切り（修正3）=====
   // 改行できる所の優先：文の終わり（。！？…）＞「、」＞言葉の切れ目（Intl.Segmenter）。行の頭に「。、！？」「ー」「っ」「）」などは来ない
   const BUB_MIN=13, BUB_MAX=15, BUB_LH=1.35, BUB_PAD=16;
@@ -1362,9 +1483,22 @@ const K=(()=>{
     if(!W.wl[lid]){W.wl[lid]=[t,typeof pid==='string'&&ID_RE.test(pid)?pid:null];ch=nw=true}
     if(typeof pid==='string'&&ID_RE.test(pid)){const m=W.w[pid]||(W.w[pid]={}); if(m[lid]===undefined){m[lid]=t;ch=true}}
     if(ch){wordsDirty=true; wordsFlush()}
-    if(nw&&t-wordNoteAt>20000){wordNoteAt=t; setTimeout(()=>{try{ktoast('📖 新しいことばを発見！')}catch(e){}},1200)}
+    if(nw)setTimeout(()=>{try{findPop(lid)}catch(e){}},1200);   // v2.1：新しいことばの発見演出（記録・判定は上のまま）
   }
   window.addEventListener('pagehide',()=>{try{wordsFlush()}catch(e){}});
+  // 新しいことばの発見演出：画面の真ん中に小さなカード。約2.5秒で消える・押すとすぐ消える。同じことばは二度出さない。
+  // 後ろの画面は押せるまま（カードの外は押せる）。表示中に次の発見が来たら、中身を新しいほうに入れ替える（重ならない）
+  let findT=0; const findShown=new Set();
+  function findPop(lid){
+    if(LOCK||!lid||findShown.has(lid))return; findShown.add(lid);
+    const x=ALL_LINES.find(l=>l.id===lid); if(!x)return;
+    const el=$('kfind'); clearTimeout(findT);
+    el.innerHTML=`<span class="kfd d1">${PCD('heart')}</span><span class="kfd d2">${PCD('star')}</span><span class="kfd d3">${PCD('sparkle')}</span><span class="kfd d4">${PCD('sparkle')}</span>
+      <b class="kft">新しいことばを発見！</b><p class="kfl">${esc(lineText(x))}</p><small class="kfs">ことば図鑑に記録されたよ ${PCD('heart')}</small>`;
+    el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+    findT=setTimeout(findClose,2500);
+  }
+  function findClose(){clearTimeout(findT);$('kfind').classList.remove('on')}
   // ===== 吹き出しの順番（修正4）=====
   // ・表示を始めたセリフ（bubCur）は、分けた吹き出しを最後まで全部出す（文字を消さない）
   // ・途中に来たセリフは待つ：操作のセリフ（なでる・タップ・ごはん 等＝'op'）は bubOps、自動のひとりごと（'auto'）は bubAutos
@@ -2084,7 +2218,7 @@ const K=(()=>{
       ${kind==='conflict'?'':'<button class="pbtn gray" id="lkrs">救出用データをコピー</button>'}
       <div id="lkrsbox" style="display:none"><p class="tleft" style="font-size:12px"><b>これは通常の「おひっこしコード」ではありません。</b>そのまま復元できるとは限りません（壊れたデータが入っていることがあります）。困ったときに、ゲームを作った人に送ってください。</p>
       <textarea id="lkrsta" class="codeta" readonly></textarea></div>`:'');
-    $('klock').classList.add('on'); ['kmodal','ksetup','kconfirm'].forEach(id=>$(id).classList.remove('on'));
+    $('klock').classList.add('on'); ['kmodal','ksetup','kconfirm','kcol'].forEach(id=>$(id).classList.remove('on'));
     if($('lkretry'))$('lkretry').onclick=()=>location.reload();   // 再開は必ず読み直し（メモリ上の古いデータは保存しない）
     if($('lknext'))$('lknext').onclick=()=>{LOCK=null;$('klock').classList.remove('on');$('ksetup').classList.add('on')};
     if(raw!=null){
@@ -2103,7 +2237,7 @@ const K=(()=>{
       `<p class="tleft">古いバージョン（v1.8など）の画面が開いたままになっていて、保存データが上書きされたようです。<b>どちらのデータも消さずに保管しています。</b>続けるデータを選んでください。<br><b>先に、古いタブや画面を閉じてください。</b>閉じないと、また上書きされることがあります。</p>`+
       card('A','v1.9で最後に正しく保存したデータ',repairSave(clone(lat)))+card('B','古い画面で上書きされたデータ',legacy,'こちらを選ぶと新しい形式に移行し、個体の記録（個体IDなど）は新しく付け直されます')+
       `<p class="mmsg" id="chmsg"></p>`;
-    $('klock').classList.add('on'); ['kmodal','ksetup','kconfirm'].forEach(i=>$(i).classList.remove('on'));
+    $('klock').classList.add('on'); ['kmodal','ksetup','kconfirm','kcol'].forEach(i=>$(i).classList.remove('on'));
     const msg=t=>{$('chmsg').innerHTML=pixify(esc(t))};
     $('cbA').onclick=()=>{try{downloadBackup(lat,'_v19');ktoast(SAVED_NOTE)}catch(e){ktoast('保存を開始できませんでした')}};
     $('cbB').onclick=()=>{try{downloadRaw(raw);ktoast(SAVED_NOTE)}catch(e){ktoast('保存を開始できませんでした')}};
@@ -2282,66 +2416,76 @@ const K=(()=>{
     seed:'たねがありません（たねは、子が大人になると1つもらえます）。今の子とこのまま暮らせます。データは消えません。<br>もし大人になったのにたねがないときは、せっていの「ぽこのおひっこし」でバックアップファイルを保存しておいてね',full:`アルバムがいっぱいです（${ALBUM_MAX}匹）。外す子を選ぶと、次の子を育てられます`,dup:'この子はもうアルバムに入っています'};
   const FAIL_MSG=r=>r.why==='conflict'||r.why==='lock'?'別のタブで開かれているため、何も変えていません':r.why==='backup'?'今のデータを退避できなかったので、何も変えていません（保存がいっぱいかもしれません）':'保存できなかったので、何も変えていません';
   const favRec=()=>S&&S.fav?albumSaved(S).find(r=>r.id===S.fav):null;
-  function albumUI(note){
-    if(LOCK||!S)return;
-    const L=albumSaved(S).slice().reverse(), c=canNext(), fv=favRec();
-    modal(`<h2>📒 ぽこアルバム</h2><p>${L.length} / ${ALBUM_MAX}匹　🌱たね ${S.seeds||0}こ</p>${note?`<p class="tleft">${note}</p>`:''}
-      <div class="sbox tleft"><b>いま育てている子</b>
-        <div style="display:flex;gap:10px;align-items:center"><img class="pix apic" src="${charPic()}"><span>${esc(S.name)}（${S.stage==='seed'?'種':fnm(S.stage==='adult'?S.form:S.stage)}）</span></div>
-        ${S.stage!=='seed'?'<button class="pbtn" id="alprof">📖 プロフィール帳</button>':''}
-        ${c.ok?'<button class="pbtn" id="alnext">🌱 アルバムに入れて、次の子を育てる</button>':`<small>${NEXT_WHY[c.why]||''}</small>`}</div>
-      ${L.length?L.map(r=>`<button class="place" data-al="${esc(r.id)}"><img class="pix apic" src="${formPic(r.form)}"><span>${r.id===S.fav?'⭐ ':''}${esc(r.name)}<small>${fnm(r.form)}・${tnm(r.temper)}<br>生まれた日 ${dstr(r.born)}${r.bornGuess?'ごろ':''}・大人になった日 ${dstr(r.adultAt)}</small></span></button>`).join(''):'<p>まだアルバムに入った子はいません。<br>大人になった子を入れると、ここに並びます。</p>'}
-      <button class="pbtn gray" onclick="K.close()">とじる</button>`);
-    if($('alnext'))$('alnext').onclick=()=>nextUI1();
-    if($('alprof'))$('alprof').onclick=()=>profileUI(S.id);
-    $('kmbody').querySelectorAll('[data-al]').forEach(b=>b.onclick=()=>albumDetail(b.dataset.al));
+  // ===== ぽこコレクション（v2.1 UI改修：docs/v21_collection_ui.md）=====
+  // アルバム・進化図鑑・ことば図鑑を1つのノート型の画面に。上（← タイトル × タブ）と下（見つけた数）は固定、中だけスクロール。
+  // 画面を作るだけ：記録・保存・判定は今までの関数（nextPet・setFav・albumRemove・dex・words）をそのまま使う。開いて見るだけでは保存しない
+  const PC={stack:[],more:20};
+  const pcOn=()=>$('kcol').classList.contains('on');
+  function pcOpen(view,arg){
+    if(LOCK)return; if(view==='album'&&!S)return;
+    $('kmodal').classList.remove('on'); clearInterval(fishTimer); fishTimer=null;
+    PC.stack=[{view,arg,sc:0}]; PC.more=20; $('kcol').classList.add('on'); pcRender(0);
   }
-  function albumDetail(id){
-    const r=albumSaved(S).find(x=>x.id===id); if(!r)return albumUI();
-    const isFav=S.fav===id;
-    modal(`<h2>${isFav?'⭐ ':''}${esc(r.name)}</h2><img class="pix apicl" src="${formPic(r.form)}">
-      <table class="atbl"><tr><td>姿</td><td>${fnm(r.form)}</td></tr><tr><td>気質</td><td>${tnm(r.temper)}</td></tr><tr><td>なかよし</td><td>${r.aff}</td></tr>
-      <tr><td>生まれた日</td><td class="dt">${dstr(r.born)}${r.bornGuess?'ごろ':''}</td></tr><tr><td>大人になった日</td><td class="dt">${dstr(r.adultAt)}</td></tr><tr><td>アルバムに入った日</td><td class="dt">${dstr(r.archivedAt)}</td></tr>
-      ${r.memo?`<tr><td>メモ</td><td>${esc(r.memo)}</td></tr>`:''}</table>
-      <button class="pbtn" id="alprof2">📖 プロフィール帳</button>
-      <button class="pbtn" id="alfav">${isFav?'お気に入りをやめる':'⭐ お気に入りにする（一緒に暮らす）'}</button>
-      <button class="pbtn red" id="alrm">アルバムから外す</button>
-      <button class="pbtn gray" id="alback">もどる</button>`);
-    $('alback').onclick=()=>albumUI(); $('alprof2').onclick=()=>profileUI(id);
-    $('alfav').onclick=()=>{const cur=favRec();
-      if(!isFav&&cur&&cur.id!==id){modal(`<h2>⭐ お気に入りを変える</h2><p class="tleft">いま一緒に暮らしている「${esc(cur.name)}」はアルバムで休み、「${esc(r.name)}」が一緒に暮らします。</p>
-        <button class="pbtn" id="fvok">変える</button><button class="pbtn gray" id="fvno">やめる</button>`);$('fvno').onclick=()=>albumDetail(id);$('fvok').onclick=()=>doFav(id);return}
-      doFav(isFav?null:id)};
-    $('alrm').onclick=()=>{
-      modal(`<h2>アルバムから外す</h2><img class="pix apic" src="${formPic(r.form)}"><p class="tleft">「${esc(r.name)}」をアルバムから外しますか？<br>進化図鑑の発見と、思い出（名前・姿）は残ります。${isFav?'<br><b>この子はお気に入りです。外すと、お気に入りもなくなります。</b>':''}</p>
-        <button class="pbtn red" id="rm1">外す</button><button class="pbtn gray" id="rmno">やめる</button>`);
-      $('rmno').onclick=()=>albumDetail(id);
-      $('rm1').onclick=()=>{modal(`<h2>本当に外しますか？</h2><p class="tleft">「${esc(r.name)}」はアルバムからいなくなります。<br>まちがえたときは、せっていの「データの復旧」で「アルバムから外す前のデータ」に戻せます。</p>
-        <button class="pbtn red" id="rm2">本当に外す</button><button class="pbtn gray" id="rmno2">やめる</button>`);
-        $('rmno2').onclick=()=>albumDetail(id);
-        $('rm2').onclick=()=>{const res=albumRemove(id); albumUI(res.ok?`「${esc(r.name)}」をアルバムから外しました。`:'⚠ '+FAIL_MSG(res)); if(res.ok){ui();draw()}}}};
+  function pcGo(view,arg){ const b=$('pcbody'); if(PC.stack.length)PC.stack[PC.stack.length-1].sc=b.scrollTop; PC.stack.push({view,arg,sc:0}); pcRender(0) }
+  function pcBack(){ if(PC.stack.length<2)return pcClose(); PC.stack.pop(); const c=PC.stack[PC.stack.length-1]; pcRender(c.sc||0) }   // 直前の画面へ。一覧のスクロール位置も戻す
+  function pcTab(view){ PC.stack=[{view,sc:0}]; PC.more=20; pcRender(0) }
+  function pcClose(){ PC.stack=[]; close() }
+  function pcRender(sc){
+    if(!PC.stack.length)return; const cur=PC.stack[PC.stack.length-1], r=PCV[cur.view](cur.arg)||{};
+    if(r.redirect){PC.stack.pop();return r.redirect()}
+    const top=PC.stack.length===1, tab=r.tab||'album';
+    $('kcolnote').className='pcn zk pc-'+tab;
+    $('pcback').style.visibility=top?'hidden':'visible';
+    $('pctitle').innerHTML=pixify(r.title||'');
+    $('pctabs').style.display=top?'':'none';
+    $('pctabs').querySelectorAll('[data-pt]').forEach(b=>b.classList.toggle('on',b.dataset.pt===tab));
+    const body=$('pcbody'); body.innerHTML=pixify(r.html||''); $('pcfoot').innerHTML=pixify(r.foot||''); $('pcfoot').style.display=r.foot?'':'none';
+    if(r.after)r.after(); body.scrollTop=sc||0;
   }
-  function doFav(id){const r=setFav(id); if(!r.ok){albumUI('⚠ '+FAIL_MSG(r));return} ui();draw(); albumUI(id?'⭐ お気に入りにしました。おうちで一緒に暮らします。':'お気に入りをやめました。')}
+  // 確認の画面（次の子・外す・お気に入りを変える）も同じ固定の上を使う。「やめる」は直前の画面へ
+  const pcPage=(title,tab,html,after)=>pcGo('page',{title,tab,html,after});
+  // 今までの入口の名前は残す（ほかの画面から呼ばれる）
+  const albumUI=note=>pcOpen('album',{note});
+  const albumDetail=id=>pcOpen('album')||pcGo('profile',{id});
+  const zukanUI=()=>pcOpen('zukan');
+  const kotobaUI=c=>pcOpen('kotoba',{c});
+  const memoryUI=()=>{pcOpen('album');setTimeout(()=>{const m=$('pcmem');if(m)m.scrollIntoView()},0)};
+  function profileUI(id,back){ if(!pcOn())pcOpen('album'); pcGo('profile',{id}) }
+  function doFav(id){const r=setFav(id); if(!r.ok){pcTab('album');PC.stack[0].arg={note:'⚠ '+FAIL_MSG(r)};pcRender(0);return} ui();draw();
+    PC.stack=[{view:'album',arg:{note:id?'⭐ お気に入りにしました。おうちで一緒に暮らします。':'お気に入りをやめました。'},sc:0}]; pcRender(0)}
+  const pcNote=t=>{PC.stack=[{view:'album',arg:{note:t},sc:0}]; pcRender(0)};
+  function favUI(id){
+    const r=albumSaved(S).find(x=>x.id===id); if(!r)return pcBack(); const isFav=S.fav===id, cur=favRec();
+    if(!isFav&&cur&&cur.id!==id){pcPage('お気に入りを変える','album',`<div class="pcbox"><p class="tleft fm">いま一緒に暮らしている「${esc(cur.name)}」はアルバムで休み、「${esc(r.name)}」が一緒に暮らします。</p>
+      <button class="pcbtn pink" id="fvok">変える</button><button class="pcbtn" id="fvno">やめる</button></div>`,()=>{$('fvno').onclick=pcBack;$('fvok').onclick=()=>doFav(id)});return}
+    doFav(isFav?null:id);
+  }
+  function removeUI(id){
+    const r=albumSaved(S).find(x=>x.id===id); if(!r)return pcBack(); const isFav=S.fav===id;
+    pcPage('アルバムから外す','album',`<div class="pcbox"><img class="pix apic" src="${pcFormPic(r.form)}"><p class="tleft fm">「${esc(r.name)}」をアルバムから外しますか？<br>進化図鑑の発見と、思い出（名前・姿）は残ります。${isFav?'<br><b>この子はお気に入りです。外すと、お気に入りもなくなります。</b>':''}</p>
+      <button class="pcbtn red" id="rm1">外す</button><button class="pcbtn" id="rmno">やめる</button></div>`,()=>{$('rmno').onclick=pcBack;
+      $('rm1').onclick=()=>pcPage('本当に外しますか？','album',`<div class="pcbox"><p class="tleft fm">「${esc(r.name)}」はアルバムからいなくなります。<br>まちがえたときは、せっていの「データの復旧」で「アルバムから外す前のデータ」に戻せます。</p>
+        <button class="pcbtn red" id="rm2">本当に外す</button><button class="pcbtn" id="rmno2">やめる</button></div>`,()=>{$('rmno2').onclick=()=>{PC.stack.pop();pcBack()};
+        $('rm2').onclick=()=>{const res=albumRemove(id); pcNote(res.ok?`「${esc(r.name)}」をアルバムから外しました。`:'⚠ '+FAIL_MSG(res)); if(res.ok){ui();draw()}}})});
+  }
   function nextUI1(){
-    const c=canNext(); if(!c.ok)return albumUI(NEXT_WHY[c.why]);
-    modal(`<h2>🌱 次の子を育てる</h2><img class="pix apic" src="${charPic()}"><p class="tleft">「${esc(S.name)}」をアルバムに入れて、新しい子を育てます。<b>たねを1つ</b>使います（いま ${S.seeds}こ）。</p>
-      <table class="atbl"><tr><td>そのまま</td><td>持ち物・料理・飾り・レシピ・行ける場所・進化図鑑</td></tr><tr><td>新しく</td><td>名前・なかよし・元気・食べた記録・気質</td></tr></table>
-      <button class="pbtn" id="nx1">次へ</button><button class="pbtn gray" id="nxno">やめる</button>`);
-    $('nxno').onclick=()=>albumUI(); $('nx1').onclick=()=>nextUI2();
+    const c=canNext(); if(!c.ok)return pcNote(NEXT_WHY[c.why]);
+    pcPage('次の子を育てる','album',`<div class="pcbox"><img class="pix apic" src="${charPic()}"><p class="tleft fm">「${esc(S.name)}」をアルバムに入れて、新しい子を育てます。<b>たねを1つ</b>使います（いま ${S.seeds}こ）。</p>
+      <table class="atbl fm"><tr><td>そのまま</td><td>持ち物・料理・飾り・レシピ・行ける場所・進化図鑑</td></tr><tr><td>新しく</td><td>名前・なかよし・元気・食べた記録・気質</td></tr></table>
+      <button class="pcbtn pink" id="nx1">次へ</button><button class="pcbtn" id="nxno">やめる</button></div>`,()=>{$('nxno').onclick=pcBack; $('nx1').onclick=()=>nextUI2()});
   }
   function nextUI2(){
-    modal(`<h2>🌱 新しい子の名前</h2><p>生まれてくる子に名前をつけてください（12文字まで）</p><input id="nxname" maxlength="12" placeholder="ぽこ" style="width:100%;font-size:18px;padding:8px;border:3px solid #3a2f45;border-radius:10px">
-      <button class="pbtn" id="nx2">次へ</button><button class="pbtn gray" id="nxno">やめる</button>`);
-    $('nxno').onclick=()=>albumUI(); $('nx2').onclick=()=>nextUI3(($('nxname').value||'').trim()||'ぽこ');
+    pcPage('新しい子の名前','album',`<div class="pcbox"><p class="fm">生まれてくる子に名前をつけてください（12文字まで）</p><input id="nxname" class="pcin" maxlength="12" placeholder="ぽこ">
+      <button class="pcbtn pink" id="nx2">次へ</button><button class="pcbtn" id="nxno">やめる</button></div>`,()=>{$('nxno').onclick=pcBack; $('nx2').onclick=()=>nextUI3(($('nxname').value||'').trim()||'ぽこ')});
   }
   function nextUI3(name){
     const cur=favRec();
-    modal(`<h2>🏠 一緒に暮らす？</h2><img class="pix apic" src="${charPic()}"><p class="tleft">「${esc(S.name)}」をお気に入りにして、新しい子と一緒におうちで暮らしますか？${cur?`<br>（いま一緒に暮らしている「${esc(cur.name)}」は、アルバムで休みます）`:''}<br>あとからアルバムで変えることもできます。</p>
-      <button class="pbtn" id="nxy">一緒に暮らす</button><button class="pbtn gray" id="nxn">${cur?`今のまま（「${esc(cur.name)}」と暮らす）`:'暮らさない'}</button><button class="pbtn gray" id="nxno">やめる</button>`);
-    $('nxno').onclick=()=>albumUI();
-    const go=fav=>{const prev=S.name, r=nextPet(name,fav); if(!r.ok){albumUI('⚠ '+(NEXT_WHY[r.why]||FAIL_MSG(r)));return}
-      close(); ui(); draw(); say(`「${prev}」はアルバムに入りました。新しいたねを植えたよ！ 種をタップして、芽を出させよう`)};
-    $('nxy').onclick=()=>go(true); $('nxn').onclick=()=>go(false);
+    pcPage('一緒に暮らす？','album',`<div class="pcbox"><img class="pix apic" src="${charPic()}"><p class="tleft fm">「${esc(S.name)}」をお気に入りにして、新しい子と一緒におうちで暮らしますか？${cur?`<br>（いま一緒に暮らしている「${esc(cur.name)}」は、アルバムで休みます）`:''}<br>あとからアルバムで変えることもできます。</p>
+      <button class="pcbtn pink" id="nxy">一緒に暮らす</button><button class="pcbtn" id="nxn">${cur?`今のまま（「${esc(cur.name)}」と暮らす）`:'暮らさない'}</button><button class="pcbtn" id="nxno">やめる</button></div>`,()=>{
+      $('nxno').onclick=pcBack;
+      const go=fav=>{const prev=S.name, r=nextPet(name,fav); if(!r.ok){pcNote('⚠ '+(NEXT_WHY[r.why]||FAIL_MSG(r)));return}
+        pcClose(); close(); ui(); draw(); say(`「${prev}」はアルバムに入りました。新しいたねを植えたよ！ 種をタップして、芽を出させよう`)};
+      $('nxy').onclick=()=>go(true); $('nxn').onclick=()=>go(false)});
   }
   // ===== AL5：進化図鑑・発見記録 =====
   // はじめての姿のお祝い（保存できた記録にあるときだけ。保存がまだなら少し待つ）
@@ -2361,70 +2505,130 @@ const K=(()=>{
   const dexNow=()=>DEXS||dexRead()||dexNew();             // 判断用（メモリの未保存分も含む：戻す質問で外した子を出さないため）
   const dexSaved=()=>dexRead()||dexNew();                  // 画面用：保存場所に実際に保存された記録だけ
   // ===== v2.1 プロフィール帳（その子への愛着）=====
-  // 項目は表 PROF_Q（上から並べるだけ。項目を足すときは1行足す）。show：出す子だけ、v：中身（HTMLにして返す）、fm：丸ゴシックで出す。
-  // 記録にないことは書かない。性格・個性は確定した子だけ（子どもの仮の性格は出さない）
+  // 項目は表 PROF_Q（上から並べるだけ。項目を足すときは1行足す）。sec：置き場所（tbl 写真の横の表・box きしつ/せいかく・memo メモ。aff・kosei は専用の枠）。
+  // show：出す子だけ、v：中身（HTMLにして返す）。記録にないことは書かない。性格・個性は確定した子だけ（子どもの仮の性格は出さない）
   const PROF_Q=[
-    {id:'pq_name',n:'なまえ',v:d=>esc(d.name||'ぽこ')},
-    {id:'pq_born',n:'誕生日',show:d=>d.stage!=='seed',v:d=>dstr(d.born)+(d.bornGuess?'ごろ':''),fm:1},
-    {id:'pq_adult',n:'大人になった日',show:d=>d.stage==='adult'&&typeof d.adultAt==='number',v:d=>dstr(d.adultAt),fm:1},
-    {id:'pq_form',n:'姿',v:d=>d.stage==='adult'?esc(fnm(d.form)):d.stage==='seed'?'種':`${esc(fnm(d.stage))}<small>（進化はこれから）</small>`},
-    {id:'pq_temper',n:'気質',v:d=>esc(tnm(d.temper))},
-    {id:'pq_pers',n:'性格',v:d=>d.pers&&PERS[d.pers]?esc(PERS[d.pers].n):'<small>まだ見つかっていない</small>'},
-    {id:'pq_kosei',n:'こんな子',show:d=>!!voiceCell(d),v:d=>esc(voiceCell(d).d),fm:1},
-    {id:'pq_aff',n:'なかよし',v:d=>String(d.aff||0)},
-    {id:'pq_memo',n:'メモ',show:d=>!!d.memo,v:d=>esc(d.memo),fm:1},
+    {id:'pq_name',n:'なまえ',sec:'tbl',v:d=>esc(d.name||'ぽこ')},
+    {id:'pq_form',n:'タイプ',sec:'tbl',v:d=>d.stage==='adult'?esc(fnm(d.form)):d.stage==='seed'?'種':`${esc(fnm(d.stage))}<small>（進化はこれから）</small>`},
+    {id:'pq_born',n:'たんじょうび',sec:'tbl',show:d=>d.stage!=='seed',v:d=>dstr(d.born)+(d.bornGuess?'ごろ':'')},
+    {id:'pq_adult',n:'おとなになった日',sec:'tbl',v:d=>d.stage==='adult'&&typeof d.adultAt==='number'?dstr(d.adultAt):'―'},
+    {id:'pq_album',n:'アルバムに入った日',sec:'tbl',show:d=>typeof d.archivedAt==='number',v:d=>dstr(d.archivedAt)},
+    {id:'pq_temper',n:'きしつ',sec:'box',v:d=>esc(tnm(d.temper))},
+    {id:'pq_pers',n:'せいかく',sec:'box',v:d=>d.pers&&PERS[d.pers]?esc(PERS[d.pers].n):'<small>まだ見つかっていない</small>'},
+    {id:'pq_kosei',n:'こんな子',sec:'kosei',v:d=>{const c=voiceCell(d);return c?esc(c.d):'まだ見つかっていません'}},
+    {id:'pq_aff',n:'なかよし',sec:'aff',v:d=>String(d.aff||0)},
+    {id:'pq_memo',n:'メモ',sec:'memo',show:d=>!!d.memo,v:d=>esc(d.memo)},
   ];
   const lineText=x=>x.t.replaceAll('{n}','〇〇');
-  function profileUI(id,back){
-    if(LOCK||!S)return;
-    const cur=id===S.id, d=cur?S:albumSaved(S).find(r=>r.id===id); if(!d)return albumUI();
-    const pic=cur?charPic():formPic(d.form), W=wordsSaved(), mine=W.w[id]||{}, byId=new Map(ALL_LINES.map(x=>[x.id,x]));
-    const heardL=Object.entries(mine).filter(([k])=>byId.has(k)).sort((a,b)=>a[1]-b[1]);
-    modal(`<div class="zk"><h2>📖 プロフィール帳</h2><img class="pix apicl" src="${pic}">
-      <table class="atbl ptbl">${PROF_Q.filter(q=>!q.show||q.show(d)).map(q=>`<tr><td class="fd">${q.n}</td><td class="${q.fm?'fm':''}">${q.v(d)}</td></tr>`).join('')}</table>
-      <div class="sbox"><b class="fd">聞いたセリフ ${heardL.length}本</b>
-        ${heardL.length?heardL.map(([k,t])=>`<div class="wrow"><span class="wt fm">${esc(lineText(byId.get(k)))}<small>${dstr(t)}</small></span></div>`).join(''):'<p class="fm"><small>まだありません。話しかけたり、一緒に過ごしたりすると増えていくよ</small></p>'}</div>
-      <button class="pbtn gray" id="pfback">もどる</button></div>`);
-    $('pfback').onclick=()=>back?back():(cur?albumUI():albumDetail(id));
-  }
-  // ===== v2.1 ことば図鑑（セリフを埋める楽しさ）：プレイヤー全体の記録。聞いたセリフだけ発見済み、未発見は伏せる =====
   const C6=['日常','性格','気分','成長','特別','秘密','豆知識'];
-  function kotobaUI(tab){
-    if(LOCK)return; tab=tab||'全部';
-    const W=wordsSaved(), L=ALL_LINES.filter(lineUsable), has=x=>!!W.wl[x.id], found=L.filter(has).length, no=new Map(L.map((x,i)=>[x.id,i+1]));
-    const cnt=c=>{const a=c==='全部'?L:L.filter(x=>x.c6===c);return [a.filter(has).length,a.length]};
-    const list=tab==='全部'?L:L.filter(x=>x.c6===tab), pc=L.length?Math.floor(found/L.length*100):0;
-    modal(`<div class="zk"><h2>📖 進化図鑑</h2>
-      <div class="ztabs"><button class="ztab fd" id="zkSp">すがた</button><button class="ztab fd on">ことば</button></div>
-      <p class="fd">見つけたことば ${found} / ${L.length}（${pc}%）</p>
-      <div class="ztabs">${['全部',...C6].map(c=>{const [a,b2]=cnt(c);return `<button class="ztab zc fd${c===tab?' on':''}" data-c="${c}">${c}<small>${a}/${b2}</small></button>`}).join('')}</div>
-      <div class="wlist">${list.length?list.map(x=>{const f=W.wl[x.id];return `<div class="wrow"><span class="wno fd">No.${String(no.get(x.id)).padStart(3,'0')}</span>
-        <span class="wt fm">${f?`${esc(lineText(x))}<small>${dstr(f[0])}</small>`:'<span class="wq fd">？？？</span>'}</span></div>`}).join(''):'<p class="fm"><small>まだこの分類のことばはないみたい。これから増えるかも…</small></p>'}</div>
-      <p class="tleft fm"><small>ぽこが話したことばが、ここに集まります。ことば図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</small></p>
-      <button class="pbtn gray" onclick="K.close()">とじる</button></div>`);
-    $('zkSp').onclick=()=>zukanUI();
-    $('kmbody').querySelectorAll('.zc').forEach(b=>b.onclick=()=>kotobaUI(b.dataset.c));
+  // ---- ぽこコレクションの飾り（ドット絵。見た目だけ）----
+  const PCD_ART={
+    heart:['.KK...KK.','KPPK.KPPK','KPLPKPPPK','KPPPPPPPK','.KPPPPPK.','..KPPPK..','...KPK...','....K....'],
+    star:['....K....','...KYK...','KKKKYKKKK','KYYYWYYYK','.KYYYYYK.','..KYYYK..','.KYYKYYK.','.KYK.KYK.','.KK...KK.'],
+    sparkle:['..Y..','..Y..','YYWYY','..Y..','..Y..'],
+    ribbon:['.KK.....KK.','KPPK.K.KPPK','KPLPKPKPLPK','KPPPKPKPPPK','KPPK.K.KPPK','.KK.KPK.KK.','...KP.PK...','...KK.KK...'],
+    paw:['.B.B.','B.B.B','.....','.BBB.','BBBBB','.BBB.'],
+    cat:['K.......K','KK.....KK','KCKKKKKCK','KCCCCCCCK','KCKCCCKCK','KCCCPCCCK','.KCCCCCK.','..KKKKK..'],
+    book:['KKKKKKKKKKK','KGGGGKGGGGK','KGWWGKGWWGK','KGGGGKGGGGK','KGWWGKGWWGK','KGGGGKGGGGK','KKKKKKKKKKK'],
+    chat:['.KKKKKKK.','KWWWWWWWK','KWKWKWKWK','KWWWWWWWK','.KKKWKKK.','...KWK...','...KK....'],
+    cloud:['...KKK...','..KWWWK..','.KWWWWWKK','KWWWWWWWK','KWWKWKWWK','.KKKKKKK.'],
+  };
+  const PCD_COL={K:'#4B345A',P:'#f58bb0',L:'#ffd6e4',Y:'#ffd84d',W:'#ffffff',B:'#a87048',C:'#ffe8b0',G:'#8fd3a5'};
+  const _pcd={};
+  function PCD(n){
+    if(!_pcd[n]){const a=PCD_ART[n]||PCD_ART.star, c=document.createElement('canvas'); c.width=a[0].length; c.height=a.length; const g2=c.getContext('2d');
+      a.forEach((row,y)=>[...row].forEach((ch,x)=>{if(PCD_COL[ch]){g2.fillStyle=PCD_COL[ch];g2.fillRect(x,y,1,1)}})); _pcd[n]=c.toDataURL()}
+    return `<img class="pix pcd" alt="" aria-hidden="true" src="${_pcd[n]}">`;
   }
-  function zukanUI(){
-    if(LOCK)return; const D=dexSaved(), found=ZUKAN.filter(([k])=>D.sp[k]).length, pets=Object.entries(D.pets);
-    modal(`<div class="zk"><h2>📖 進化図鑑</h2><div class="ztabs"><button class="ztab fd on">すがた</button><button class="ztab fd" id="zkWd">ことば</button></div>
-      <p class="fd">見つけた姿 ${found} / ${ZUKAN.length}（${Math.floor(found/ZUKAN.length*100)}%）</p>
-      ${ZUKAN.map(([k,h])=>{const f=D.sp[k];if(!f)return `<div class="place"><img class="pix apic" src="${shadowPic(k)}"><span>？？？<small>${h}</small></span></div>`;
-        const by=f.by&&D.pets[f.by]?D.pets[f.by].name:null, n=pets.filter(([,v])=>v.form===k).length;
-        return `<div class="place"><img class="pix apic" src="${formPic(k)}"><span>${fnm(k)}<small>はじめて：${f.at?dstr(f.at):'？'}${by?`・${esc(by)}`:''}<br>この姿になった子：${n}匹</small></span></div>`}).join('')}
-      <button class="pbtn" id="zkpets">💭 大人になった子の思い出（${pets.length}匹）</button>
-      <p class="tleft"><small>進化図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</small></p>
-      <button class="pbtn gray" onclick="K.close()">とじる</button></div>`);
-    $('zkpets').onclick=()=>memoryUI(); $('zkWd').onclick=()=>kotobaUI();
-  }
-  function memoryUI(){
-    const D=dexSaved(), inAlbum=new Set(S?albumSaved(S).map(r=>r.id):[]), L=Object.entries(D.pets).sort((a,b)=>(b[1].adultAt||0)-(a[1].adultAt||0));
-    const where=id=>S&&id===S.id?'いま育てている子':S&&id===S.fav?'⭐ 一緒に暮らしている':inAlbum.has(id)?'アルバム':'思い出';
-    modal(`<div class="zk"><h2>💭 思い出</h2><p class="tleft"><small>大人になった子の記録です。アルバムから外した子も残ります。</small></p>
-      ${L.length?L.map(([id,v])=>`<div class="place"><img class="pix apic" src="${formPic(v.form)}"><span>${esc(v.name||'ぽこ')}<small>${fnm(v.form)}${v.adultAt?`・大人になった日 ${dstr(v.adultAt)}`:''}・${where(id)}</small></span></div>`).join(''):'<p>まだいません</p>'}
-      <button class="pbtn gray" id="mmback">もどる</button></div>`);
-    $('mmback').onclick=()=>zukanUI();
-  }
+  // ---- ぽこコレクションの画面（見るだけ。データは書かない）----
+  const _pcPic=new Map();
+  const pcFormPic=k=>{if(!_pcPic.has(k))_pcPic.set(k,formPic(k));return _pcPic.get(k)};      // 同じ姿の絵は1回だけ作る（思い出が多くても重くしない）
+  const pcShadow=k=>{const q='sh:'+k;if(!_pcPic.has(q))_pcPic.set(q,shadowPic(k));return _pcPic.get(q)};
+  const pcSec=(icon,title,right,cls)=>`<div class="pcsec ${cls||''}"><span class="fd">${PCD(icon)} ${title}</span>${right?`<span class="fd pccnt">${right}</span>`:`<span class="pcspk">${PCD('sparkle')}${PCD('ribbon')}</span>`}</div>`;
+  const pcStrip=()=>`<div class="pcstrip" aria-hidden="true"><i class="tp pk"></i>${PCD('heart')}${PCD('star')}${PCD('paw')}${PCD('cat')}${PCD('star')}${PCD('heart')}<i class="tp bl"></i></div>`;
+  const pcStage=d=>d.stage==='adult'?fnm(d.form):d.stage==='seed'?'種':fnm(d.stage);
+  const pcDate=t=>typeof t==='number'&&isFinite(t)?(d=>`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`)(new Date(t)):'？';
+  const PCV={
+    page:a=>({title:a.title,tab:a.tab,html:a.html,after:a.after}),
+    album(a){
+      if(!S)return {redirect:()=>pcClose()};
+      const L=albumSaved(S).slice().reverse(), c=canNext(), D=dexSaved(), inAlbum=new Set(L.map(r=>r.id));
+      const M=Object.entries(D.pets).sort((x,y)=>(y[1].adultAt||0)-(x[1].adultAt||0)), shown=M.slice(0,PC.more);
+      const where=id=>S&&id===S.id?['now','🌱 いま育てている子']:S&&id===S.fav?['fav','⭐ 一緒に暮らしている']:inAlbum.has(id)?['keep','📒 保管中']:['mem','💭 思い出だけ'];
+      const note=a&&a.note?`<div class="pcnote fm">${a.note}</div>`:'';
+      return {title:'ぽこコレクション',tab:'album',html:`<div class="pcban" aria-hidden="true">${PCD('star')}<span>POKO COLLECTION</span>${PCD('cat')}${PCD('heart')}</div>${note}
+        ${pcSec('star','いま育てている子','')}
+        <button class="pccard" id="alprof" ${S.stage==='seed'?'disabled':''}><span class="pcph"><img class="pix" src="${charPic()}"></span>
+          <span class="pcci"><b class="fm">${esc(S.name)}</b><small class="fm">${esc(pcStage(S))}</small><small class="fm">${PCD('heart')} なかよし ${S.aff}</small></span>${S.stage==='seed'?'':'<span class="pcgo">›</span>'}</button>
+        ${c.ok?`<button class="pcbtn pink" id="alnext">🌱 アルバムに入れて、次の子を育てる</button>`:`<p class="pcwhy fm">${NEXT_WHY[c.why]||''}</p>`}
+        ${pcSec('heart','保管中のぽこ',`${L.length} / ${ALBUM_MAX}匹`,'keep')}
+        <p class="pcsub fm">🌱たね ${S.seeds||0}こ</p>
+        ${L.length?L.map(r=>`<button class="pccard" data-al="${esc(r.id)}"><span class="pcph"><img class="pix" src="${pcFormPic(r.form)}"></span>
+          <span class="pcci"><b class="fm">${esc(r.name)}</b><small class="fm">${esc(fnm(r.form))}・${esc(tnm(r.temper))}</small>${r.pers&&PERS[r.pers]?`<small class="fm">せいかく：${esc(PERS[r.pers].n)}</small>`:''}<small class="fm">${pcDate(r.born)} 〜 ${pcDate(r.adultAt)}</small></span>
+          ${r.id===S.fav?`<span class="pcfav">${PCD('star')}</span>`:''}<span class="pcgo">›</span></button>`).join(''):'<p class="pcempty fm">まだいないよ。大人になった子をアルバムに入れると、ここに並ぶよ</p>'}
+        <div id="pcmem">${pcSec('cloud','思い出のぽこ',`${M.length}匹`,'mem')}</div>
+        <p class="pcsub fm">大人になった子の思い出です。アルバムから外した子も、ここに残ります。</p>
+        ${shown.length?shown.map(([id,v])=>{const w=where(id);return `<div class="pccard ro"><span class="pcph"><img class="pix" src="${pcFormPic(v.form)}"></span>
+          <span class="pcci"><b class="fm">${esc(v.name||'ぽこ')}</b><small class="fm">${esc(fnm(v.form))}</small><small class="fm">${v.adultAt?pcDate(v.adultAt):'？'}</small></span><span class="pctag ${w[0]} fm">${w[1]}</span></div>`}).join(''):'<p class="pcempty fm">まだいないよ</p>'}
+        ${M.length>shown.length?`<button class="pcbtn pink" id="pcmore">もっと見る（+${Math.min(20,M.length-shown.length)}匹）</button>`:''}${pcStrip()}`,
+        after(){
+          if($('alnext'))$('alnext').onclick=()=>nextUI1();
+          if(S.stage!=='seed')$('alprof').onclick=()=>pcGo('profile',{id:S.id});
+          $('pcbody').querySelectorAll('[data-al]').forEach(b=>b.onclick=()=>pcGo('profile',{id:b.dataset.al}));
+          if($('pcmore'))$('pcmore').onclick=()=>{const sc=$('pcbody').scrollTop;PC.more+=20;pcRender(sc)};
+        }};
+    },
+    profile(a){
+      const id=a.id, cur=S&&id===S.id, d=cur?S:albumSaved(S).find(r=>r.id===id); if(!d)return {redirect:()=>pcBack()};
+      const W=wordsSaved(), mine=W.w[id]||{}, byId=new Map(ALL_LINES.map(x=>[x.id,x]));
+      const heardL=Object.entries(mine).filter(([k])=>byId.has(k)).sort((x,y)=>x[1]-y[1]);
+      const Q=PROF_Q.filter(q=>!q.show||q.show(d)), sec=s=>Q.filter(q=>(q.sec||'tbl')===s);
+      const cell=voiceCell(d), isFav=S.fav===id, aff=Math.max(0,d.aff||0);
+      return {title:'プロフィール帳',tab:'album',html:`
+        <div class="pcprof"><div class="pcphoto"><i class="tape t1"></i><i class="tape t2"></i><img class="pix" src="${cur?charPic():pcFormPic(d.form)}"></div>
+          <div class="pcinfo">${sec('tbl').map(q=>`<div class="pcir"><span class="fd">${q.n}</span><b class="fm">${q.v(d)}</b></div>`).join('')}</div></div>
+        <div class="pcbox2">${sec('box').map(q=>`<div class="pcmini"><span class="pch">${PCD('heart')}<span class="fd">${q.n}</span></span><b class="fm">${q.v(d)}</b></div>`).join('')}</div>
+        <div class="pckosei"><span class="pclab"><span class="fd">こんな子</span>${PCD('heart')}</span><p class="fm">${cell?esc(cell.d):'まだ見つかっていません'}</p></div>
+        <div class="pcaff"><span class="pclab">${PCD('star')}<span class="fd">なかよし</span></span><b class="fm">${PCD('heart')} ${aff}</b><i class="pcbar"><i style="width:${Math.min(100,aff/80*100)}%"></i></i></div>
+        <div class="pcwords"><span class="pclab">${PCD('star')}<span class="fd">きいてくれたことば（${heardL.length}）</span></span>
+          ${heardL.length?heardL.map(([k,t])=>`<div class="pcw fm">${PCD('heart')}<span>${esc(lineText(byId.get(k)))}<small>${dstr(t)}</small></span></div>`).join(''):'<p class="pcempty fm">まだありません。話しかけたり、一緒に過ごしたりすると増えていくよ</p>'}</div>
+        ${sec('memo').map(q=>`<div class="pckosei"><span class="pclab"><span class="fd">${q.n}</span></span><p class="fm">${q.v(d)}</p></div>`).join('')}
+        ${cur?'':`<div class="pcacts"><button class="pcbtn yel" id="alfav">${isFav?'お気に入りをやめる':'⭐ 一緒に暮らす'}</button><button class="pcbtn red" id="alrm">アルバムから外す</button></div>`}`,
+        after(){ if(!cur){$('alfav').onclick=()=>favUI(id); $('alrm').onclick=()=>removeUI(id)} }};
+    },
+    zukan(a){
+      const D=dexSaved(), pets=Object.entries(D.pets), found=ZUKAN.filter(([k])=>D.sp[k]).length, P=9, pages=Math.max(1,Math.ceil(ZUKAN.length/P)), pg=Math.min(pages-1,Math.max(0,(a&&a.pg)||0));
+      const cells=ZUKAN.slice(pg*P,pg*P+P);
+      return {title:'進化図鑑',tab:'zukan',html:`<div class="pcpill fd"><i class="tp pk tl"></i>見つけたすがた ${found} / ${ZUKAN.length}（${Math.floor(found/ZUKAN.length*100)}%）</div>
+        <div class="pcgrid">${cells.map(([k],i)=>{const f=D.sp[k], no=String(pg*P+i+1).padStart(3,'0');
+          return `<button class="pcz ${f?'':'un'}" data-z="${k}">${f&&i%2===0?`<i class="pcz-st">${PCD('star')}</i>`:''}<img class="pix" src="${f?pcFormPic(k):pcShadow(k)}"><span class="fd">No.${no}</span><span class="fd">${f?esc(fnm(k)):'？？？'}</span></button>`}).join('')}</div>
+        <p class="pcsub fm">進化図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</p>${pcStrip()}`,
+        foot:pages>1?`<div class="pcpager"><button class="pcrb" id="pzprev" ${pg?'':'disabled'}>＜</button><span class="fd">${pg+1} / ${pages}</span><button class="pcrb" id="pznext" ${pg<pages-1?'':'disabled'}>＞</button></div>`:'',
+        after(){
+          $('pcbody').querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>pcGo('zdetail',{k:b.dataset.z}));
+          if($('pzprev'))$('pzprev').onclick=()=>{PC.stack[PC.stack.length-1].arg={pg:pg-1};pcRender(0)};
+          if($('pznext'))$('pznext').onclick=()=>{PC.stack[PC.stack.length-1].arg={pg:pg+1};pcRender(0)};
+        }};
+    },
+    zdetail(a){
+      const D=dexSaved(), k=a.k, i=ZUKAN.findIndex(z=>z[0]===k), f=D.sp[k]; if(i<0)return {redirect:()=>pcBack()};
+      const by=f&&f.by&&D.pets[f.by]?D.pets[f.by].name:null, n=Object.values(D.pets).filter(v=>v.form===k).length;
+      return {title:'進化図鑑',tab:'zukan',html:`<div class="pcbox"><div class="pcphoto big"><i class="tape t1"></i><img class="pix" src="${f?pcFormPic(k):pcShadow(k)}"></div>
+        <p class="fd pcbig">No.${String(i+1).padStart(3,'0')}　${f?esc(fnm(k)):'？？？'}</p>
+        ${f?`<table class="atbl fm"><tr><td>はじめて</td><td>${f.at?dstr(f.at):'？'}${by?`・${esc(by)}`:''}</td></tr><tr><td>この姿になった子</td><td>${n}匹</td></tr></table>`:`<p class="fm pcsub">${esc(ZUKAN[i][1])}</p>`}</div>`};
+    },
+    kotoba(a){
+      const tab=(a&&a.c)||'すべて', W=wordsSaved(), L=ALL_LINES.filter(lineUsable), has=x=>!!W.wl[x.id], found=L.filter(has).length, no=new Map(L.map((x,i)=>[x.id,i+1]));
+      const cnt=c=>{const s=c==='すべて'?L:L.filter(x=>x.c6===c);return [s.filter(has).length,s.length]};
+      const list=tab==='すべて'?L:L.filter(x=>x.c6===tab), pc=L.length?Math.floor(found/L.length*100):0;
+      return {title:'ことば図鑑',tab:'kotoba',html:`<div class="pckt">${['すべて',...C6].map(c=>{const [x,y]=cnt(c);return `<button class="pctb fd${c===tab?' on':''}" data-c="${c}">${c}<small>${x}/${y}</small></button>`}).join('')}</div>
+        <div class="pcwl">${list.length?list.map(x=>{const f=W.wl[x.id];return `<div class="pcwr"><span class="fd pcno">No.${String(no.get(x.id)).padStart(3,'0')}</span>
+          ${f?`<span class="fm pcwt">${esc(lineText(x))}<small>${dstr(f[0])}</small></span><span class="pchrt">${PCD('heart')}</span>`:'<span class="fd pcq">？？？</span>'}</div>`}).join(''):'<p class="pcempty fm">まだこの分類のことばはないみたい。これから増えるかも…</p>'}</div>
+        <p class="pcsub fm">ぽこが話したことばが、ここに集まります。ことば図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</p>`,
+        foot:`<div class="pcpill fd">${PCD('star')} 見つけたことば ${found}/${L.length}（${pc}%）<span class="pcrib">${PCD('ribbon')}</span></div>`,
+        after(){ $('pcbody').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{PC.stack[PC.stack.length-1].arg={c:b.dataset.c};pcRender(0)}) }};
+    },
+  };
   // ===== AL7：「最初から」の2択・アルバムの子を戻す・保存の容量 =====
   function resetUI(){
     if(LOCK)return; if(!S){$('kconfirm').classList.add('on');return}
@@ -2592,8 +2796,10 @@ const K=(()=>{
     ensureIntegrity(S);
     $('ksetup').classList.remove('on');save();ui();draw();say('種をタップして、芽を出させよう')};
   $('kff').onclick=()=>{if(LOCK)return;if(!S||S.stage==='seed'){ktoast('先に種を育ててね');return}const st=S.explore?3:30;S.skew+=st*MIN;tick();save();ui();draw();ktoast(st+'分たった！')};
-  $('kalbum').onclick=()=>{if(!LOCK&&S)albumUI()};
-  $('kzukan').onclick=()=>{if(!LOCK)zukanUI()};
+  $('kcolbtn').onclick=()=>{if(!LOCK&&S)pcOpen('album')};   // v2.1：アルバム・進化図鑑・ことば図鑑は「ぽこコレクション」1つから
+  $('pcx').onclick=()=>pcClose(); $('pcback').onclick=()=>pcBack(); $('kfind').onclick=()=>findClose();
+  $('pctabs').querySelectorAll('[data-pt]').forEach(b=>b.onclick=()=>pcTab(b.dataset.pt));
+  {const T={album:'heart',zukan:'book',kotoba:'chat'};$('pctabs').querySelectorAll('[data-pt]').forEach(b=>{b.innerHTML=PCD(T[b.dataset.pt])+b.textContent.replace(/^[❤📖💬]/u,'')})}
   $('kreset').onclick=()=>{if(!LOCK)resetUI()};
   $('kcn').onclick=()=>$('kconfirm').classList.remove('on');
   $('kcy').onclick=()=>{
