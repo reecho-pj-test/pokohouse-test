@@ -213,6 +213,8 @@ label.fl input{display:none}
 .pcgo{flex:none;font-size:24px;font-weight:900;color:#e0457b}
 .pcfav img{width:22px;height:22px}
 .pctag{flex:none;font-size:12px;font-weight:900;border:2px solid var(--ink);border-radius:12px;padding:3px 6px;white-space:nowrap;max-width:46%}
+.pctag.mem{font-size:10.5px;padding:1px 4px;border-radius:10px}
+.pccard.ro{flex-wrap:wrap;row-gap:4px}.pccard.ro .pcci{flex:1 1 110px}.pccard.ro .pctag{margin-left:auto;max-width:100%}   /* 札が長くて狭いときは下の段へ（名前・日付をつぶさない） */   /* 思い出だけ：名前・種類・日付を読みやすく（少し小さく） */
 .pctag.now{background:#d6f2d0}.pctag.fav{background:#FFE08A}.pctag.keep{background:#F8C5D9}.pctag.mem{background:#C8DDF5}
 .pcsub{font-size:13px;color:#5a4868;margin:2px 4px 4px;line-height:1.5}
 .pcempty{font-size:13px;color:#7a6a88;text-align:center;padding:10px 4px;border:2px dashed var(--lpink);border-radius:10px;background:#fff}
@@ -282,12 +284,14 @@ label.fl input{display:none}
 .kfind{position:absolute;left:50%;top:50%;z-index:40;width:min(300px,84%);max-height:70%;overflow:hidden;transform:translate(-50%,-50%) scale(.6);opacity:0;pointer-events:none;
   background:linear-gradient(90deg,rgba(248,197,217,.55) 50%,transparent 50%) 0 0/12px 12px,linear-gradient(rgba(248,197,217,.55) 50%,transparent 50%) 0 0/12px 12px,#FFF7E9;
   border:4px solid #4B345A;border-radius:20px;box-shadow:0 5px 0 #4B345A;padding:16px 14px 12px;text-align:center;color:#4B345A;transition:transform .25s cubic-bezier(.3,1.6,.5,1),opacity .2s}
-.kfind.on{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto;cursor:pointer}
+.kfind{overflow:visible}.kfind.on{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
+.kfind .kfx{position:absolute;right:-14px;top:-14px;z-index:2;width:44px;height:44px;border-radius:50%;border:3px solid #4B345A;background:#fff;color:#4B345A;font-size:20px;font-weight:900;line-height:1;padding:0;box-shadow:0 3px 0 #4B345A;display:flex;align-items:center;justify-content:center}
+.kfind .kfx:active{transform:translateY(2px);box-shadow:0 1px 0 #4B345A}
 .kfind .kft{display:block;font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:400;font-size:16px;line-height:1.3;color:#fff;background:#f58bb0;border:3px solid #4B345A;border-radius:14px;padding:4px 8px;margin:0 auto 10px;width:fit-content;max-width:100%;text-shadow:1px 1px 0 #4B345A}
 .kfind .kfl{font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:900;font-size:17px;line-height:1.55;background:#fff;border:3px solid #4B345A;border-radius:12px;padding:10px 8px;overflow-wrap:anywhere;word-break:break-word}
 .kfind .kfs{display:block;margin-top:8px;font-size:13px;font-weight:900;color:#7a5a88}
 .kfind img.pcd{width:16px;height:16px;vertical-align:-3px;image-rendering:pixelated}
-.kfind .kfd{position:absolute}.kfind .kfd img.pcd{width:20px;height:20px}.kfd.d1{left:8px;top:8px}.kfd.d2{right:8px;top:8px}.kfd.d3{left:10px;bottom:10px}.kfd.d4{right:12px;bottom:12px}
+.kfind .kfd{position:absolute}.kfind .kfd img.pcd{width:20px;height:20px}.kfd.d1{left:8px;top:8px}.kfd.d2{right:34px;top:8px}.kfd.d3{left:10px;bottom:10px}.kfd.d4{right:12px;bottom:12px}
 @media (prefers-reduced-motion:reduce){.kfind{transition:opacity .2s;transform:translate(-50%,-50%)}.kfind.on{transform:translate(-50%,-50%)}}
 </style>
 </head>
@@ -1486,7 +1490,7 @@ const K=(()=>{
     if(nw)setTimeout(()=>{try{findPop(lid)}catch(e){}},1200);   // v2.1：新しいことばの発見演出（記録・判定は上のまま）
   }
   window.addEventListener('pagehide',()=>{try{wordsFlush()}catch(e){}});
-  // 新しいことばの発見演出：画面の真ん中に小さなカード。約2.5秒で消える・押すとすぐ消える。同じことばは二度出さない。
+  // 新しいことばの発見演出：画面の真ん中に小さなカード。右上の × を押すまで出しておく（自動では消えない）。同じことばは二度出さない。
   // 後ろの画面は押せるまま（カードの外は押せる）。表示中に次の発見が来たら、中身を新しいほうに入れ替える（重ならない）
   let findT=0; const findShown=new Set();
   function findPop(lid){
@@ -1494,9 +1498,9 @@ const K=(()=>{
     const x=ALL_LINES.find(l=>l.id===lid); if(!x)return;
     const el=$('kfind'); clearTimeout(findT);
     el.innerHTML=`<span class="kfd d1">${PCD('heart')}</span><span class="kfd d2">${PCD('star')}</span><span class="kfd d3">${PCD('sparkle')}</span><span class="kfd d4">${PCD('sparkle')}</span>
-      <b class="kft">新しいことばを発見！</b><p class="kfl">${esc(lineText(x))}</p><small class="kfs">ことば図鑑に記録されたよ ${PCD('heart')}</small>`;
+      <button class="kfx" id="kfindx" aria-label="とじる">×</button><b class="kft">新しいことばを発見！</b><p class="kfl">${esc(lineText(x))}</p><small class="kfs">ことば図鑑に記録されたよ ${PCD('heart')}</small>`;
     el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
-    findT=setTimeout(findClose,2500);
+    $('kfindx').onclick=e=>{e.stopPropagation();findClose()};
   }
   function findClose(){clearTimeout(findT);$('kfind').classList.remove('on')}
   // ===== 吹き出しの順番（修正4）=====
@@ -2602,7 +2606,7 @@ const K=(()=>{
       return {title:'進化図鑑',tab:'zukan',html:`<div class="pcpill fd"><i class="tp pk tl"></i>見つけたすがた ${found} / ${ZUKAN.length}（${Math.floor(found/ZUKAN.length*100)}%）</div>
         <div class="pcgrid">${cells.map(([k],i)=>{const f=D.sp[k], no=String(pg*P+i+1).padStart(3,'0');
           return `<button class="pcz ${f?'':'un'}" data-z="${k}">${f&&i%2===0?`<i class="pcz-st">${PCD('star')}</i>`:''}<img class="pix" src="${f?pcFormPic(k):pcShadow(k)}"><span class="fd">No.${no}</span><span class="fd">${f?esc(fnm(k)):'？？？'}</span></button>`}).join('')}</div>
-        <p class="pcsub fm">進化図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</p>${pcStrip()}`,
+        <p class="pcsub fm">見つけたぽこの姿は、ここにずっと残るよ。「最初から」にしても、発見の記録は消えないよ。</p>${pcStrip()}`,
         foot:pages>1?`<div class="pcpager"><button class="pcrb" id="pzprev" ${pg?'':'disabled'}>＜</button><span class="fd">${pg+1} / ${pages}</span><button class="pcrb" id="pznext" ${pg<pages-1?'':'disabled'}>＞</button></div>`:'',
         after(){
           $('pcbody').querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>pcGo('zdetail',{k:b.dataset.z}));
@@ -2621,7 +2625,7 @@ const K=(()=>{
       const tab=(a&&a.c)||'すべて', W=wordsSaved(), L=ALL_LINES.filter(lineUsable), has=x=>!!W.wl[x.id], found=L.filter(has).length, no=new Map(L.map((x,i)=>[x.id,i+1]));
       const cnt=c=>{const s=c==='すべて'?L:L.filter(x=>x.c6===c);return [s.filter(has).length,s.length]};
       const list=tab==='すべて'?L:L.filter(x=>x.c6===tab), pc=L.length?Math.floor(found/L.length*100):0;
-      return {title:'ことば図鑑',tab:'kotoba',html:`<div class="pckt">${['すべて',...C6].map(c=>{const [x,y]=cnt(c);return `<button class="pctb fd${c===tab?' on':''}" data-c="${c}">${c}<small>${x}/${y}</small></button>`}).join('')}</div>
+      return {title:'ことば図鑑',tab:'kotoba',html:`<div class="pckt">${['すべて',...C6].map(c=>{const [x,y]=cnt(c);return `<button class="pctb fd${c===tab?' on':''}" data-c="${c}">${c}<small>${y?`${x}/${y}`:'準備中'}</small></button>`}).join('')}</div>
         <div class="pcwl">${list.length?list.map(x=>{const f=W.wl[x.id];return `<div class="pcwr"><span class="fd pcno">No.${String(no.get(x.id)).padStart(3,'0')}</span>
           ${f?`<span class="fm pcwt">${esc(lineText(x))}<small>${dstr(f[0])}</small></span><span class="pchrt">${PCD('heart')}</span>`:'<span class="fd pcq">？？？</span>'}</div>`}).join(''):'<p class="pcempty fm">まだこの分類のことばはないみたい。これから増えるかも…</p>'}</div>
         <p class="pcsub fm">ぽこが話したことばが、ここに集まります。ことば図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</p>`,
@@ -2797,7 +2801,7 @@ const K=(()=>{
     $('ksetup').classList.remove('on');save();ui();draw();say('種をタップして、芽を出させよう')};
   $('kff').onclick=()=>{if(LOCK)return;if(!S||S.stage==='seed'){ktoast('先に種を育ててね');return}const st=S.explore?3:30;S.skew+=st*MIN;tick();save();ui();draw();ktoast(st+'分たった！')};
   $('kcolbtn').onclick=()=>{if(!LOCK&&S)pcOpen('album')};   // v2.1：アルバム・進化図鑑・ことば図鑑は「ぽこコレクション」1つから
-  $('pcx').onclick=()=>pcClose(); $('pcback').onclick=()=>pcBack(); $('kfind').onclick=()=>findClose();
+  $('pcx').onclick=()=>pcClose(); $('pcback').onclick=()=>pcBack(); 
   $('pctabs').querySelectorAll('[data-pt]').forEach(b=>b.onclick=()=>pcTab(b.dataset.pt));
   {const T={album:'heart',zukan:'book',kotoba:'chat'};$('pctabs').querySelectorAll('[data-pt]').forEach(b=>{b.innerHTML=PCD(T[b.dataset.pt])+b.textContent.replace(/^[❤📖💬]/u,'')})}
   $('kreset').onclick=()=>{if(!LOCK)resetUI()};
