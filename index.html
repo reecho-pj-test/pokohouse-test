@@ -289,9 +289,82 @@ label.fl input{display:none}
 .kfind .kfx:active{transform:translateY(2px);box-shadow:0 1px 0 #4B345A}
 .kfind .kft{display:block;font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:400;font-size:16px;line-height:1.3;color:#fff;background:#f58bb0;border:3px solid #4B345A;border-radius:14px;padding:4px 8px;margin:0 auto 10px;width:fit-content;max-width:100%;text-shadow:1px 1px 0 #4B345A}
 .kfind .kfl{font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:900;font-size:17px;line-height:1.55;background:#fff;border:3px solid #4B345A;border-radius:12px;padding:10px 8px;overflow-wrap:anywhere;word-break:break-word}
+.kfind .kfl{text-wrap:balance}.kfind .kfw{display:inline-block;max-width:100%}
 .kfind .kfs{display:block;margin-top:8px;font-size:13px;font-weight:900;color:#7a5a88}
 .kfind img.pcd{width:16px;height:16px;vertical-align:-3px;image-rendering:pixelated}
 .kfind .kfd{position:absolute}.kfind .kfd img.pcd{width:20px;height:20px}.kfd.d1{left:8px;top:8px}.kfd.d2{right:34px;top:8px}.kfd.d3{left:10px;bottom:10px}.kfd.d4{right:12px;bottom:12px}
+/* ===== v2.2 コイン・シール帳ログインボーナス（この部分だけ）===== */
+img.pcd{image-rendering:pixelated}
+.kcoinbar{position:absolute;left:5px;right:5px;top:5px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;z-index:1}
+.kcoin{display:flex;align-items:center;gap:4px;background:#fff;border:3px solid #3a2f45;border-radius:99px;padding:1px 9px 1px 4px;box-shadow:0 2px 0 #3a2f45;
+  font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-size:15px;line-height:22px;color:#3a2f45;min-width:64px}
+.kcoin img.pcd{width:18px;height:18px}
+.kcoin.bump{animation:kcbump .5s}
+@keyframes kcbump{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(1)}}
+#klbbtn{position:relative;pointer-events:auto;display:flex;align-items:center;gap:3px;border:3px solid #3a2f45;border-radius:99px;background:#ffe3ee;color:#3a2f45;box-shadow:0 2px 0 #3a2f45;
+  font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-size:16px;line-height:24px;padding:2px 10px 2px 5px}
+#klbbtn.new{padding-right:16px}
+#klbbtn:before{content:'';position:absolute;inset:-8px}   /* 押せる範囲を少し広く */
+#klbbtn img.pcd{width:22px;height:22px}
+#klbbtn:active{transform:translateY(2px);box-shadow:0 0 0 #3a2f45}
+#klbbtn.new:after{content:'！';position:absolute;right:-9px;top:-11px;width:20px;height:20px;border-radius:50%;background:#ff4d6d;border:2px solid #fff;box-shadow:0 0 0 2px #3a2f45;
+  color:#fff;font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:900;font-size:13px;line-height:16px;text-align:center}   /* 受け取っていないときだけ */
+.kcoinl{font-size:14px;font-weight:900;color:#5a4868;margin-top:4px}.kcoinl img.pcd{width:16px;height:16px;vertical-align:-3px}
+.kfind .kfc{display:block;margin-top:4px;font-size:13px;font-weight:900;color:#7a5a88}
+#klb.ov{padding:14px 12px}
+#klb.on{display:flex;align-items:center;justify-content:center}
+.lbn{--ink:#4B345A;--lpink:#E9CAD8;position:relative;width:100%;max-width:380px;margin:auto;color:var(--ink);border:4px solid var(--ink);border-radius:18px;box-shadow:4px 5px 0 var(--ink);
+  background-color:#fffdf7;background-image:linear-gradient(rgba(120,190,150,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(120,190,150,.22) 1px,transparent 1px);background-size:12px 12px;
+  padding:10px 10px 14px 30px}
+.lbn .pcrings{left:-6px;top:18px;bottom:18px}
+.lbn img.pcd{image-rendering:pixelated}
+.lbhd{display:grid;grid-template-columns:1fr 44px;align-items:center;gap:6px}
+.lbtt{justify-self:center;font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-size:18px;line-height:1.3;color:#fff;background:#f58bb0;border:3px solid var(--ink);border-radius:16px;
+  padding:3px 14px;text-shadow:1px 1px 0 var(--ink);box-shadow:0 3px 0 var(--ink);white-space:nowrap}
+.lbn .tape.t1{left:2px;top:-8px;transform:rotate(-8deg);width:52px}.lbn .tape.t2{right:60px;top:-8px;bottom:auto;transform:rotate(6deg);width:48px}
+.lbsub{font-size:13px;font-weight:700;text-align:center;margin:8px 0 2px;color:#6a5478}
+.lbsub .lbnum{font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:400;font-size:18px;color:#e0457b;vertical-align:-1px}
+.lbhave{display:flex;justify-content:center;align-items:center;gap:4px;font-size:13px;font-weight:900;margin-bottom:6px}
+.lbhave b{font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:400;font-size:17px}.lbhave img.pcd{width:18px;height:18px}
+.lbrow{display:grid;gap:5px;margin-top:5px}.lbrow.r1{grid-template-columns:repeat(4,minmax(0,1fr))}.lbrow.r2{grid-template-columns:1fr 1fr 1.45fr}
+.lbc{position:relative;background:#fff;border:3px solid var(--ink);border-radius:12px;padding:3px 1px 4px;text-align:center;display:flex;flex-direction:column;align-items:center;min-width:0}
+.lbd{font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-size:13px;line-height:1.25;white-space:nowrap}
+.lbs{position:relative;height:46px;width:100%;display:flex;align-items:center;justify-content:center}
+.lbs i{display:block;width:34px;height:34px;border-radius:50%;border:2px dashed #d7c6e2;background:#faf6fc}
+.lbs>img.pcd{height:32px;width:auto;max-width:44px;--r:-6deg;transform:rotate(var(--r));
+  filter:drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(1px 2px 0 rgba(75,52,90,.35))}
+.lbc:nth-child(2n) .lbs>img.pcd{--r:5deg}
+.lba{display:flex;align-items:center;gap:2px;font-size:13px;font-weight:900;line-height:1.2;white-space:nowrap}.lba img.pcd{width:14px;height:14px}
+.lbc.lbgot{background:#fff4f8}
+.lbck{position:absolute;right:-6px;top:-7px;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;z-index:2}
+.lbck img.pcd{width:14px;height:12px}
+.lbc.fut{opacity:.8}.lbc.fut .lba{color:#8a7a98}
+.lbc.today{padding-top:9px;background:#fffbe6;box-shadow:0 0 0 3px #FFE08A;animation:lbglow 1.6s ease-in-out infinite}
+.lbc.today .lbs i{border-color:#f58bb0;background:#fff0f6}
+.lbtd{position:absolute;left:50%;top:-11px;transform:translateX(-50%);font-size:10.5px;font-weight:900;line-height:1;background:#f58bb0;color:#fff;border:2px solid var(--ink);border-radius:8px;padding:2px 5px;white-space:nowrap;z-index:2}
+@keyframes lbglow{0%,100%{box-shadow:0 0 0 3px #FFE08A}50%{box-shadow:0 0 0 5px #FFE08A}}
+.lbc.sp{background:radial-gradient(circle at 50% 45%,#fff 0 30%,#fff3c4 60%,#ffd6e4);border-width:3px}
+.lbc.sp .lbs{height:56px}.lbc.sp .lbs i{width:44px;height:44px;border-color:#f0c040;background:#fffbea}
+.lbc.sp .lbs>img.pcd{height:44px;max-width:56px}
+.lbc.sp .lbd b{font-weight:400;color:#e0457b}
+.lbkr{position:absolute;width:14px;height:14px;pointer-events:none;animation:lbtw 1.4s ease-in-out infinite}.lbkr img.pcd{width:14px;height:14px}
+.lbkr.k1{left:8%;top:4px}.lbkr.k2{right:8%;top:16px;animation-delay:.5s}.lbkr.k3{left:18%;bottom:20px;animation-delay:.9s}
+@keyframes lbtw{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.1)}}
+.lbs img.peta{animation:lbpeta .55s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes lbpeta{0%{transform:scale(1.9) rotate(-14deg);opacity:0}45%{transform:scale(.86) rotate(3deg);opacity:1}70%{transform:scale(1.08) rotate(var(--r))}100%{transform:scale(1) rotate(var(--r))}}
+.lbpt{position:absolute;left:50%;top:-4px;transform:translateX(-50%);font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-size:14px;color:#e0457b;
+  text-shadow:1px 1px 0 #fff,-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff;white-space:nowrap;animation:lbpt 1s ease-out both;z-index:3;pointer-events:none}
+@keyframes lbpt{0%{opacity:0;transform:translate(-50%,6px)}25%{opacity:1;transform:translate(-50%,-4px)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-10px)}}
+.lbmsg{min-height:26px;margin-top:8px;text-align:center;font-size:15px;font-weight:900;color:#e0457b;display:flex;align-items:center;justify-content:center;gap:4px}
+.lbmsg img.pcd{width:18px;height:18px}.lbmsg.pop{animation:kcbump .5s}
+.lbn .pcbtn{margin-top:4px}.lbn .pcbtn:disabled{background:#eee7f2;color:#8a7a98;box-shadow:0 2px 0 #b9aac6;border-color:#b9aac6}
+.lbsr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.lbnote{font-size:12px;color:#7a6a88;text-align:center;margin-top:6px;line-height:1.5}
+.kcard h2.cph{font-size:17px;white-space:nowrap}
+.cpast{background:#fff;border:3px solid #3a2f45;border-radius:12px;padding:8px 10px;margin:8px 0;text-align:left;font-size:14px;line-height:1.8}
+.cpast b{float:right}.cpast .tot{border-top:2px dashed #E9CAD8;margin-top:4px;padding-top:4px;color:#e0457b;font-weight:900}
+.cpast img.pcd,.kcard h2 img.pcd{width:18px;height:18px;vertical-align:-3px}
+@media (prefers-reduced-motion:reduce){.lbc.today,.lbkr,.kcoin.bump,.lbmsg.pop{animation:none}.lbs img.peta{animation:none}.lbpt{animation:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.kfind{transition:opacity .2s;transform:translate(-50%,-50%)}.kfind.on{transform:translate(-50%,-50%)}}
 </style>
 </head>
@@ -301,7 +374,7 @@ label.fl input{display:none}
   <div class="khead"><div><b id="kname2"></b> <span id="kstage"></span></div><div id="kgenki"></div></div>
   <div class="kstat"><span>なかよし</span><div class="bar"><i id="kaff"></i></div><span id="kaffn"></span></div>
   <div class="knext" id="knext"></div>
-  <div class="kscene"><canvas id="kcv" width="64" height="48"></canvas><div id="kov"><div id="kdecor"></div><div id="kzz"></div><div id="kbub"></div></div></div>
+  <div class="kscene"><canvas id="kcv" width="64" height="48"></canvas><div class="kcoinbar" id="kcoinbar"><div class="kcoin" id="kcoin" aria-label="もっているコイン"><span id="kcoinic"></span><span id="kcoinn">0</span></div><button id="klbbtn" aria-label="ログインボーナス"><span id="klbic"></span>ログボ</button></div><div id="kov"><div id="kdecor"></div><div id="kzz"></div><div id="kbub"></div></div></div>
   <div id="kmsg"></div>
   <div class="kbtns" id="kbtns">
     <button data-k="explore"><em data-ic="explore"></em>探検</button>
@@ -336,6 +409,7 @@ label.fl input{display:none}
   <div class="ov" id="klock"><div class="kcard" id="klockbody"></div></div>
   <div class="toast" id="ktoast"></div>
   <div class="kfind" id="kfind" role="status" aria-live="polite"></div>
+  <div class="ov" id="klb"><div class="lbn zk" id="klbnote" role="dialog" aria-label="ログインボーナス"></div></div>
 </div>
 
 
@@ -571,6 +645,8 @@ const SND=(()=>{
     fanfare(){ [0,4,7,12,7,12].forEach((n,i)=>tone(hz(n+12),.14,'square',.08,i*.1)); },
     pop(){ tone(600,.05,'sine',.12,0,400); },
     btn(){ tone(1100,.03,'square',.04); },
+    peta(){ tone(520,.05,'square',.1,0,-220); [0,4,7].forEach((n,i)=>tone(hz(n+19),.1,'triangle',.1,.09+i*.06)); },   // v2.2：シールを貼る音（音OFFのときは tone が鳴らさない）
+    coin(){ tone(hz(24),.06,'square',.07); tone(hz(31),.12,'square',.07,.06); },
   };
   // 最初のタップで音を有効にする（ブラウザの決まり）
   // スマホは「指を離した時」「クリック」でないと音の許可が出ないので、そこで鳴らせる状態にする
@@ -1064,6 +1140,7 @@ const K=(()=>{
     {const eb=document.querySelector('#kbtns [data-k=explore]'), onMap=S.explore&&!PL(S.explore.p).walk&&!PL(S.explore.p).unknown&&!(S.explore.map&&S.explore.map.done);
      const want=onMap?'sugoroku':'explore'; if(eb.dataset.cur!==want){eb.dataset.cur=want;eb.innerHTML=`<em><img class="pix bi" src="${ICON(want)}"></em>${onMap?'すごろく':'探検'}`;} if(onMap)eb.classList.add('hint');}
     $('kzz').textContent=S.sleep&&present()?(frame%4<2?'Z z':'z Z'):'';
+    coinUI();
   }
   // ===== v2.1 WD1.5：性格（docs/v21_pers.md 22章が正。persRule＝1）=====
   // 6つの行動（ごはん・料理・効果のあったなでる・探検・お散歩・釣り）を log に数だけで記録し、大人になった瞬間に一度だけ性格を書く。
@@ -1175,17 +1252,18 @@ const K=(()=>{
     got.forEach(k=>{ if(hasIT(k)) IT[k].d?add(S.decor,k):add(S.inv,k); else { if(!Array.isArray(S.hold))S.hold=[]; S.hold.push(k); held++; } });
     ANA.track('explore_end',{place:E.p,items:got.length});
     S.explore=null; S.lucky=false; S.justBack=true; if(pl.walk)S.backFrom='walk'; else if(!pl.unknown)S.backFrom='explore'; else delete S.backFrom; EX=null; x=34;
+    const cr=pl.walk?coinAct('walk'):!pl.unknown?coinAct('go'):null;   // v2.2：帰ってきた（行動が終わった）ときだけ。今日の回数の上限まで
     if(pl.walk)prRec('walk'); else if(!pl.unknown)prRec('go',['n_go_'+E.p].concat(Object.keys(PLACES).filter(k=>!PLACES[k].walk&&(PLACES[k].need<=0||(S.unlocked||[]).includes(k))).length>=2?['q_'+E.p]:[]));   // v2.1 性格の記録
     save();
     say('おかえり！');   // 探検中の案内（光・おまけ・ダッシュ・あと○分など）は、帰ったら残さない SND.sfx.ding(); setTimeout(()=>speak(lineOf('back'),'happy'),400);
     modal(`<h2>${pl.e} ただいま！</h2><p>${esc(S.name)}が${pl.n}から帰ってきた！</p><div class="got">${got.map(k=>IT[k].e).join('')}</div>
-      <p>${[...new Set(got)].map(k=>IT[k].n).join('、')}を拾ってきた${(E.bonus||[]).length?`<br>（すごろくや光るおまけで拾った ${E.bonus.length}個 込み）`:''}${held?`<br>（このバージョンで使えない物 ${held}個は、なくさないように保管しました）`:''}<br>「なでる」とおまけをくれるかも？</p><button class="pbtn" onclick="K.close()">やったね！</button>`);
+      <p>${[...new Set(got)].map(k=>IT[k].n).join('、')}を拾ってきた${(E.bonus||[]).length?`<br>（すごろくや光るおまけで拾った ${E.bonus.length}個 込み）`:''}${held?`<br>（このバージョンで使えない物 ${held}個は、なくさないように保管しました）`:''}<br>「なでる」とおまけをくれるかも？</p>${coinLine(cr)}<button class="pbtn" onclick="K.close()">やったね！</button>`);
   }
 
   // ---- モーダル ----
   let fishTimer=null;
   function modal(html){$('kmbody').innerHTML=pixify(html);$('kmodal').classList.add('on')}
-  function close(){$('kmodal').classList.remove('on');$('kcol').classList.remove('on');clearInterval(fishTimer);fishTimer=null;ui();draw()}
+  function close(){$('kmodal').classList.remove('on');$('kcol').classList.remove('on');$('klb').classList.remove('on');clearInterval(fishTimer);fishTimer=null;ui();draw()}
 
   // ---- こうどう ----
   const ckey=()=>!S?'baby':S.stage==='adult'?S.form:S.stage;
@@ -1370,7 +1448,7 @@ const K=(()=>{
   let bubShown=0, bubUntil=0, nextIdle=Date.now()+15000;
   const DEBUG=TEST_BUILD&&location.search.includes('debug');
   const idleGap=()=>DEBUG?(4000+Math.random()*2000):(S&&S.explore?(20000+Math.random()*20000):(45000+Math.random()*45000));
-  const modalOpen=()=>['kmodal','ksetup','kconfirm','kcol'].some(id=>$(id).classList.contains('on'));
+  const modalOpen=()=>['kmodal','ksetup','kconfirm','kcol','klb'].some(id=>$(id).classList.contains('on'));
   // ===== 吹き出しの改行・区切り（修正3）=====
   // 改行できる所の優先：文の終わり（。！？…）＞「、」＞言葉の切れ目（Intl.Segmenter）。行の頭に「。、！？」「ー」「っ」「）」などは来ない
   const BUB_MIN=13, BUB_MAX=15, BUB_LH=1.35, BUB_PAD=16;
@@ -1487,6 +1565,7 @@ const K=(()=>{
     if(!W.wl[lid]){W.wl[lid]=[t,typeof pid==='string'&&ID_RE.test(pid)?pid:null];ch=nw=true}
     if(typeof pid==='string'&&ID_RE.test(pid)){const m=W.w[pid]||(W.w[pid]={}); if(m[lid]===undefined){m[lid]=t;ch=true}}
     if(ch){wordsDirty=true; wordsFlush()}
+    if(nw&&S&&!LOCK){try{if(coinWord(lid)){COIN_WNEW.add(lid);try{SND.sfx.coin()}catch(e){}save()}}catch(e){}}   // v2.2：初めて見つけたことば +10（1つにつき1回）
     if(nw)setTimeout(()=>{try{findPop(lid)}catch(e){}},1200);   // v2.1：新しいことばの発見演出（記録・判定は上のまま）
   }
   window.addEventListener('pagehide',()=>{try{wordsFlush()}catch(e){}});
@@ -1498,11 +1577,125 @@ const K=(()=>{
     const x=ALL_LINES.find(l=>l.id===lid); if(!x)return;
     const el=$('kfind'); clearTimeout(findT);
     el.innerHTML=`<span class="kfd d1">${PCD('heart')}</span><span class="kfd d2">${PCD('star')}</span><span class="kfd d3">${PCD('sparkle')}</span><span class="kfd d4">${PCD('sparkle')}</span>
-      <button class="kfx" id="kfindx" aria-label="とじる">×</button><b class="kft">新しいことばを発見！</b><p class="kfl">${esc(lineText(x))}</p><small class="kfs">ことば図鑑に記録されたよ ${PCD('heart')}</small>`;
+      <button class="kfx" id="kfindx" aria-label="とじる">×</button><b class="kft">新しいことばを発見！</b><p class="kfl">${findWrap(lineText(x))}</p><small class="kfs">ことば図鑑に記録されたよ ${PCD('heart')}</small>${COIN_WNEW.has(lid)?`<small class="kfc">${PCD('coin')} コイン +${COIN_WORD}</small>`:''}`;
     el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
     $('kfindx').onclick=e=>{e.stopPropagation();findClose()};
   }
+  // 発見カードの文だけ：文節のまとまりで改行する（「ぽかぽかす／る。」のような1〜2文字だけの折り返しを防ぐ）。
+  // Intl.Segmenter がない端末では今まで通りの表示。文章そのものは変えない
+  function findWrap(t){
+    t=String(t);
+    try{
+      if(typeof Intl==='undefined'||!Intl.Segmenter)return esc(t);
+      const segs=[...new Intl.Segmenter('ja',{granularity:'word'}).segment(t)], out=[]; let pre='';
+      for(const g of segs){
+        const w=g.segment;
+        if(/^[「『（(【〈《"']+$/.test(w)){pre+=w;continue}
+        const hira=/^[ぁ-ゖー]{1,2}$/.test(w), last=out.length?out[out.length-1]:'';
+        if(out.length&&!pre&&(!g.isWordLike||hira||/^\s+$/.test(w))&&!/[。！？!?]$/.test(last))out[out.length-1]+=w;
+        else if(out.length&&!pre&&!g.isWordLike)out[out.length-1]+=w;
+        else{out.push(pre+w);pre=''}
+      }
+      if(pre)out.push(pre);
+      return out.map(c=>`<span class="kfw">${esc(c)}</span>`).join('');
+    }catch(e){return esc(t)}
+  }
   function findClose(){clearTimeout(findT);$('kfind').classList.remove('on')}
+
+  // ===== v2.2 コイン（docs/v22_coins.md）=====
+  // 保存はセーブ本体の S.coin（引っ越しコード・バックアップ・復元にそのまま入る。v2.1/v1.9 は知らない項目として残す）。
+  // {v:1, n:残高, past:過去分を精算したら1, day:回数を数えている日番号, c:{walk,fish,go}:その日に実際に払った回数,
+  //  lb:{s:今のシール帳に貼った枚数0〜7, last:最後に受け取った日番号, shown:自動で開いた日番号}, d:{料理ID:1}, w:{セリフID:1}}
+  // 日付は端末の日付（dayNo）。時計を戻しても同じ日の受け取りは増えない（3日以上の巻き戻しだけは、時計を直したとみなして受け取れる）
+  const COIN_MAX=999999999, LB_COINS=[30,30,30,30,30,30,150], LB_ICONS=['heart','star','cat','ribbon','cloud','paw','kira'];
+  const COIN_DAY={walk:[5,3,'お散歩'],fish:[5,3,'釣り'],go:[10,2,'探検']}, COIN_DISH=20, COIN_WORD=10, COINKEEP=KEY+'_coinkeep';
+  const COIN_OK=new WeakSet(), COIN_WNEW=new Set();
+  let LIDSET=null; const lidOk=id=>{if(!LIDSET)LIDSET=new Set(ALL_LINES.filter(lineUsable).map(x=>x.id));return LIDSET.has(id)};   // ことば図鑑にのるセリフだけ
+  const coinFmt=n=>Number(n||0).toLocaleString('ja-JP');
+  function coinFix(d){
+    if(!d)return null; if(isO(d.coin)&&COIN_OK.has(d.coin))return d.coin;
+    if(!isO(d.coin))d.coin={v:1,n:0,past:0};
+    const c=d.coin, int=(v,lo,hi,def)=>Number.isInteger(v)&&v>=lo&&v<=hi?v:def, day=v=>Number.isInteger(v)&&Math.abs(v)<1e7?v:null;
+    c.v=int(c.v,1,99,1); c.n=int(c.n,0,COIN_MAX,0); c.past=c.past===1?1:0; c.day=day(c.day);
+    if(!isO(c.c))c.c={}; for(const k of Object.keys(COIN_DAY))c.c[k]=int(c.c[k],0,99,0);
+    if(!isO(c.lb))c.lb={}; c.lb.s=int(c.lb.s,0,7,0); c.lb.last=day(c.lb.last); c.lb.shown=day(c.lb.shown);
+    for(const f of ['d','w']){const o=isO(c[f])?c[f]:{}; c[f]={}; for(const k of Object.keys(o).slice(0,5000))if(KEY_RE.test(k)&&o[k])c[f][k]=1}
+    COIN_OK.add(c); return c;
+  }
+  const dayAfter=(t,last)=>last===null||t>last||last-t>=3;   // 次の日になった（または時計を大きく戻した）
+  function coinAdd(n){const c=coinFix(S); c.n=Math.min(COIN_MAX,c.n+n); coinSeen=-1}
+  // 1日の回数の上限がある報酬：行動が終わったときに呼ぶ。払ったときだけ回数を増やす
+  function coinAct(kind){
+    if(!S||!COIN_DAY[kind])return null; const c=coinFix(S), t=dayNo(), [amt,max,nm]=COIN_DAY[kind];
+    if(dayAfter(t,c.day)){c.day=t; for(const k of Object.keys(COIN_DAY))c.c[k]=0}
+    if(c.c[kind]>=max)return {got:0,used:max,max,nm};
+    c.c[kind]++; coinAdd(amt); try{SND.sfx.coin()}catch(e){} return {got:amt,used:c.c[kind],max,nm};
+  }
+  const coinLine=r=>!r?'':r.got?`<p class="kcoinl">${PCD('coin')} コイン +${r.got}（${r.nm}のコイン 今日 ${r.used}/${r.max}回）</p>`:`<p class="kcoinl">${r.nm}のコインは、今日はおしまい（${r.max}回まで）</p>`;
+  function coinDish(k){ if(!S||k==='fushigi'||!hasDISH(k))return 0; const c=coinFix(S); if(c.d[k])return 0; c.d[k]=1; coinAdd(COIN_DISH); return COIN_DISH }   // ふしぎな料理（失敗）は対象外
+  function coinWord(lid){ if(!S||!lidOk(lid))return 0; const c=coinFix(S); if(c.w[lid])return 0; c.w[lid]=1; coinAdd(COIN_WORD); return COIN_WORD }
+  // これまでの発見（v2.2 を初めて開いたとき1回だけ）：今のデータのレシピと、ことば図鑑の記録から。知らないIDは払わない（印も付けない）
+  function coinPast(){
+    if(!S)return null; const c=coinFix(S); if(c.past===1)return null;
+    const rs=Array.isArray(S.recipes)?S.recipes:[], W=wordsNow();
+    const ds=rs.filter(k=>typeof k==='string'&&k!=='fushigi'&&hasDISH(k)&&!c.d[k]), ws=Object.keys(isO(W.wl)?W.wl:{}).filter(k=>lidOk(k)&&!c.w[k]);
+    const skip=rs.filter(k=>typeof k==='string'&&k!=='fushigi'&&!hasDISH(k)).length+Object.keys(isO(W.wl)?W.wl:{}).filter(k=>!lidOk(k)).length;
+    ds.forEach(k=>c.d[k]=1); ws.forEach(k=>c.w[k]=1); c.past=1;
+    const total=ds.length*COIN_DISH+ws.length*COIN_WORD; if(total)coinAdd(total);
+    return {dn:ds.length,wn:ws.length,total,skip};
+  }
+  function pastUI(p){
+    modal(`<h2 class="cph">${PCD('coin')} これまでの発見ボーナス</h2><p class="tleft">今までに見つけた料理とことばの分のコインを、まとめてプレゼント！（1回だけ）</p>
+      <div class="cpast">${p.dn?`料理 ${p.dn}種 × ${COIN_DISH}<b>${coinFmt(p.dn*COIN_DISH)}</b><br>`:''}${p.wn?`ことば ${p.wn}個 × ${COIN_WORD}<b>${coinFmt(p.wn*COIN_WORD)}</b>`:''}
+      <div class="tot">ぜんぶで<b>${PCD('coin')} +${coinFmt(p.total)}</b></div></div><button class="pbtn" onclick="K.close()">やったね！</button>`);
+    try{SND.sfx.coin()}catch(e){}
+  }
+  // ---- シール帳のログインボーナス ----
+  function lbCan(){ if(!S)return false; const c=coinFix(S); return dayAfter(dayNo(),c.lb.last) }
+  function lbClaim(){
+    if(LOCK||!S||!lbCan())return null;
+    const c=coinFix(S), prev=clone(c), t=dayNo();
+    if(c.lb.s>=7)c.lb.s=0;   // 7日目のあと：新しいシール帳の1日目から
+    const i=c.lb.s, amt=LB_COINS[i]; c.lb.s=i+1; c.lb.last=t; c.lb.shown=t; c.n=Math.min(COIN_MAX,c.n+amt); coinSeen=-1;
+    if(!save()){if(S&&S.coin===c){S.coin=prev; coinFix(S)} return {fail:true}}   // 保存できなければ受け取っていないまま
+    ANA.track('login_bonus',{day:i+1}); return {i,amt};
+  }
+  function lbOpen(){ if(LOCK||!S)return; $('klb').classList.add('on'); lbRender() }
+  function lbClose(){ $('klb').classList.remove('on'); ui(); draw() }
+  function lbRender(got){
+    const c=coinFix(S), can=lbCan(), s=c.lb.s, full=s>=7&&can, filled=full?0:s, today=can?(full?0:s):-1;
+    const cell=i=>{const st=i<filled?'lbgot':i===today?'today':'fut', sp=i===6;
+      return `<div class="lbc ${st}${sp?' sp':''}">${i===today?'<span class="lbtd">きょう</span>':''}${st==='lbgot'?`<span class="lbck">${PCD('check')}</span>`:''}
+        <span class="lbd">${i+1}日目${sp?'<br><b>とくべつ</b>':''}</span>
+        <span class="lbs">${st==='lbgot'?PCD(LB_ICONS[i]).replace('class="pix pcd"',`class="pix pcd${got&&got.i===i?' peta':''}"`):'<i></i>'}${got&&got.i===i?'<span class="lbpt">ペタッ！</span>':''}${sp?`<span class="lbkr k1">${PCD('sparkle')}</span><span class="lbkr k2">${PCD('sparkle')}</span><span class="lbkr k3">${PCD('sparkle')}</span>`:''}</span>
+        <span class="lba">${PCD('coin')}${LB_COINS[i]}</span><span class="lbsr">${st==='lbgot'?'受け取りずみ':st==='today'?'今日の分':'まだ'}</span></div>`};
+    $('klbnote').innerHTML=`<div class="pcrings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><i class="tape t1"></i><i class="tape t2"></i>
+      <div class="lbhd"><span class="lbtt">ログインボーナス</span><button class="pcrb" id="lbx" aria-label="とじる">×</button></div>
+      <p class="lbsub">毎日 <b class="lbnum">1</b> まい、シールをはろう</p>
+      <div class="lbhave">もっているコイン ${PCD('coin')}<b id="lbn">${coinFmt(c.n)}</b></div>
+      <div class="lbrow r1">${[0,1,2,3].map(cell).join('')}</div><div class="lbrow r2">${[4,5,6].map(cell).join('')}</div>
+      <div class="lbmsg${got?' pop':''}" id="lbmsg" aria-live="polite">${got?`${PCD('coin')} +${got.amt}コイン ゲット！`:''}</div>
+      <button class="pcbtn pink" id="lbgo" ${can?'':'disabled'}>${can?'今日の分を受け取る':'今日の分は受け取りずみ'}</button>
+      <p class="lbnote">${can?'受け取らずに閉じても、今日のうちならあとで受け取れるよ':'また明日、シールをはりにきてね'}${s>=7&&!can?'<br>7まい そろった！ 次は新しいシール帳の1日目から':''}</p>`;
+    $('lbx').onclick=lbClose;
+    $('lbgo').onclick=()=>{ $('lbgo').disabled=true; const r=lbClaim(); if(!r){lbRender();return}
+      if(r.fail){if(S&&!LOCK){lbRender(); $('lbmsg').textContent='保存できなかったので、受け取りをやめました'} return}
+      lbRender(r); try{SND.sfx.peta();setTimeout(()=>SND.sfx.coin(),350)}catch(e){} ui(); };
+  }
+  // ホームのコイン表示・ログボの入口の印（ui から呼ぶ）
+  let coinSeen=null;
+  function coinUI(){
+    if(!S)return; const c=coinFix(S);
+    if(coinSeen!==c.n){const el=$('kcoin'); if(coinSeen!==null&&c.n>coinSeen){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump')} coinSeen=c.n; $('kcoinn').textContent=coinFmt(c.n)}
+    $('klbbtn').classList.toggle('new',lbCan());
+  }
+  // 起動のあと・日付が変わったとき：これまでの発見ボーナス（1回だけ）→ その日まだ受け取っていなければシール帳を1回だけ自動で開く
+  let coinWait=Date.now()+2200;
+  function coinTick(){
+    if(LOCK||!S||Date.now()<coinWait||modalOpen()||$('klock').classList.contains('on')||$('kfind').classList.contains('on'))return;   // 発見カードが出ているあいだは待つ（重ねない）
+    const p=coinPast(); if(p){ save(); if(p.total>0){pastUI(p);return} }
+    const c=coinFix(S), t=dayNo(); if(lbCan()&&c.lb.shown!==t){c.lb.shown=t;save();lbOpen()}
+  }
   // ===== 吹き出しの順番（修正4）=====
   // ・表示を始めたセリフ（bubCur）は、分けた吹き出しを最後まで全部出す（文字を消さない）
   // ・途中に来たセリフは待つ：操作のセリフ（なでる・タップ・ごはん 等＝'op'）は bubOps、自動のひとりごと（'auto'）は bubAutos
@@ -1639,8 +1832,8 @@ const K=(()=>{
       $('kclr').onclick=()=>{if(sel.length){sel=[];render()}else close()};
       $('kcook').onclick=()=>{
         const key=[...sel].sort().join('+'), d=(R[key]&&!isRetired('dish',R[key].k)?R[key]:null)||FUSHIGI, isNew=!S.recipes.includes(d.k);
-        sel.forEach(k=>add(S.inv,k,-1)); ANA.track('cook',{recipe:d.k,is_new:isNew}); if(S.tut===1)setTut(2); SND.sfx.ding(); if(S.stage!=='seed'&&!S.explore) speak(lineOf('cook')); add(S.dishes,d.k); if(isNew)S.recipes.push(d.k); prFood('c',d.k); prRec('cook',d===FUSHIGI?['n_odd']:[]); save();
-        modal(`<h2>${isNew?'🎉 新しいレシピ！':'できた！'}</h2><div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b><br>元気 +${d.g}　なかよし +${d.a}</p>
+        sel.forEach(k=>add(S.inv,k,-1)); ANA.track('cook',{recipe:d.k,is_new:isNew}); if(S.tut===1)setTut(2); SND.sfx.ding(); if(S.stage!=='seed'&&!S.explore) speak(lineOf('cook')); add(S.dishes,d.k); if(isNew)S.recipes.push(d.k); const cg=isNew?coinDish(d.k):0; if(cg)try{SND.sfx.coin()}catch(e){} prFood('c',d.k); prRec('cook',d===FUSHIGI?['n_odd']:[]); save();
+        modal(`<h2>${isNew?'🎉 新しいレシピ！':'できた！'}</h2><div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b><br>元気 +${d.g}　なかよし +${d.a}</p>${cg?`<p class="kcoinl">${PCD('coin')} 新しい料理の発見 コイン +${cg}</p>`:''}
           <button class="pbtn" onclick="K.close()">OK</button>`);
         if(isNew)kfx($('kmbody'),'✨',3,20);
       };
@@ -1685,7 +1878,8 @@ const K=(()=>{
         if(k!=='kutsu'){S.lucky=true;txt+='　🍀次の探検はラッキー'}
         kfx($('kmbody'),'💦',2,20);SND.sfx.splash();$('ftalk').innerHTML=talkRow(k==='kutsu'?'…長ぐつ？ なんで？':k==='takara'?'宝箱だ！':k==='oosakana'?'大物だ〜！':lineOf('fish'),k==='kutsu'?'normal':'happy')} else {SND.sfx.miss();$('ftalk').innerHTML=talkRow(pick(['逃げられた〜。','早かったかな…']),'sad')}
       if(S.fishN>=3){S.fishN=0;S.fishRest=now()+10*MIN;txt+='\n{n}は疲れちゃった（10分休憩）';$('fbtn').disabled=true}
-      $('fmsg').innerHTML=pixify(esc(txt.replaceAll('{n}',S.name))); $('fbtn').textContent='もう一回'; save();
+      const cr=ok?coinAct('fish'):null;   // v2.2：釣れたときだけ（逃げられた・何もかからなかったときは0）
+      $('fmsg').innerHTML=pixify(esc(txt.replaceAll('{n}',S.name)))+coinLine(cr); $('fbtn').textContent='もう一回'; save();
     };
     $('fbtn').onclick=()=>{if(F.ph==='wait')done(false,'早すぎ！ 逃げられた…');else if(F.ph==='bite')done(true);else start()};
     $('fend').onclick=close;
@@ -1898,6 +2092,7 @@ const K=(()=>{
     // 目印が育成枠と合わないものは消さずに残して、警告だけ記録
     d.album.forEach(r=>{if(r&&r.live&&(r.id!==d.id||d.stage!=='adult'))INTEG_WARN.push('live:'+r.id)});
     if(d.fav!==null&&!d.album.some(r=>r&&r.id===d.fav))d.fav=null;
+    coinFix(d);   // v2.2：コインがないデータは残高0で始める
     return d;
   }
   // ===== 次の子を育てる（AL3）：今の大人をアルバムへ → 新しいたね。おうちのもの（持ち物・料理・飾り・レシピ・行ける場所）は引き継ぐ =====
@@ -2222,7 +2417,7 @@ const K=(()=>{
       ${kind==='conflict'?'':'<button class="pbtn gray" id="lkrs">救出用データをコピー</button>'}
       <div id="lkrsbox" style="display:none"><p class="tleft" style="font-size:12px"><b>これは通常の「おひっこしコード」ではありません。</b>そのまま復元できるとは限りません（壊れたデータが入っていることがあります）。困ったときに、ゲームを作った人に送ってください。</p>
       <textarea id="lkrsta" class="codeta" readonly></textarea></div>`:'');
-    $('klock').classList.add('on'); ['kmodal','ksetup','kconfirm','kcol'].forEach(id=>$(id).classList.remove('on'));
+    $('klock').classList.add('on'); ['kmodal','ksetup','kconfirm','kcol','klb'].forEach(id=>$(id).classList.remove('on'));
     if($('lkretry'))$('lkretry').onclick=()=>location.reload();   // 再開は必ず読み直し（メモリ上の古いデータは保存しない）
     if($('lknext'))$('lknext').onclick=()=>{LOCK=null;$('klock').classList.remove('on');$('ksetup').classList.add('on')};
     if(raw!=null){
@@ -2241,7 +2436,7 @@ const K=(()=>{
       `<p class="tleft">古いバージョン（v1.8など）の画面が開いたままになっていて、保存データが上書きされたようです。<b>どちらのデータも消さずに保管しています。</b>続けるデータを選んでください。<br><b>先に、古いタブや画面を閉じてください。</b>閉じないと、また上書きされることがあります。</p>`+
       card('A','v1.9で最後に正しく保存したデータ',repairSave(clone(lat)))+card('B','古い画面で上書きされたデータ',legacy,'こちらを選ぶと新しい形式に移行し、個体の記録（個体IDなど）は新しく付け直されます')+
       `<p class="mmsg" id="chmsg"></p>`;
-    $('klock').classList.add('on'); ['kmodal','ksetup','kconfirm','kcol'].forEach(i=>$(i).classList.remove('on'));
+    $('klock').classList.add('on'); ['kmodal','ksetup','kconfirm','kcol','klb'].forEach(i=>$(i).classList.remove('on'));
     const msg=t=>{$('chmsg').innerHTML=pixify(esc(t))};
     $('cbA').onclick=()=>{try{downloadBackup(lat,'_v19');ktoast(SAVED_NOTE)}catch(e){ktoast('保存を開始できませんでした')}};
     $('cbB').onclick=()=>{try{downloadRaw(raw);ktoast(SAVED_NOTE)}catch(e){ktoast('保存を開始できませんでした')}};
@@ -2536,8 +2731,12 @@ const K=(()=>{
     book:['KKKKKKKKKKK','KGGGGKGGGGK','KGWWGKGWWGK','KGGGGKGGGGK','KGWWGKGWWGK','KGGGGKGGGGK','KKKKKKKKKKK'],
     chat:['.KKKKKKK.','KWWWWWWWK','KWKWKWKWK','KWWWWWWWK','.KKKWKKK.','...KWK...','...KK....'],
     cloud:['...KKK...','..KWWWK..','.KWWWWWKK','KWWWWWWWK','KWWKWKWWK','.KKKKKKK.'],
+    coin:['..KKKKK..','.KYYYYYK.','KYWYYYYOK','KYWYOYYOK','KYYYOYYOK','KYYYOYYOK','KYYYYYYOK','.KYOOOOK.','..KKKKK..'],   // v2.2
+    seal:['.KKKKKKK..','KLLLLLLLK.','KLPPLPPLK.','KLPPPPPLK.','KLLPPPLLK.','KLLLPLLKWK','KLLLLLKWWK','.KKKKKKKK.'],
+    check:['......KK','.....KGK','KK..KGK.','KGKKGK..','.KGGK...','..KK....'],
+    kira:['.....K.....','....KYK....','....KYK....','KKKKYWYKKKK','KPYYWWWYYPK','.KPYYWYYPK.','..KPYYYPK..','..KYYPYYK..','.KYYK.KYYK.','.KYK...KYK.','.KK.....KK.'],
   };
-  const PCD_COL={K:'#4B345A',P:'#f58bb0',L:'#ffd6e4',Y:'#ffd84d',W:'#ffffff',B:'#a87048',C:'#ffe8b0',G:'#8fd3a5'};
+  const PCD_COL={K:'#4B345A',P:'#f58bb0',L:'#ffd6e4',Y:'#ffd84d',W:'#ffffff',B:'#a87048',C:'#ffe8b0',G:'#8fd3a5',O:'#e0a22e'};
   const _pcd={};
   function PCD(n){
     if(!_pcd[n]){const a=PCD_ART[n]||PCD_ART.star, c=document.createElement('canvas'); c.width=a[0].length; c.height=a.length; const g2=c.getContext('2d');
@@ -2637,8 +2836,8 @@ const K=(()=>{
   function resetUI(){
     if(LOCK)return; if(!S){$('kconfirm').classList.add('on');return}
     modal(`<h2>最初から</h2><p class="tleft">どちらにしますか？ どちらも、始める前に今のデータを退避します（せってい → データの復旧 で戻せます）。</p>
-      <button class="place" id="rsone"><em>🌱</em><span>今の子だけやり直す<small>消える：今の子（${esc(S.name)}）の名前・なかよし・元気・食べた記録<br>残る：アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・進化図鑑</small></span></button>
-      <button class="place" id="rsall"><em>🧹</em><span>全部消して最初から<small>消える：今の子・アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね<br>残る：進化図鑑（発見記録・思い出）</small></span></button>
+      <button class="place" id="rsone"><em>🌱</em><span>今の子だけやり直す<small>消える：今の子（${esc(S.name)}）の名前・なかよし・元気・食べた記録<br>残る：アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・コイン・進化図鑑</small></span></button>
+      <button class="place" id="rsall"><em>🧹</em><span>全部消して最初から<small>消える：今の子・アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・コイン<br>残る：進化図鑑（発見記録・思い出）・ことば図鑑・シール帳の進み</small></span></button>
       <button class="pbtn gray" onclick="K.close()">やめる</button>`);
     $('rsone').onclick=()=>restartUI();
     $('rsall').onclick=()=>{close();$('kconfirm').classList.add('on')};
@@ -2797,20 +2996,24 @@ const K=(()=>{
     const t=Date.now();
     S={name:$('kname').value.trim()||'ぽこ',stage:'seed',taps:0,form:null,genki:3,aff:0,inv:{},dishes:{},decor:{},recipes:[],tags:{},
        explore:null,sleep:false,lucky:false,justBack:false,last:t,skew:0,ver:SAVE_FORMAT,album:[],unlocked:[],seeds:0,fav:null,seen:{},book:{}};
+    try{const kp=JSON.parse(localStorage.getItem(COINKEEP)||'null');if(isO(kp)){S.coin=kp;S.coin.n=0}}catch(e){}
     ensureIntegrity(S);
-    $('ksetup').classList.remove('on');save();ui();draw();say('種をタップして、芽を出させよう')};
+    $('ksetup').classList.remove('on');if(save())try{localStorage.removeItem(COINKEEP)}catch(e){}coinWait=Date.now()+2500;ui();draw();say('種をタップして、芽を出させよう')};
   $('kff').onclick=()=>{if(LOCK)return;if(!S||S.stage==='seed'){ktoast('先に種を育ててね');return}const st=S.explore?3:30;S.skew+=st*MIN;tick();save();ui();draw();ktoast(st+'分たった！')};
   $('kcolbtn').onclick=()=>{if(!LOCK&&S)pcOpen('album')};   // v2.1：アルバム・進化図鑑・ことば図鑑は「ぽこコレクション」1つから
   $('pcx').onclick=()=>pcClose(); $('pcback').onclick=()=>pcBack(); 
   $('pctabs').querySelectorAll('[data-pt]').forEach(b=>b.onclick=()=>pcTab(b.dataset.pt));
   {const T={album:'heart',zukan:'book',kotoba:'chat'};$('pctabs').querySelectorAll('[data-pt]').forEach(b=>{b.innerHTML=PCD(T[b.dataset.pt])+b.textContent.replace(/^[❤📖💬]/u,'')})}
   $('kreset').onclick=()=>{if(!LOCK)resetUI()};
+  $('klbbtn').onclick=()=>{if(!LOCK&&S&&!modalOpen())lbOpen()};   // v2.2
+  $('kcoinic').innerHTML=PCD('coin'); $('klbic').innerHTML=PCD('seal');
   $('kcn').onclick=()=>$('kconfirm').classList.remove('on');
   $('kcy').onclick=()=>{
     if(LOCK)return; if(conflict()){enterConflict();return}
     try{if(S)dexMark('removed',albumSaved(S).map(r=>r.id))}catch(e){}   // AL7：全部消した子は「アルバムの子を戻す」に出さない（図鑑の思い出には残る）
     try{const r=localStorage.getItem(KEY);if(r&&r!=='null'){const bk=KEY+'_before_reset_'+Date.now();localStorage.setItem(bk,r);if(localStorage.getItem(bk)!==r)throw 0}}
     catch(e){$('kconfirm').classList.remove('on');ktoast('今のデータを退避できなかったので、やめました');setSaveFail(true);return}
+    try{if(S){const k=Object.assign(clone(coinFix(S)),{n:0});localStorage.setItem(COINKEEP,JSON.stringify(k))}}catch(e){}   // v2.2：残高は0。シール帳の進み・受け取った日・発見報酬の記録は引き継ぐ（同じ日・同じ発見で二重にもらわない）
     const wr=writeMain('null'); if(!wr.ok){$('kconfirm').classList.remove('on');if(wr.why!=='conflict'){ktoast('保存できなかったので、やめました');setSaveFail(true)}return}
     S=null;setSaveFail(false);$('kconfirm').classList.remove('on');$('ksetup').classList.add('on');draw()};
   function open(){show('kid');
@@ -2847,6 +3050,7 @@ const K=(()=>{
     if(S&&present()&&!S.sleep&&!busy&&Math.random()<.18){const nx=x+(Math.random()<.5?-1:1),[lo,hi]=walkRange();if(nx>=lo&&nx<=hi){face=nx>x?1:-1;x=nx}}
     if(S&&S.explore&&!$('kmodal').classList.contains('on'))exStep();
     if(S){idleTalk();bubTick();}
+    if(S&&frame%5===0){try{coinTick()}catch(e){}}
     SND.bgm(!S||S.stage==='seed'?'home':S.explore?(PLACES[S.explore.p]?S.explore.p:'mori'):(S.sleep||per()==='night')?'night':'home');
     if(S&&frame%25===0){tick();save()}
     if(frame%2===0)ui();draw()},200);
