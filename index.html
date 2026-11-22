@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>【テスト】ぽこのおうち v2.0</title>
+<title>ぽこのおうち</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="テストぽこ">
+<meta name="apple-mobile-web-app-title" content="ぽこのおうち">
 <meta name="theme-color" content="#bfeccd">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
@@ -158,6 +158,22 @@ label.fl input{display:none}
 .talk .tb:before{content:"";position:absolute;left:-11px;top:50%;margin-top:-7px;border:7px solid transparent;border-right:10px solid #3a2f45;border-left:0}
 .hint{animation:hint 1s ease-in-out infinite;border-color:#ff5f97!important;background:#fff0f6!important}
 @keyframes hint{50%{transform:translateY(-4px)}}
+.zk .fd{font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif;font-weight:400}   /* v2.1：プロフィール帳・ことば図鑑・進化図鑑だけ。タイトル・タブ・項目名・No.・発見数 */
+.zk .fm,.zk small,.zk .place small,.zk p{font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif}   /* 説明・セリフ・日付・メモ */
+.zk .place>span{font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP','Yu Gothic','Meiryo',sans-serif;font-weight:400;font-size:16px;min-width:0;overflow-wrap:anywhere}
+.zk .place>span small{font-weight:700}
+.zk .ztabs{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.zk .ztab{flex:1 1 calc(25% - 4px);min-width:0;min-height:40px;padding:4px 0;white-space:nowrap;font-size:16px;line-height:1.1;border:3px solid #3a2f45;background:#fff;color:#2e2438}
+.zk .ztab small{display:block;font-size:13px}
+.zk .ztab.on{background:#ffd84d}
+.zk .ptbl td.fd,.zk p.fd{font-size:16px}
+.zk .wrow{display:flex;gap:8px;align-items:baseline;text-align:left;padding:6px 2px;border-bottom:1px dashed #cbb;min-width:0}
+.zk .wno{font-size:16px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.zk .wt{flex:1;min-width:0;font-size:14px;overflow-wrap:anywhere;word-break:break-word}
+.zk .wt small{display:block;font-size:13px;color:#5a4868;font-weight:500}
+.zk .wq{font-size:16px;color:#9a8aa8}
+.zk .wlist{max-height:46vh;overflow-y:auto;border:3px solid #3a2f45;padding:2px 6px;margin-top:6px}
+.zk .sbox b{font-size:16px}
 </style>
 </head>
 <body>
@@ -178,7 +194,7 @@ label.fl input{display:none}
     <button data-k="sleep"><em data-ic="sleep"></em>寝る</button>
     <button id="kbag"><em data-ic="bag"></em>持ち物</button>
   </div>
-  <div class="kbtns2"><button id="kalbum">📒 アルバム</button><button id="kzukan">📖 キャラ図鑑</button></div>
+  <div class="kbtns2"><button id="kalbum">📒 アルバム</button><button id="kzukan">📖 進化図鑑</button></div>
   <div class="foot"><button id="kset">⚙️ 設定</button><button id="ksnd">🔊 音あり</button><button id="kff" style="display:none">⏩ テスト</button><button id="kreset">最初から</button></div>
   <div class="ov" id="ksetup"><div class="kcard">
     <h2>🌱 ふしぎな種を拾った！</h2>
@@ -189,7 +205,7 @@ label.fl input{display:none}
     <button class="pbtn gray" id="kmovein">📦 おひっこしコードで続きから</button>
   </div></div>
   <div class="ov" id="kmodal"><div class="kcard" id="kmbody"></div></div>
-  <div class="ov" id="kconfirm"><div class="kcard"><h2>全部消して最初から？</h2><p>今の子・アルバム・持ち物などが消えます</p><p style="font-size:12px"><b>キャラ図鑑（発見記録・思い出）は消えずに残ります。</b></p><p style="font-size:12px">消す前に「設定 → ぽこのおひっこし → ファイルに保存する」でバックアップを残しておくと安心です</p>
+  <div class="ov" id="kconfirm"><div class="kcard"><h2>全部消して最初から？</h2><p>今の子・アルバム・持ち物などが消えます</p><p style="font-size:12px"><b>進化図鑑（発見記録・思い出）は消えずに残ります。</b></p><p style="font-size:12px">消す前に「設定 → ぽこのおひっこし → ファイルに保存する」でバックアップを残しておくと安心です</p>
     <button class="pbtn" id="kcy">最初から</button><button class="pbtn gray" id="kcn">やめる</button></div></div>
   <div class="savefail" id="ksavefail"></div>
   <div class="rotnote" id="krot" aria-live="polite"><b>📱 スマホを縦にしてね</b><span>横向きだと、ぽこが見えません。<br>縦向きにすると、そのまま続きから遊べます。</span></div>
@@ -199,7 +215,7 @@ label.fl input{display:none}
 
 
 <script>
-const TEST_BUILD=true;   // 正式版は false。テスト用サイトだけ true にする（早送り・?debug を使えるのはテスト版だけ）
+const TEST_BUILD=false;   // 正式版は false。テスト用サイトだけ true にする（早送り・?debug を使えるのはテスト版だけ）
 
 // ================= 共通 =================
 const $=id=>document.getElementById(id);
@@ -895,7 +911,7 @@ const K=(()=>{
     favBusy=Date.now()+1200; favN++;
     kfx($('kov'),'💗',1); SND.cry(f.form);
     const t=FAV_LINES[favN%FAV_LINES.length].replaceAll('{n}',S.name);
-    speak(`${favN%2?'なでなで…えへへ。':''}${t}`,null,'fav'); draw();   // 反応（ハート・鳴き声）はすぐ。セリフは今のセリフの後
+    speak(`${favN%2?'なでなで…えへへ。':''}${t}`,null,'fav',undefined,'l_fav_'+String(favN%FAV_LINES.length+1).padStart(2,'0')); draw();   // 反応（ハート・鳴き声）はすぐ。セリフは今のセリフの後
     return true;
   }
 
@@ -924,6 +940,86 @@ const K=(()=>{
      const want=onMap?'sugoroku':'explore'; if(eb.dataset.cur!==want){eb.dataset.cur=want;eb.innerHTML=`<em><img class="pix bi" src="${ICON(want)}"></em>${onMap?'すごろく':'探検'}`;} if(onMap)eb.classList.add('hint');}
     $('kzz').textContent=S.sleep&&present()?(frame%4<2?'Z z':'z Z'):'';
   }
+  // ===== v2.1 WD1.5：性格（docs/v21_pers.md 22章が正。persRule＝1）=====
+  // 6つの行動（ごはん・料理・効果のあったなでる・探検・お散歩・釣り）を log に数だけで記録し、大人になった瞬間に一度だけ性格を書く。
+  // 進化（tags・form）・なかよし・元気・場所の解放には使わない。判定は記録・気質・子のIDだけで決まる（乱数・時刻は使わない）
+  const PERS={pr_amae:{n:'甘えん坊'},pr_bouken:{n:'冒険好き'},pr_kuishinbo:{n:'食いしん坊'},pr_nonbiri:{n:'のんびり屋'},
+    pr_kenkyu:{n:'研究家'},pr_jishin:{n:'自信家'},pr_kodawari:{n:'こだわり屋'},pr_fushigi:{n:'不思議ちゃん'}};
+  const PERS_IDS=['pr_amae','pr_bouken','pr_kuishinbo','pr_nonbiri','pr_kenkyu','pr_jishin','pr_kodawari','pr_fushigi'];   // 並び順は変えない（相性表の列）
+  const PERS_AFFINITY={amaenbo:[5,1,2,2,1,1,2,2],ottori:[2,1,2,5,2,1,3,2],kokishin:[1,5,2,2,4,3,1,4],kuishinbo:[2,1,5,2,3,1,3,2],
+    cool:[1,2,1,2,5,4,3,2],makezu:[1,3,2,1,2,5,4,1],shincho:[2,1,2,3,4,1,5,2],kimagure:[2,3,2,3,2,1,1,5]};
+  const PERS_FALLBACK={cool:'pr_kenkyu'};   // 記録不足のとき、相性の最高値が並ぶ気質の決め方（正式の表では並ばないが、安全のため残す）
+  const PERS_RULE=1, PR_ACTS=['feed','cook','pet','go','walk','fish'], PR_MIN_NEW=10, PR_MIN_OLD=30;
+  const dayNo=()=>{const t=now();return Math.floor((t-new Date(t).getTimezoneOffset()*60000)/864e5)};   // 端末の日付の日番号
+  // px：その子用の拡張の入れ物（v21_evo）。持ち主の id（of）を入れる。料理ごとの回数 food.c（作った）・food.e（食べた）
+  function pxOf(d){ d=d||S; if(d.px!==undefined&&!isO(d.px))return null; if(!d.px)d.px={of:d.id}; const p=d.px; if(p.of!==d.id)return null;
+    if(!isO(p.food))p.food={}; if(!isO(p.food.c))p.food.c={}; if(!isO(p.food.e))p.food.e={}; return p }
+  function prFood(kind,k){const p=pxOf(); if(p&&typeof k==='string'){const f=p.food[kind];f[k]=Math.min(1e9,(f[k]||0)+1)}}
+  // 行動を1回記録：回数 n_、有効回数 v_（その日の6回目まで）、点 p_（半点の整数：1〜3回目+4、4〜6回目+2）、日数 d_、今日の回数 c_・日番号 t_
+  function prRec(a,more){
+    if(!S||S.stage==='seed'||!isO(S.log))return;
+    const L=S.log, d=dayNo(), inc=k=>{L[k]=Math.min(1e9,(L[k]||0)+1)};
+    if(typeof L.from!=='number')L.from=d;
+    if(typeof L['t_'+a]!=='number'||d>L['t_'+a]){L['t_'+a]=d;L['c_'+a]=0;inc('d_'+a)}   // 時計を戻したときは同じ日として続ける（得をしない）
+    inc('c_'+a); inc('n_'+a); const k=L['c_'+a];
+    if(k<=6){inc('v_'+a); L['p_'+a]=Math.min(1e9,(L['p_'+a]||0)+(k<=3?4:2))}
+    (more||[]).forEach(inc);
+    prLegacy();
+  }
+  // 性格の点（0〜1 の同じ尺度）。L：log、F：px.food
+  function prScores(L,F){
+    const n=a=>L['n_'+a]||0, P={}, mix={};
+    PR_ACTS.forEach(a=>{P[a]=(L['p_'+a]||0)/2+Math.min(3,Math.max(0,(L['d_'+a]||0)-1))});
+    const TP=PR_ACTS.reduce((s,a)=>s+P[a],0)||1, TN=PR_ACTS.reduce((s,a)=>s+n(a),0)||1;
+    PR_ACTS.forEach(a=>{mix[a]=.35*P[a]/TP+.65*n(a)/TN});
+    const c=isO(F)&&isO(F.c)?F.c:{}, e=isO(F)&&isO(F.e)?F.e:{};
+    const odd=L.n_odd||0, ncook=n('cook'), oddr=ncook?odd/ncook:0;
+    const good=Object.entries(c).filter(([k,v])=>k!=='fushigi'&&v>0), gsum=good.reduce((s,[,v])=>s+v,0), kinds=good.length;
+    const s={pr_amae:.8*mix.pet, pr_bouken:mix.go, pr_kuishinbo:1.3*mix.feed, pr_nonbiri:.45*(mix.walk+mix.fish)};
+    s.pr_kenkyu=(ncook-odd>=4&&kinds>=3&&oddr<.3)?1.25*mix.cook*Math.min(1,kinds/5)*(1-oddr):null;
+    const ngo=n('go'), yama=ngo?(L.n_go_yama||0)/ngo:0, nf=n('fish'), fok=nf?(L.n_fishok||0)/nf:0;
+    s.pr_jishin=1.6*mix.go*yama+.8*mix.fish*fok;
+    const ev=Object.values(e).filter(v=>v>0), dcook=gsum?Math.max(...good.map(([,v])=>v))/gsum:0, dfeed=n('feed')>=4&&ev.length?Math.max(...ev)/n('feed'):0, df=Math.max(dcook,dfeed);
+    const qs=Object.keys(L).filter(k=>/^q_/.test(k)).map(k=>L[k]), pc=qs.reduce((a,b)=>a+b,0), pf=pc?Math.max(...qs)/pc:0;
+    const c1=ncook>=4&&df>=.6, c2=pc>=4&&pf>=.75;
+    s.pr_kodawari=(c1||c2)?1.5*Math.max(c1?(mix.cook+mix.feed)*.8*df:0,c2?mix.go*pf:0):null;
+    s.pr_fushigi=(odd>=2&&oddr>=.2)?1.5*mix.cook*Math.min(1,oddr/.4):null;
+    return s;
+  }
+  function prTie(tied,d){   // 相性 → 子のIDから決まる固定順
+    const af=PERS_AFFINITY[d.temper]||[];
+    if(tied.length>1){const m=Math.max(...tied.map(i=>af[i]||0));tied=tied.filter(i=>(af[i]||0)===m)}
+    const ord=i=>parseInt(crc32(`${d.id}:${PERS_IDS[i]}`),16);
+    return PERS_IDS[tied.slice().sort((a,b)=>ord(a)-ord(b))[0]];
+  }
+  function prValid(L){return {valid:PR_ACTS.reduce((s,a)=>s+(L['v_'+a]||0),0),kinds:PR_ACTS.filter(a=>(L['v_'+a]||0)>0).length}}
+  // 記録から決める。最低条件（有効 min 回以上・2種類以上）に届かなければ null
+  function prDecide(d,min){
+    const L=isO(d.log)?d.log:{}, v=prValid(L); if(v.valid<min||v.kinds<2)return null;
+    const s=prScores(L,isO(d.px)&&d.px.of===d.id?d.px.food:null);
+    const cand=PERS_IDS.map((p,i)=>[s[p]==null?null:Math.round(s[p]*1000),i]).filter(c=>c[0]!==null);
+    const top=Math.max(...cand.map(c=>c[0])); let tied=cand.filter(c=>c[0]===top).map(c=>c[1]);
+    if(tied.length>1){const n=a=>L['n_'+a]||0, raw=[n('pet'),n('go'),n('feed'),n('walk')+n('fish'),n('cook'),(L.n_go_yama||0)+(L.n_fishok||0),n('cook'),L.n_odd||0];
+      const m=Math.max(...tied.map(i=>raw[i])); tied=tied.filter(i=>raw[i]===m)}
+    return prTie(tied,d);
+  }
+  const prFallback=d=>PERS_FALLBACK[d.temper]||prTie(PERS_IDS.map((p,i)=>i),d);
+  // 一度だけ書く（pers が入っている子には二度と書かない）。log の写し logFixed と、料理の写し px.foodFixed も一度だけ
+  function prFix(d,p,mode){
+    if(d.pers||!PERS[p])return false;
+    if(!isO(d.log))d.log={};
+    d.pers=p; d.persRule=PERS_RULE; d.log.pr_mode=mode; d.log.pr_day=dayNo();
+    if(!d.logFixed)d.logFixed=clone(d.log);
+    const x=pxOf(d); if(x&&!x.foodFixed)x.foodFixed=clone(x.food);
+    return true;
+  }
+  // 大人になった瞬間（姿を決めたすぐ後）：記録から。届かなければ気質との相性から（pr_mode 2）
+  function prOnAdult(){ if(!S||S.pers)return; const p=prDecide(S,PR_MIN_NEW); prFix(S,p||prFallback(S),p?1:2) }
+  // 性格がまだない大人（v2.1 より前に大人になった子など）：v2.1 からの記録が有効30回・2種類に届いたら確定（pr_mode 3）
+  function prLegacy(){
+    if(!S||S.stage!=='adult'||S.pers)return; const p=prDecide(S,PR_MIN_OLD); if(!p)return;
+    if(prFix(S,p,3))setTimeout(()=>{if(S&&S.pers===p){say(`{n}の性格が見つかった！「${PERS[p].n}」 アルバムのプロフィール帳で見られるよ`);ktoast('📖 性格が見つかった！')}},900);
+  }
   // W3：大人になるときの姿（基本の進化先）を決める。v1.9 の判定をそのまま移したもの（docs/spec.md「進化の決まり」）
   // 食べた料理のタグの回数がいちばん多いタグの姿。同じ回数なら先に記録されたタグ、ただし fruit（花の子）と同じ回数なら fruit。何もなければ花の子
   function baseForm(tags){const t=tags;let best='fruit';Object.keys(t).forEach(k=>{if(TAG2FORM[k]&&t[k]>(t[best]||0))best=k});return TAG2FORM[best]}
@@ -932,7 +1028,7 @@ const K=(()=>{
     Object.entries(PLACES).forEach(([k,p])=>{if(p.need>0&&b<p.need&&S.aff>=p.need&&!S.unlocked.includes(k)){S.unlocked.push(k);setTimeout(()=>{say(`新しい場所「${p.n}」に行けるようになった！`);ktoast(`${p.e} ${p.n} 解放！`)},1600)}});
     if(S.stage==='baby'&&S.aff>=15)grow('child');
     else if(S.stage==='child'&&S.aff>=60){
-      S.form=baseForm(S.tags);S.adultAt=now();ensureIntegrity(S);grow('adult')}
+      S.form=baseForm(S.tags);S.adultAt=now();prOnAdult();ensureIntegrity(S);grow('adult')}
     if(S.stage==='adult'&&!(S.album||[]).some(r=>r&&r.id===S.id)){ensureIntegrity(S);const nw=!(DEXS&&DEXS.sp[S.form]);dexAddPet(S,false);if(nw){const fm=S.form;setTimeout(()=>newFormUI(fm),2400)}}   // AL3：大人になった直後に、アルバムの目印・たね（1匹1回：seedGiven）・図鑑の記録を付ける
   }
   function grow(st){
@@ -953,7 +1049,9 @@ const K=(()=>{
     let held=0;
     got.forEach(k=>{ if(hasIT(k)) IT[k].d?add(S.decor,k):add(S.inv,k); else { if(!Array.isArray(S.hold))S.hold=[]; S.hold.push(k); held++; } });
     ANA.track('explore_end',{place:E.p,items:got.length});
-    S.explore=null; S.lucky=false; S.justBack=true; if(pl.walk)S.backFrom='walk'; else if(!pl.unknown)S.backFrom='explore'; else delete S.backFrom; EX=null; x=34; save();
+    S.explore=null; S.lucky=false; S.justBack=true; if(pl.walk)S.backFrom='walk'; else if(!pl.unknown)S.backFrom='explore'; else delete S.backFrom; EX=null; x=34;
+    if(pl.walk)prRec('walk'); else if(!pl.unknown)prRec('go',['n_go_'+E.p].concat(Object.keys(PLACES).filter(k=>!PLACES[k].walk&&(PLACES[k].need<=0||(S.unlocked||[]).includes(k))).length>=2?['q_'+E.p]:[]));   // v2.1 性格の記録
+    save();
     say('おかえり！');   // 探検中の案内（光・おまけ・ダッシュ・あと○分など）は、帰ったら残さない SND.sfx.ding(); setTimeout(()=>speak(lineOf('back'),'happy'),400);
     modal(`<h2>${pl.e} ただいま！</h2><p>${esc(S.name)}が${pl.n}から帰ってきた！</p><div class="got">${got.map(k=>IT[k].e).join('')}</div>
       <p>${[...new Set(got)].map(k=>IT[k].n).join('、')}を拾ってきた${(E.bonus||[]).length?`<br>（すごろくや光るおまけで拾った ${E.bonus.length}個 込み）`:''}${held?`<br>（このバージョンで使えない物 ${held}個は、なくさないように保管しました）`:''}<br>「なでる」とおまけをくれるかも？</p><button class="pbtn" onclick="K.close()">やったね！</button>`);
@@ -1017,19 +1115,131 @@ const K=(()=>{
     love:['一緒にいると楽しいね。','ずっとここにいてね。','きみのこと、大好き。','なかよしだね。',
       L('きみが来ると、しっぽが…あ、しっぽない。',{odd:1})],
   };
+  // ===== v2.1 WD1：セリフID（文・条件・並びは上の表のまま。ID は種類ごとの並び順で l_<種類>_<2けた>） =====
+  // 一度付けたIDは変えない・使い直さない（docs/v21_lines_current.md と同じ。台帳 ids/ledger.json の line）
+  const LINE_ID=(cat,i)=>`l_${cat}_${String(i+1).padStart(2,'0')}`;
+  const LINE_C6={idle:'日常',tap:'日常',pet:'日常',feed:'日常',cook:'日常',sleep:'日常',wake:'日常',zzz:'日常',morning:'日常',day:'日常',evening:'日常',night:'日常',
+    go:'特別',back:'特別',fish:'特別',walk:'特別',mori:'特別',umi:'特別',yama:'特別',sanpo:'特別',find:'特別',spark:'特別',soon:'特別',tired:'気分',love:'気分',grow:'成長'};
+  const BASE_LINES=[];   // 既存133本：{id,t,c6}（図鑑・ことば帳の表示用。抽選には使わない）
+  Object.entries(LINES).forEach(([cat,a])=>a.forEach((x,i)=>BASE_LINES.push({id:LINE_ID(cat,i),t:typeof x==='string'?x:x.t,c6:LINE_C6[cat]||'日常'})));
+  FAV_LINES.forEach((t,i)=>BASE_LINES.push({id:'l_fav_'+String(i+1).padStart(2,'0'),t,c6:'日常'}));
+  BASE_LINES.push({id:'l_dex_01',t:'図鑑にのったよ、うれしいな',c6:'特別'});
+  let RECENT=[];   // 直近に出したセリフID（新しい層で同じ文を避ける。保存しない）
+  function lineSeen(id){ if(!id)return; RECENT.push(id); if(RECENT.length>8)RECENT.shift(); }
+  // ===== v2.1 WD2：追加セリフ66本・豆知識・気質×性格の64通り（docs/v21_lines_batch1.md 4章、v21_voicemap.md）=====
+  // ly：pers（性格別）・combo（気質×性格の組み合わせ限定）・trivia（豆知識）。on：出る場面。pers/temper/st：そろったときだけ候補。fact：豆知識の事実ID
+  const XLINES=[
+    {"id":"l_pers_amae_001","ly":"pers","t":"そばにいて。用事はないけど。","on":"idle","c6":"性格","pers":"pr_amae","st":"adult"},
+    {"id":"l_pers_amae_002","ly":"pers","t":"なでてもらう準備はできてる。","on":"idle","c6":"性格","pers":"pr_amae","st":"adult","odd":1},
+    {"id":"l_pers_amae_003","ly":"pers","t":"顔を見たら甘えたくなった。","on":"idle","c6":"性格","pers":"pr_amae","st":"adult"},
+    {"id":"l_pers_amae_004","ly":"pers","t":"今日は頑張った。褒めてもいいよ。","on":"idle","c6":"性格","pers":"pr_amae","st":"adult","odd":1},
+    {"id":"l_pers_bouken_001","ly":"pers","t":"知らない道を見つけた。","on":"idle","c6":"性格","pers":"pr_bouken","st":"adult"},
+    {"id":"l_pers_bouken_002","ly":"pers","t":"次はもっと遠くへ行きたい。","on":"idle","c6":"性格","pers":"pr_bouken","st":"adult","odd":1},
+    {"id":"l_pers_bouken_003","ly":"pers","t":"地図の端には何があるんだろう。","on":"idle","c6":"性格","pers":"pr_bouken","st":"adult"},
+    {"id":"l_pers_bouken_004","ly":"pers","t":"準備はできた。おやつも持った。","on":"idle","c6":"性格","pers":"pr_bouken","st":"adult","odd":1},
+    {"id":"l_pers_kuishinbo_001","ly":"pers","t":"満腹。でも食べたいものはある。","on":"idle","c6":"性格","pers":"pr_kuishinbo","st":"adult"},
+    {"id":"l_pers_kuishinbo_002","ly":"pers","t":"今日のごはん、また食べたい。","on":"idle","c6":"性格","pers":"pr_kuishinbo","st":"adult","odd":1},
+    {"id":"l_pers_kuishinbo_003","ly":"pers","t":"おいしいものには弱いんだ。","on":"idle","c6":"性格","pers":"pr_kuishinbo","st":"adult"},
+    {"id":"l_pers_kuishinbo_004","ly":"pers","t":"食べ物のことを考えてた。","on":"idle","c6":"性格","pers":"pr_kuishinbo","st":"adult","odd":1},
+    {"id":"l_pers_nonbiri_001","ly":"pers","t":"今日はゆっくりしよう。","on":"idle","c6":"性格","pers":"pr_nonbiri","st":"adult"},
+    {"id":"l_pers_nonbiri_002","ly":"pers","t":"急ぐ用事がないって、いいね。","on":"idle","c6":"性格","pers":"pr_nonbiri","st":"adult","odd":1},
+    {"id":"l_pers_nonbiri_003","ly":"pers","t":"休憩しよう。さっきもしたけど。","on":"idle","c6":"性格","pers":"pr_nonbiri","st":"adult"},
+    {"id":"l_pers_nonbiri_004","ly":"pers","t":"何もしない時間も好き。","on":"idle","c6":"性格","pers":"pr_nonbiri","st":"adult","odd":1},
+    {"id":"l_pers_kenkyu_001","ly":"pers","t":"気になることが増えた。","on":"idle","c6":"性格","pers":"pr_kenkyu","st":"adult"},
+    {"id":"l_pers_kenkyu_002","ly":"pers","t":"あの料理、もう一度試したい。","on":"idle","c6":"性格","pers":"pr_kenkyu","st":"adult","odd":1},
+    {"id":"l_pers_kenkyu_003","ly":"pers","t":"失敗にも理由があるはず。","on":"idle","c6":"性格","pers":"pr_kenkyu","st":"adult"},
+    {"id":"l_pers_kenkyu_004","ly":"pers","t":"考え事をしてた。内容は忘れた。","on":"idle","c6":"性格","pers":"pr_kenkyu","st":"adult","odd":1},
+    {"id":"l_pers_jishin_001","ly":"pers","t":"今日は調子がいい。たぶん。","on":"idle","c6":"性格","pers":"pr_jishin","st":"adult"},
+    {"id":"l_pers_jishin_002","ly":"pers","t":"任せて。何をするんだっけ。","on":"idle","c6":"性格","pers":"pr_jishin","st":"adult","odd":1},
+    {"id":"l_pers_jishin_003","ly":"pers","t":"できる気がする。根拠はない。","on":"idle","c6":"性格","pers":"pr_jishin","st":"adult"},
+    {"id":"l_pers_jishin_004","ly":"pers","t":"失敗じゃない。練習だよ。","on":"idle","c6":"性格","pers":"pr_jishin","st":"adult","odd":1},
+    {"id":"l_pers_kodawari_001","ly":"pers","t":"いつもの場所が落ち着く。","on":"idle","c6":"性格","pers":"pr_kodawari","st":"adult"},
+    {"id":"l_pers_kodawari_002","ly":"pers","t":"食べる順番も大事なんだ。","on":"idle","c6":"性格","pers":"pr_kodawari","st":"adult","odd":1},
+    {"id":"l_pers_kodawari_003","ly":"pers","t":"何でもいいよ。……やっぱりこれがいい。","on":"idle","c6":"性格","pers":"pr_kodawari","st":"adult"},
+    {"id":"l_pers_kodawari_004","ly":"pers","t":"ちょっと違う。説明は難しい。","on":"idle","c6":"性格","pers":"pr_kodawari","st":"adult","odd":1},
+    {"id":"l_pers_fushigi_001","ly":"pers","t":"夢に知らない人が出てきた。","on":"idle","c6":"性格","pers":"pr_fushigi","st":"adult"},
+    {"id":"l_pers_fushigi_002","ly":"pers","t":"何かの気配がする。気のせい？","on":"idle","c6":"性格","pers":"pr_fushigi","st":"adult","odd":1},
+    {"id":"l_pers_fushigi_003","ly":"pers","t":"部屋が少し広くなった気がする。","on":"idle","c6":"性格","pers":"pr_fushigi","st":"adult"},
+    {"id":"l_pers_fushigi_004","ly":"pers","t":"あの料理、こっちを見てない？","on":"idle","c6":"性格","pers":"pr_fushigi","st":"adult","odd":1},
+    {"id":"l_combo_001","ly":"combo","t":"別になでてほしくない。……もう終わり？","on":"pet","c6":"性格","pers":"pr_amae","temper":"cool","st":"adult","odd":1},
+    {"id":"l_combo_002","ly":"combo","t":"冒険の前に帰り道を調べよう。","on":"idle","c6":"性格","pers":"pr_bouken","temper":"shincho","st":"adult","odd":1},
+    {"id":"l_combo_003","ly":"combo","t":"誰よりものんびりしてみせる。","on":"idle","c6":"性格","pers":"pr_nonbiri","temper":"makezu","st":"adult","odd":1},
+    {"id":"l_combo_004","ly":"combo","t":"味見で全部消えた。研究は順調。","on":"cook","c6":"性格","pers":"pr_kenkyu","temper":"kuishinbo","st":"adult","odd":1},
+    {"id":"l_combo_005","ly":"combo","t":"なんとかなるよ。たぶんね。","on":"idle","c6":"性格","pers":"pr_jishin","temper":"ottori","st":"adult","odd":1},
+    {"id":"l_combo_006","ly":"combo","t":"昨日まではこれが一番だった。","on":"idle","c6":"性格","pers":"pr_kodawari","temper":"kimagure","st":"adult","odd":1},
+    {"id":"l_combo_007","ly":"combo","t":"そばにいて。理由は明日教える。","on":"idle","c6":"性格","pers":"pr_fushigi","temper":"amaenbo","st":"adult","odd":1},
+    {"id":"l_combo_008","ly":"combo","t":"これ、食べられるのかな。","on":"idle","c6":"性格","pers":"pr_kuishinbo","temper":"kokishin","st":"adult","odd":1},
+    {"id":"l_combo_009","ly":"combo","t":"おかわり。……聞こえた？","on":"feed","c6":"性格","pers":"pr_kuishinbo","temper":"cool","st":"adult","odd":1},
+    {"id":"l_combo_010","ly":"combo","t":"成功するよ。あと三回確認する。","on":"idle","c6":"性格","pers":"pr_jishin","temper":"shincho","st":"adult","odd":1},
+    {"id":"l_combo_011","ly":"combo","t":"なでられた回数なら負けない。","on":"idle","c6":"性格","pers":"pr_amae","temper":"makezu","st":"adult","odd":1},
+    {"id":"l_combo_012","ly":"combo","t":"知らない場所に着いた。いいね。","on":"idle","c6":"性格","pers":"pr_bouken","temper":"ottori","st":"adult","odd":1},
+    {"id":"l_combo_013","ly":"combo","t":"気になることは順番に調べる。","on":"idle","c6":"性格","pers":"pr_kodawari","temper":"kokishin","st":"adult","odd":1},
+    {"id":"l_combo_014","ly":"combo","t":"材料は謎だけど、おかわり。","on":"feed","c6":"性格","pers":"pr_fushigi","temper":"kuishinbo","st":"adult","odd":1},
+    {"id":"l_combo_015","ly":"combo","t":"前の研究はちょっと休憩中。","on":"idle","c6":"性格","pers":"pr_kenkyu","temper":"kimagure","st":"adult","odd":1},
+    {"id":"l_combo_016","ly":"combo","t":"ぼくのこと好きでしょ。知ってる。","on":"idle","c6":"性格","pers":"pr_jishin","temper":"amaenbo","st":"adult","odd":1},
+    {"id":"l_trivia_animals_001","ly":"trivia","t":"タコには心臓が3つあるんだって。心配事も3倍かな。","on":"idle","c6":"豆知識","fact":"f_animals_001","odd":1},
+    {"id":"l_trivia_animals_002","ly":"trivia","t":"ウォンバットのフンは四角いんだって。妙にきっちりしてる。","on":"idle","c6":"豆知識","fact":"f_animals_002","odd":1},
+    {"id":"l_trivia_animals_003","ly":"trivia","t":"ラッコは石で貝を割るんだって。道具を使いこなしてる。","on":"idle","c6":"豆知識","fact":"f_animals_003","odd":1},
+    {"id":"l_trivia_food_001","ly":"trivia","t":"トマトは植物学では果実なんだって。野菜売り場には内緒。","on":"idle","c6":"豆知識","fact":"f_food_001","odd":1},
+    {"id":"l_trivia_food_002","ly":"trivia","t":"ポップコーンは粒の中の水分で弾けるんだって。大仕事だね。","on":"idle","c6":"豆知識","fact":"f_food_002","odd":1},
+    {"id":"l_trivia_food_003","ly":"trivia","t":"チョコってカカオの種からできるんだって。種のままじゃダメだったのかな。","on":"idle","c6":"豆知識","fact":"f_food_003","odd":1},
+    {"id":"l_trivia_science_001","ly":"trivia","t":"月では地球より体が軽く感じるんだって。体重計を持っていこう。","on":"idle","c6":"豆知識","fact":"f_science_001","odd":1},
+    {"id":"l_trivia_science_002","ly":"trivia","t":"宇宙の真空では音が伝わらないんだって。叫び損だね。","on":"idle","c6":"豆知識","fact":"f_science_002","odd":1},
+    {"id":"l_trivia_science_003","ly":"trivia","t":"金星は1回自転する間に、太陽を1周以上するんだって。のんびりだね。","on":"idle","c6":"豆知識","fact":"f_science_003","odd":1},
+    {"id":"l_trivia_daily_001","ly":"trivia","t":"鉛筆の芯は黒鉛と粘土でできてるんだって。名前って難しい。","on":"idle","c6":"豆知識","fact":"f_daily_001","odd":1},
+    {"id":"l_trivia_daily_002","ly":"trivia","t":"鏡って、左右じゃなくて前後が逆になるんだって。ややこしいね。","on":"idle","c6":"豆知識","fact":"f_daily_002","odd":1},
+    {"id":"l_trivia_daily_003","ly":"trivia","t":"雲は小さな水滴や氷の粒でできてるんだって。ふわふわなのに。","on":"idle","c6":"豆知識","fact":"f_daily_003","odd":1},
+    {"id":"l_trivia_history_001","ly":"trivia","t":"江戸時代は季節で一刻の長さが変わったんだって。遅刻の言い訳に使えそう。","on":"idle","c6":"豆知識","fact":"f_history_001","odd":1},
+    {"id":"l_trivia_history_002","ly":"trivia","t":"江戸時代には時刻を鐘で知らせたんだって。町ぐるみの時計だね。","on":"idle","c6":"豆知識","fact":"f_history_002","odd":1},
+    {"id":"l_trivia_history_003","ly":"trivia","t":"ひらがなは漢字を崩して生まれたんだって。文字にも昔の姿がある。","on":"idle","c6":"豆知識","fact":"f_history_003","odd":1},
+    {"id":"l_trivia_gaming_001","ly":"trivia","t":"NPCはプレイヤーが操作しないキャラなんだって。ぼくはどっちだろう。","on":"idle","c6":"豆知識","fact":"f_gaming_001","odd":1},
+    {"id":"l_trivia_gaming_002","ly":"trivia","t":"ドット絵は小さな点を並べた絵なんだって。ぼくも四角い？","on":"idle","c6":"豆知識","fact":"f_gaming_002","odd":1},
+    {"id":"l_trivia_gaming_003","ly":"trivia","t":"英語のbugには虫という意味もあるんだって。虫も迷惑だろうね。","on":"idle","c6":"豆知識","fact":"f_gaming_003","odd":1}];
+  // 豆知識の事実の確認状態（docs/v21_facts_batch1_final.csv）。verified 以外の事実のセリフは抽選にも図鑑の分母にも入れない
+  const FACTS={"f_animals_001":"verified","f_animals_002":"verified","f_animals_003":"verified","f_food_001":"verified","f_food_002":"verified","f_food_003":"verified","f_science_001":"verified","f_science_002":"verified","f_science_003":"verified","f_daily_001":"verified","f_daily_002":"verified","f_daily_003":"verified","f_history_001":"verified","f_history_002":"verified","f_history_003":"verified","f_gaming_001":"verified","f_gaming_002":"verified","f_gaming_003":"verified"};
+  // 気質×性格の64通りの個性の説明（docs/v21_voice_map.csv の d_play）。プロフィール帳にだけ出す。保存しない。文を直しても性格・記録は変わらない
+  const VOICE_MAP={v:1,cells:{"amaenbo|pr_amae":{"id":"vm_amaenbo_amae","d":"素直に甘え、そばにいたがる"},"ottori|pr_amae":{"id":"vm_ottori_amae","d":"控えめに甘え、待つのが得意"},"kokishin|pr_amae":{"id":"vm_kokishin_amae","d":"何でも見せて共有したがる"},"kuishinbo|pr_amae":{"id":"vm_kuishinbo_amae","d":"おやつを口実に甘える"},"cool|pr_amae":{"id":"vm_cool_amae","d":"甘えたいのに素直に言えない"},"makezu|pr_amae":{"id":"vm_makezu_amae","d":"甘える回数でも張り合う"},"shincho|pr_amae":{"id":"vm_shincho_amae","d":"安心できる相手にだけ甘える"},"kimagure|pr_amae":{"id":"vm_kimagure_amae","d":"急に甘えて、急に離れる"},"amaenbo|pr_bouken":{"id":"vm_amaenbo_bouken","d":"一緒に冒険したがる"},"ottori|pr_bouken":{"id":"vm_ottori_bouken","d":"寄り道を楽しみながら冒険する"},"kokishin|pr_bouken":{"id":"vm_kokishin_bouken","d":"発見するとすぐ飛び出す"},"kuishinbo|pr_bouken":{"id":"vm_kuishinbo_bouken","d":"食べ物を探して冒険する"},"cool|pr_bouken":{"id":"vm_cool_bouken","d":"平気な顔で、あぶなそうな場所にも行く"},"makezu|pr_bouken":{"id":"vm_makezu_bouken","d":"誰より遠くへ行きたがる"},"shincho|pr_bouken":{"id":"vm_shincho_bouken","d":"準備万端で冒険したがる"},"kimagure|pr_bouken":{"id":"vm_kimagure_bouken","d":"思いつきで目的地を変える"},"amaenbo|pr_kuishinbo":{"id":"vm_amaenbo_kuishinbo","d":"ごはんも一緒に食べたがる"},"ottori|pr_kuishinbo":{"id":"vm_ottori_kuishinbo","d":"ゆっくり味わって、幸せそうに食べる"},"kokishin|pr_kuishinbo":{"id":"vm_kokishin_kuishinbo","d":"未知の味に挑戦したがる"},"kuishinbo|pr_kuishinbo":{"id":"vm_kuishinbo_kuishinbo","d":"常に次のごはんを考える"},"cool|pr_kuishinbo":{"id":"vm_cool_kuishinbo","d":"食への執着を隠そうとする"},"makezu|pr_kuishinbo":{"id":"vm_makezu_kuishinbo","d":"大盛りや早食いに挑みたがる"},"shincho|pr_kuishinbo":{"id":"vm_shincho_kuishinbo","d":"初めての料理はよく確かめる"},"kimagure|pr_kuishinbo":{"id":"vm_kimagure_kuishinbo","d":"好物がころころ変わる"},"amaenbo|pr_nonbiri":{"id":"vm_amaenbo_nonbiri","d":"そばでのんびりしたがる"},"ottori|pr_nonbiri":{"id":"vm_ottori_nonbiri","d":"何も急がず満足している"},"kokishin|pr_nonbiri":{"id":"vm_kokishin_nonbiri","d":"気になるものを眺めて過ごす"},"kuishinbo|pr_nonbiri":{"id":"vm_kuishinbo_nonbiri","d":"食べて休むことに全力"},"cool|pr_nonbiri":{"id":"vm_cool_nonbiri","d":"無駄なことをしたがらない"},"makezu|pr_nonbiri":{"id":"vm_makezu_nonbiri","d":"のんびりすることまで競う"},"shincho|pr_nonbiri":{"id":"vm_shincho_nonbiri","d":"予定どおりの休息を好む"},"kimagure|pr_nonbiri":{"id":"vm_kimagure_nonbiri","d":"のんびりしていても、急に動き出す"},"amaenbo|pr_kenkyu":{"id":"vm_amaenbo_kenkyu","d":"発見をすぐ報告したがる"},"ottori|pr_kenkyu":{"id":"vm_ottori_kenkyu","d":"時間をかけて観察する"},"kokishin|pr_kenkyu":{"id":"vm_kokishin_kenkyu","d":"疑問が次々と増える"},"kuishinbo|pr_kenkyu":{"id":"vm_kuishinbo_kenkyu","d":"味や材料の研究に熱心"},"cool|pr_kenkyu":{"id":"vm_cool_kenkyu","d":"感情を抑えて分析する"},"makezu|pr_kenkyu":{"id":"vm_makezu_kenkyu","d":"正解を見つけるまで諦めない"},"shincho|pr_kenkyu":{"id":"vm_shincho_kenkyu","d":"何度も検証してから結論を出す"},"kimagure|pr_kenkyu":{"id":"vm_kimagure_kenkyu","d":"研究対象が突然変わる"},"amaenbo|pr_jishin":{"id":"vm_amaenbo_jishin","d":"褒められる前提で自慢する"},"ottori|pr_jishin":{"id":"vm_ottori_jishin","d":"穏やかに自信を持っている"},"kokishin|pr_jishin":{"id":"vm_kokishin_jishin","d":"未経験でもできると思っている"},"kuishinbo|pr_jishin":{"id":"vm_kuishinbo_jishin","d":"味の違いには絶対の自信がある"},"cool|pr_jishin":{"id":"vm_cool_jishin","d":"淡々と実力を主張する"},"makezu|pr_jishin":{"id":"vm_makezu_jishin","d":"失敗を認めたがらない"},"shincho|pr_jishin":{"id":"vm_shincho_jishin","d":"自信はあるが確認を欠かさない"},"kimagure|pr_jishin":{"id":"vm_kimagure_jishin","d":"根拠のない自信が突然湧く"},"amaenbo|pr_kodawari":{"id":"vm_amaenbo_kodawari","d":"甘え方にも決まった手順がある"},"ottori|pr_kodawari":{"id":"vm_ottori_kodawari","d":"自分のペースを崩さない"},"kokishin|pr_kodawari":{"id":"vm_kokishin_kodawari","d":"細部まで確かめたがる"},"kuishinbo|pr_kodawari":{"id":"vm_kuishinbo_kodawari","d":"食べ方や順番にうるさい"},"cool|pr_kodawari":{"id":"vm_cool_kodawari","d":"美学があり、簡単には譲らない"},"makezu|pr_kodawari":{"id":"vm_makezu_kodawari","d":"自分のやり方が一番だと思う"},"shincho|pr_kodawari":{"id":"vm_shincho_kodawari","d":"いつもの手順を守りたがる"},"kimagure|pr_kodawari":{"id":"vm_kimagure_kodawari","d":"こだわる対象が日によって変わる"},"amaenbo|pr_fushigi":{"id":"vm_amaenbo_fushigi","d":"不思議な理由でそばにいたがる"},"ottori|pr_fushigi":{"id":"vm_ottori_fushigi","d":"夢と現実を自然に混ぜる"},"kokishin|pr_fushigi":{"id":"vm_kokishin_fushigi","d":"ふつうは気にしないことを不思議がる"},"kuishinbo|pr_fushigi":{"id":"vm_kuishinbo_fushigi","d":"謎の料理を平然と食べる"},"cool|pr_fushigi":{"id":"vm_cool_fushigi","d":"奇妙なことを真顔で言う"},"makezu|pr_fushigi":{"id":"vm_makezu_fushigi","d":"独特な理屈で張り合う"},"shincho|pr_fushigi":{"id":"vm_shincho_fushigi","d":"不思議な現象を慎重に観察する"},"kimagure|pr_fushigi":{"id":"vm_kimagure_fushigi","d":"発想が読めないけど、本人はいたって自然"}}};
+  const lineUsable=x=>!x.fact||FACTS[x.fact]==='verified';
+  const xOk=x=>lineUsable(x)&&(!x.st||x.st===S.stage)&&(!x.pers||x.pers===S.pers)&&(!x.temper||x.temper===S.temper);
+  // 性格の層（4章の⑤）：性格が決まった子だけ、家で起きているとき。候補があるときだけ 25%。組み合わせ限定は重み2倍。直近8本は避ける
+  function persPick(cat){
+    if(!S||!S.pers||S.explore||S.sleep)return null;
+    const c=XLINES.filter(x=>(x.ly==='pers'||x.ly==='combo')&&x.on===cat&&xOk(x)); if(!c.length)return null;
+    if(Math.random()>=.25)return null;
+    let use=c.filter(x=>!RECENT.includes(x.id)); if(!use.length)use=c;
+    const w=use.map(x=>x.ly==='combo'?2:1); let r=Math.random()*w.reduce((a,b)=>a+b,0), p=use[use.length-1];
+    for(let i=0;i<use.length;i++){if((r-=w[i])<0){p=use[i];break}}
+    lastLine=p.t; lineSeen(p.id); return p.t;
+  }
+  // 豆知識の層（4章の③）：家で起きているときのひとりごとの 10%（候補があるときだけ）。同じ事実は直近20回のひとりごとで繰り返さない
+  let TALKS=[];
+  function triviaPick(){
+    if(!S||S.explore||S.sleep)return null;
+    const rf=new Set(TALKS.filter(Boolean)), c=XLINES.filter(x=>x.ly==='trivia'&&xOk(x)&&!rf.has(x.fact)); if(!c.length)return null;
+    if(Math.random()>=.1)return null;
+    let use=c.filter(x=>!RECENT.includes(x.id)); if(!use.length)use=c;
+    const p=use[Math.floor(Math.random()*use.length)]; lineSeen(p.id); return p;
+  }
+  const talkDone=f=>{TALKS.push(f||null); if(TALKS.length>20)TALKS.shift()};
+  const voiceCell=d=>d&&d.pers?(VOICE_MAP.cells[d.temper+'|'+d.pers]||null):null;   // 性格が決まった子だけ（先取りしない）
+  const ALL_LINES=BASE_LINES.concat(XLINES.map(x=>({id:x.id,t:x.t,c6:x.c6,fact:x.fact})));   // ことば図鑑の並び（既存133本 → 追加66本）
+  const LID_TEXT=new Map(); ALL_LINES.forEach(x=>LID_TEXT.set(x.t,x.id));
   let lastLine='';
   function lineOf(cat){
     if(!S)return '';
+    {const xp=persPick(cat); if(xp)return xp}
     const st=S.stage, fm=S.stage==='adult'?S.form:null, ps=S.pers||null;
     const ok=x=>typeof x==='string'||((!x.st||x.st.includes(st))&&(!x.form||x.form.includes(fm))&&(!x.pers||x.pers.includes(ps)));
-    let pool=(LINES[cat]||LINES.idle).filter(ok).map(x=>typeof x==='string'?{t:x}:x);
-    if(!pool.length) pool=LINES.idle.filter(ok).map(x=>typeof x==='string'?{t:x}:x);
+    const withId=c=>(x,i)=>Object.assign(typeof x==='string'?{t:x}:Object.assign({},x),{id:LINE_ID(c,i)});
+    const src=LINES[cat]?cat:'idle';
+    let pool=LINES[src].map(withId(src)).filter((x,i)=>ok(LINES[src][i]));
+    if(!pool.length) pool=LINES.idle.map(withId('idle')).filter((x,i)=>ok(LINES.idle[i]));
     // 7割かわいい・3割シュール（両方あるとき）
     const odd=pool.filter(x=>x.odd), cute=pool.filter(x=>!x.odd);
     let use=(odd.length&&cute.length)?(Math.random()<.3?odd:cute):pool;
     if(use.length>1){const f=use.filter(x=>x.t!==lastLine); if(f.length) use=f;}
     const c=use[Math.floor(Math.random()*use.length)]||pool[0];
-    lastLine=c.t; return c.t;
+    lastLine=c.t; lineSeen(c.id); return c.t;
   }
   // ---- 吹き出し（ぽこの声はここ。説明は下の枠） ----
   let bubShown=0, bubUntil=0, nextIdle=Date.now()+15000;
@@ -1109,6 +1319,52 @@ const K=(()=>{
     }
     return {fs:BUB_MIN,chunks:bubChunks(bubLayout(text,Math.max(80,R.w*0.55),BUB_MIN),2),mode:'side'};
   }
+  // ===== v2.1 WD3：聞いたセリフの記録（別の保存場所 pokohouse_v1_words。セーブ本体・発見記録 dex には足さない）=====
+  // wl：プレイヤー全体の発見（セリフID → [初めて聞いた日, 最初の子]）。w：子ごとに聞いたセリフ（子ID → {セリフID: 初めての日}）。
+  // 増えるだけ。書く前に保存場所を読み直して合わせる（和集合）ので、2タブでも片方の記録が消えない。「最初から」・アルバムから外す・やり直しでも消さない。
+  // 記録するのは、実際に吹き出し（または会話の枠）に表示されたときだけ。v1.9・修正4 はこのキーを読まない・書かない・消さない
+  const WORDSK=KEY+'_words';
+  let WORDS=null, wordsDirty=false, wordNoteAt=0;
+  const wordsNew=()=>({v:1,wl:{},w:{}});
+  function wordsClean(o){
+    const d=wordsNew(); if(!isO(o))return d;
+    for(const [k,v] of Object.entries(o))if(!(k in d)&&/^[A-Za-z_][A-Za-z0-9_]{0,30}$/.test(k))d[k]=v;   // 知らない項目（新しい版）は残す
+    if(isO(o.wl))for(const [k,v] of Object.entries(o.wl))if(KEY_RE.test(k)&&Array.isArray(v)&&typeof v[0]==='number'&&isFinite(v[0]))d.wl[k]=[v[0],typeof v[1]==='string'&&ID_RE.test(v[1])?v[1]:null];
+    if(isO(o.w))for(const [p,m] of Object.entries(o.w))if(ID_RE.test(p)&&isO(m)){const e={};for(const [k,t] of Object.entries(m))if(KEY_RE.test(k)&&typeof t==='number'&&isFinite(t))e[k]=t;d.w[p]=e}
+    return d;
+  }
+  function wordsMerge(a,b){
+    const d=wordsClean(a), e=wordsClean(b);
+    for(const [k,v] of Object.entries(e))if(!(k in d))d[k]=v;
+    for(const [k,v] of Object.entries(e.wl)){const o=d.wl[k]; if(!o||v[0]<o[0])d.wl[k]=[v[0],v[1]||(o&&o[1])||null]}
+    for(const [p,m] of Object.entries(e.w)){const o=d.w[p]||(d.w[p]={}); for(const [k,t] of Object.entries(m))o[k]=o[k]===undefined?t:Math.min(o[k],t)}
+    return d;
+  }
+  function wordsRead(){
+    let raw=null; try{raw=localStorage.getItem(WORDSK)}catch(e){return null}
+    if(raw===null)return wordsNew();
+    let o=null; try{o=JSON.parse(raw)}catch(e){}
+    if(!isO(o)){try{localStorage.setItem(WORDSK+'_broken_'+Date.now(),raw)}catch(e){} return wordsNew()}   // 読めない記録は別名で残す
+    return wordsClean(o);
+  }
+  function wordsFlush(){
+    if(LOCK||!WORDS||!wordsDirty)return !wordsDirty;
+    const cur=wordsRead(); if(cur===null)return false;
+    const m=wordsMerge(cur,WORDS), txt=JSON.stringify(m);
+    try{localStorage.setItem(WORDSK,txt); if(localStorage.getItem(WORDSK)!==txt)throw 0}catch(e){return false}   // 書けなければメモリに残して次に再挑戦
+    WORDS=m; wordsDirty=false; return true;
+  }
+  const wordsNow=()=>{if(!WORDS)WORDS=wordsRead()||wordsNew(); return WORDS};
+  const wordsSaved=()=>{const w=wordsRead(); return w?wordsMerge(w,WORDS||wordsNew()):(WORDS||wordsNew())};   // 画面用
+  function heard(lid,pid){
+    if(LOCK||typeof lid!=='string'||!KEY_RE.test(lid))return;
+    const W=wordsNow(), t=Date.now(); let ch=false, nw=false;
+    if(!W.wl[lid]){W.wl[lid]=[t,typeof pid==='string'&&ID_RE.test(pid)?pid:null];ch=nw=true}
+    if(typeof pid==='string'&&ID_RE.test(pid)){const m=W.w[pid]||(W.w[pid]={}); if(m[lid]===undefined){m[lid]=t;ch=true}}
+    if(ch){wordsDirty=true; wordsFlush()}
+    if(nw&&t-wordNoteAt>20000){wordNoteAt=t; setTimeout(()=>{try{ktoast('📖 新しいことばを発見！')}catch(e){}},1200)}
+  }
+  window.addEventListener('pagehide',()=>{try{wordsFlush()}catch(e){}});
   // ===== 吹き出しの順番（修正4）=====
   // ・表示を始めたセリフ（bubCur）は、分けた吹き出しを最後まで全部出す（文字を消さない）
   // ・途中に来たセリフは待つ：操作のセリフ（なでる・タップ・ごはん 等＝'op'）は bubOps、自動のひとりごと（'auto'）は bubAutos
@@ -1120,6 +1376,7 @@ const K=(()=>{
   function bubValid(m){ if(!S||S.stage==='seed'||m.pid!==S.id)return false; if(m.who==='fav'){const f=favHere();return !!f&&f.id===m.fid} return true }
   function showBub(m){
     const el=$('kbub'), lines=m.chunks[m.i]; bubWho=m.who; bubFs=m.fs; bubMode=m.mode;
+    if(m.i===0&&m.lid&&!m.rec){m.rec=1; heard(m.lid,m.who==='fav'?m.fid:m.pid)}   // v2.1：表示を始めたセリフだけ記録
     el.innerHTML=lines.map(l=>`<span class="ln">${pixify(esc(l))}</span>`).join(''); el.classList.add('on');
     const n=lines.join('').length; bubShown=Date.now(); bubUntil=bubShown+Math.max(3000,1500+n*130);
     placeBub();
@@ -1131,12 +1388,12 @@ const K=(()=>{
   function bubClear(){bubCur=null;bubOps=[];bubAutos=[];bubUntil=0;$('kbub').classList.remove('on')}
   const bubLeft=()=>(bubCur?bubCur.chunks.length-bubCur.i-1:0)+bubOps.length+bubAutos.length;
   // kind：'op'（プレイヤーの操作で出るセリフ。省略時）／'auto'（ひとりごと）
-  function speak(text,expr,who,kind){
+  function speak(text,expr,who,kind,lid){
     if(!text||!S||S.stage==='seed')return;
     who=who||'pet'; kind=kind||'op';
     if(who==='pet'&&expr&&!busy&&!S.sleep){busy=expr;setTimeout(()=>{if(busy===expr)busy=null},1400)}   // 表情・動きはすぐ（セリフの順番を待たない）
     const fv=who==='fav'?favHere():null; if(who==='fav'&&!fv)return;
-    const P=bubPlan(String(text),who), m={chunks:P.chunks,fs:P.fs,mode:P.mode,who,kind,pid:S.id,fid:fv?fv.id:null,i:0};
+    const P=bubPlan(String(text),who), m={chunks:P.chunks,fs:P.fs,mode:P.mode,who,kind,pid:S.id,fid:fv?fv.id:null,i:0,lid:lid||LID_TEXT.get(String(text))||null};
     if(!m.chunks.length)return;
     if(!bubCur){bubCur=m;showBub(m);return}
     if(kind==='op')bubOps.push(m); else {bubAutos.push(m); if(bubAutos.length>1)bubAutos.splice(0,bubAutos.length-1)}   // ひとりごとは新しい1つだけ待たせる
@@ -1186,12 +1443,15 @@ const K=(()=>{
     if(t<nextIdle) return;
     nextIdle=t+idleGap();
     if(!S||S.stage==='seed'||busy||modalOpen()||t<bubUntil||bubCur||bubOps.length) return;
-    let cat='idle';
+    let cat='idle', tv=null;
     if(S.explore) cat=PL(S.explore.p).walk?'sanpo':PL(S.explore.p).unknown?'idle':S.explore.p;
     else if(S.sleep) cat='zzz';
+    else if((tv=triviaPick())) cat=null;   // v2.1：豆知識（候補がないときは乱数を使わない＝今と同じ）
     else if(S.genki<1.5&&Math.random()<.6) cat='tired';
     else if(S.aff>=40&&Math.random()<.25) cat='love';
     else if(Math.random()<.25) cat=per();
+    if(tv){talkDone(tv.fact);speak(tv.t,pick(['happy','normal','happy']),'pet','auto',tv.id);return}
+    talkDone(null);
     speak(lineOf(cat),S.sleep?null:pick(['happy','normal','happy']),'pet','auto');
   }
 
@@ -1213,11 +1473,11 @@ const K=(()=>{
     if(k==='feed')return feedUI();
     if(k==='pet'){
       if(S.justBack){const bf=S.backFrom;S.justBack=false;delete S.backFrom;
-        const c2=['kinomi','ringo','kinoko','komugi'].filter(canGet),k2=c2.length?pick(c2):null;if(k2)add(S.inv,k2);ANA.track('pet',{bonus:true});addAff(2);busy='happy';kfx($('kov'),'💗',2);SND.cry(ckey());
+        const c2=['kinomi','ringo','kinoko','komugi'].filter(canGet),k2=c2.length?pick(c2):null;if(k2)add(S.inv,k2);ANA.track('pet',{bonus:true});prRec('pet');addAff(2);busy='happy';kfx($('kov'),'💗',2);SND.cry(ckey());
         const bm=bf==='walk'?'お散歩たのしかったね！':bf==='explore'?'探検おつかれさま！':'おかえりなさい！';   // 種類が分からない古いセーブは、どちらとも決めない
         speak(lineOf('pet'));say(k2?`{n}が${IT[k2].e}${IT[k2].n}をくれた！ ${bm}`:`{n}がうれしそうにすりよってきた！ ${bm}`)}
       else{const t=now();if(t-(S.petAt||0)>10*MIN){S.petAt=t;S.petN=0}S.petN++;
-        if(S.petN<=3){ANA.track('pet');addAff(1);busy='happy';kfx($('kov'),'💗');SND.cry(ckey());speak(lineOf('pet'));say('なでた！ なかよし +1')}else{busy='normal';say('{n}はもう満足そう。少し時間をおいてね')}}
+        if(S.petN<=3){ANA.track('pet');prRec('pet');addAff(1);busy='happy';kfx($('kov'),'💗');SND.cry(ckey());speak(lineOf('pet'));say('なでた！ なかよし +1')}else{busy='normal';say('{n}はもう満足そう。少し時間をおいてね')}}
       setTimeout(()=>busy=null,1200);save();ui();
     }
   }
@@ -1241,7 +1501,7 @@ const K=(()=>{
       $('kclr').onclick=()=>{if(sel.length){sel=[];render()}else close()};
       $('kcook').onclick=()=>{
         const key=[...sel].sort().join('+'), d=(R[key]&&!isRetired('dish',R[key].k)?R[key]:null)||FUSHIGI, isNew=!S.recipes.includes(d.k);
-        sel.forEach(k=>add(S.inv,k,-1)); ANA.track('cook',{recipe:d.k,is_new:isNew}); if(S.tut===1)setTut(2); SND.sfx.ding(); if(S.stage!=='seed'&&!S.explore) speak(lineOf('cook')); add(S.dishes,d.k); if(isNew)S.recipes.push(d.k); save();
+        sel.forEach(k=>add(S.inv,k,-1)); ANA.track('cook',{recipe:d.k,is_new:isNew}); if(S.tut===1)setTut(2); SND.sfx.ding(); if(S.stage!=='seed'&&!S.explore) speak(lineOf('cook')); add(S.dishes,d.k); if(isNew)S.recipes.push(d.k); prFood('c',d.k); prRec('cook',d===FUSHIGI?['n_odd']:[]); save();
         modal(`<h2>${isNew?'🎉 新しいレシピ！':'できた！'}</h2><div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b><br>元気 +${d.g}　なかよし +${d.a}</p>
           <button class="pbtn" onclick="K.close()">OK</button>`);
         if(isNew)kfx($('kmbody'),'✨',3,20);
@@ -1256,7 +1516,7 @@ const K=(()=>{
     $('kmbody').querySelectorAll('.item').forEach(b=>b.onclick=()=>{
       const d=DISH[b.dataset.d];
       if(S.genki>=5){close();say('「おなかいっぱい！」 探検に行って、おなかをすかせよう');return}
-      add(S.dishes,d.k,-1);S.genki=clamp(S.genki+d.g,0,5);if(d.tag)S.tags[d.tag]=(S.tags[d.tag]||0)+1;
+      add(S.dishes,d.k,-1);S.genki=clamp(S.genki+d.g,0,5);if(d.tag)S.tags[d.tag]=(S.tags[d.tag]||0)+1;prFood('e',d.k);prRec('feed');
       ANA.track('feed',{dish:d.k});close();busy='eat';kfx($('kov'),'dish:'+d.k);SND.sfx.eat();setTimeout(()=>SND.cry(ckey()),500);say(`${d.n}を食べた！ 元気 +${d.g}　なかよし +${d.a}`);setTimeout(()=>speak(lineOf('feed'),'happy'),1300);
       setTimeout(()=>{busy='happy';setTimeout(()=>busy=null,900)},1200);addAff(d.a);if(S.tut===2)setTut(3);save();ui();
     });
@@ -1280,7 +1540,7 @@ const K=(()=>{
     };
     const done=(ok,m)=>{ANA.track('fish',{result:ok?'catch':'miss'});
       F.ph='done'; S.fishN=(S.fishN||0)+1; let txt=m;
-      const fk=ok?wpick([['sakana',60],['oosakana',15],['kutsu',15],['takara',10]]):null; if(ok&&!fk){ok=false;txt='…何もかからなかった';}
+      const fk=ok?wpick([['sakana',60],['oosakana',15],['kutsu',15],['takara',10]]):null; if(ok&&!fk){ok=false;txt='…何もかからなかった';} prRec('fish',ok?['n_fishok']:[]);
       if(ok){const k=fk;
         if(k==='takara'){add(S.decor,'takara');if(canGet('hoshi'))add(S.inv,'hoshi');txt='🎁 宝箱！ 中に⭐星のかけらが入っていた！'}
         else{IT[k].d?add(S.decor,k):add(S.inv,k);txt=k==='kutsu'?'👢 長ぐつ… 飾りにしちゃおう':`${IT[k].e} ${IT[k].n}が釣れた！`}
@@ -1305,7 +1565,8 @@ const K=(()=>{
   const sqIcon=q=>q.t==='item'?IT[q.k].e:(SQ[q.t]||{e:'❓'}).e;
   let charImg=null;
   function charPic(e='happy'){const sp=SPR[ckey()]||SPR.baby,c=document.createElement('canvas');c.width=sp.w+2;c.height=sp.h+2;drawSprite(c.getContext('2d'),sp,1,1,e);return c.toDataURL()}
-  const talkRow=(text,e)=>`<div class="talk"><img class="pix face" src="${charPic(e)}"><div class="tb">${esc(text)}</div></div>`;
+  const talkRow=(text,e)=>{const lid=LID_TEXT.get(String(text)); if(lid&&S)heard(lid,S.id); return talkRow0(text,e)};   // v2.1：会話の枠に出たセリフも記録
+  const talkRow0=(text,e)=>`<div class="talk"><img class="pix face" src="${charPic(e)}"><div class="tb">${esc(text)}</div></div>`;
   function mapUI(){
     const E=S.explore; if(PL(E.p).unknown){close();say('この場所のすごろくは、このバージョンでは遊べません');return} if(!E.map||!E.map.sq) E.map=makeMap(PLACES[E.p]);
     const M=E.map, order=[0,1,2,3,7,6,5,4,8,9,10,11,15,14,13,12];
@@ -1485,6 +1746,9 @@ const K=(()=>{
     if(typeof d.traitVer!=='number')d.traitVer=TRAIT_VER;
     if(!isO(d.log))d.log={};
     if(d.logFixed===undefined)d.logFixed=null;
+    // v2.1：持ち主と違う px（修正4で次の子に前の子の px が残った：Issue #27）は、持ち主のアルバムの記録へ戻す。戻せなければ別の場所に退避してから外す
+    if(isO(d.px)&&typeof d.px.of==='string'&&d.px.of!==d.id){const r=d.album.find(r=>r&&!r.live&&r.id===d.px.of);
+      if(r&&r.px===undefined){r.px=d.px;delete d.px} else {try{const k=KEY+'_px_'+Date.now(),v=JSON.stringify(d.px);localStorage.setItem(k,v);if(localStorage.getItem(k)===v)delete d.px}catch(e){}}}
     // 行けるようになった場所（プレイヤー全体）
     Object.entries(PLACES).forEach(([k,p])=>{if(p.need>0&&d.aff>=p.need&&!d.unlocked.includes(k))d.unlocked.push(k)});
     // 大人：アルバムに目印を1つだけ。種は1匹につき1回だけ
@@ -1499,8 +1763,8 @@ const K=(()=>{
     return d;
   }
   // ===== 次の子を育てる（AL3）：今の大人をアルバムへ → 新しいたね。おうちのもの（持ち物・料理・飾り・レシピ・行ける場所）は引き継ぐ =====
-  const PET_KEEP=['id','name','form','aff','tags','taps','born','bornGuess','temper','traitVer','adultAt','seedGiven','log','logFixed','persRule','pers','hidden','memo'];   // アルバムに入れる、その子だけのもの
-  const PET_RESET=['backFrom','petN','petAt','fishN','fishRest','idle','born','bornGuess','adultAt','seedGiven','persRule','pers','hidden','memo','temper','traitVer','id'];  // 次の子では作り直す（消して、ensureIntegrity が新しく付ける）
+  const PET_KEEP=['id','name','form','aff','tags','taps','born','bornGuess','temper','traitVer','adultAt','seedGiven','log','logFixed','persRule','pers','hidden','memo','px'];   // アルバムに入れる、その子だけのもの
+  const PET_RESET=['backFrom','petN','petAt','fishN','fishRest','idle','born','bornGuess','adultAt','seedGiven','persRule','pers','hidden','memo','temper','traitVer','id','px'];  // 次の子では作り直す（消して、ensureIntegrity が新しく付ける）
   const albumSaved=d=>(Array.isArray(d.album)?d.album:[]).filter(r=>r&&!r.live);
   function canNext(d){
     d=d||S; if(LOCK)return {ok:false,why:'lock'}; if(!d)return {ok:false,why:'none'};
@@ -1515,6 +1779,7 @@ const K=(()=>{
     const r={stage:'adult'};
     for(const k of PET_KEEP)if(d[k]!==undefined)r[k]=clone(d[k]);
     r.archivedAt=Date.now(); r.gen=typeof d.gen==='number'?d.gen:0;
+    if(isO(r.log))Object.keys(r.log).forEach(k=>{if(/^[ct]_/.test(k))delete r.log[k]});   // v2.1：1日の上限のためだけの数（今日の回数・日番号）はアルバムでは消す（v21_pers 22-4）
     return r;
   }
   // name：新しい子の名前。withFav：前の子と一緒に暮らすか（true のときだけお気に入りにする。false は今のお気に入りを変えない）
@@ -1796,8 +2061,8 @@ const K=(()=>{
   // バックアップファイル（data の ver が形式になる。新しい版のデータは新しい版でしか読めない）
   function downloadBackup(data,suffix){
     const d=clone(data), ver=typeof d.ver==='number'?d.ver:1;
-    const dx=DEXS?clone(DEXS):null;
-    const body=JSON.stringify({app:'pokohouse',ver,at:Date.now(),crc:crc32(JSON.stringify(d)),data:d,...(dx?{dex:dx,dexcrc:crc32(JSON.stringify(dx))}:{})},null,1);
+    const dx=DEXS?clone(DEXS):null, wd=clone(wordsSaved());   // v2.1：ことば帳（聞いたセリフ）も入れる
+    const body=JSON.stringify({app:'pokohouse',ver,at:Date.now(),crc:crc32(JSON.stringify(d)),data:d,...(dx?{dex:dx,dexcrc:crc32(JSON.stringify(dx))}:{}),words:wd,wordscrc:crc32(JSON.stringify(wd))},null,1);
     downloadText(body,`pokohouse_backup_${ymd()}${suffix||''}.json`,'application/json');
   }
   function downloadRaw(raw){
@@ -1917,10 +2182,10 @@ const K=(()=>{
     if(crc32(json)!==m[3])throw new Error('コードがこわれています（文字が欠けているかも）');
     let obj; try{obj=JSON.parse(json)}catch(e){throw new Error('コードがこわれています')}
     if(!obj||obj.app!=='pokohouse')throw new Error('ぽこのおひっこしコードではないみたい');
-    IMPORT_DEX=isO(obj.dex)?obj.dex:null;   // 発見記録は、復元できたときに今の記録と合わせる（減らさない）
+    IMPORT_WORDS=null; IMPORT_DEX=isO(obj.dex)?obj.dex:null;   // 発見記録は、復元できたときに今の記録と合わせる（減らさない）
     return toCurrent({ver:+m[1],data:obj.data},true);
   }
-  let IMPORT_DEX=null;
+  let IMPORT_DEX=null, IMPORT_WORDS=null;
   function readBackup(text){
     if(text.length>MAX_IMPORT)throw new Error('ファイルが大きすぎます');
     let obj; try{obj=JSON.parse(text)}catch(e){throw new Error('バックアップファイルではないみたい')}
@@ -1928,6 +2193,7 @@ const K=(()=>{
     if(+obj.ver>SAVE_FORMAT)throw new Error('新しいバージョンのファイルです。ゲームを最新にしてから試してね');
     if(obj.crc!==crc32(JSON.stringify(obj.data)))throw new Error('ファイルがこわれています');
     IMPORT_DEX=isO(obj.dex)&&obj.dexcrc===crc32(JSON.stringify(obj.dex))?obj.dex:null;
+    IMPORT_WORDS=isO(obj.words)&&obj.wordscrc===crc32(JSON.stringify(obj.words))?obj.words:null;
     return toCurrent({ver:+obj.ver,data:obj.data},false);
   }
   // 復元：保存できたのを確かめてから画面に反映。失敗したら元に戻す
@@ -1935,6 +2201,7 @@ const K=(()=>{
     const r=commit(clean,backupKey||(KEY+'_before_restore_'+Date.now()));
     if(!r.ok)return false;
     try{DEXS=dexMerge(DEXS||dexNew(),IMPORT_DEX||dexNew());IMPORT_DEX=null;dexFromSave(S,true);dexDirty=true;dexFlush()}catch(e){}
+    try{if(IMPORT_WORDS){WORDS=wordsMerge(wordsNow(),IMPORT_WORDS);wordsDirty=true;wordsFlush()}IMPORT_WORDS=null}catch(e){}   // v2.1：ことば帳は合わせる（減らさない）
     EX=null; x=34; busy=null; return true;
   }
   const stageName=d=>d.stage==='seed'?'種':fnm(d.stage==='adult'?d.form:d.stage);
@@ -2021,10 +2288,12 @@ const K=(()=>{
     modal(`<h2>📒 ぽこアルバム</h2><p>${L.length} / ${ALBUM_MAX}匹　🌱たね ${S.seeds||0}こ</p>${note?`<p class="tleft">${note}</p>`:''}
       <div class="sbox tleft"><b>いま育てている子</b>
         <div style="display:flex;gap:10px;align-items:center"><img class="pix apic" src="${charPic()}"><span>${esc(S.name)}（${S.stage==='seed'?'種':fnm(S.stage==='adult'?S.form:S.stage)}）</span></div>
+        ${S.stage!=='seed'?'<button class="pbtn" id="alprof">📖 プロフィール帳</button>':''}
         ${c.ok?'<button class="pbtn" id="alnext">🌱 アルバムに入れて、次の子を育てる</button>':`<small>${NEXT_WHY[c.why]||''}</small>`}</div>
       ${L.length?L.map(r=>`<button class="place" data-al="${esc(r.id)}"><img class="pix apic" src="${formPic(r.form)}"><span>${r.id===S.fav?'⭐ ':''}${esc(r.name)}<small>${fnm(r.form)}・${tnm(r.temper)}<br>生まれた日 ${dstr(r.born)}${r.bornGuess?'ごろ':''}・大人になった日 ${dstr(r.adultAt)}</small></span></button>`).join(''):'<p>まだアルバムに入った子はいません。<br>大人になった子を入れると、ここに並びます。</p>'}
       <button class="pbtn gray" onclick="K.close()">とじる</button>`);
     if($('alnext'))$('alnext').onclick=()=>nextUI1();
+    if($('alprof'))$('alprof').onclick=()=>profileUI(S.id);
     $('kmbody').querySelectorAll('[data-al]').forEach(b=>b.onclick=()=>albumDetail(b.dataset.al));
   }
   function albumDetail(id){
@@ -2034,16 +2303,17 @@ const K=(()=>{
       <table class="atbl"><tr><td>姿</td><td>${fnm(r.form)}</td></tr><tr><td>気質</td><td>${tnm(r.temper)}</td></tr><tr><td>なかよし</td><td>${r.aff}</td></tr>
       <tr><td>生まれた日</td><td class="dt">${dstr(r.born)}${r.bornGuess?'ごろ':''}</td></tr><tr><td>大人になった日</td><td class="dt">${dstr(r.adultAt)}</td></tr><tr><td>アルバムに入った日</td><td class="dt">${dstr(r.archivedAt)}</td></tr>
       ${r.memo?`<tr><td>メモ</td><td>${esc(r.memo)}</td></tr>`:''}</table>
+      <button class="pbtn" id="alprof2">📖 プロフィール帳</button>
       <button class="pbtn" id="alfav">${isFav?'お気に入りをやめる':'⭐ お気に入りにする（一緒に暮らす）'}</button>
       <button class="pbtn red" id="alrm">アルバムから外す</button>
       <button class="pbtn gray" id="alback">もどる</button>`);
-    $('alback').onclick=()=>albumUI();
+    $('alback').onclick=()=>albumUI(); $('alprof2').onclick=()=>profileUI(id);
     $('alfav').onclick=()=>{const cur=favRec();
       if(!isFav&&cur&&cur.id!==id){modal(`<h2>⭐ お気に入りを変える</h2><p class="tleft">いま一緒に暮らしている「${esc(cur.name)}」はアルバムで休み、「${esc(r.name)}」が一緒に暮らします。</p>
         <button class="pbtn" id="fvok">変える</button><button class="pbtn gray" id="fvno">やめる</button>`);$('fvno').onclick=()=>albumDetail(id);$('fvok').onclick=()=>doFav(id);return}
       doFav(isFav?null:id)};
     $('alrm').onclick=()=>{
-      modal(`<h2>アルバムから外す</h2><img class="pix apic" src="${formPic(r.form)}"><p class="tleft">「${esc(r.name)}」をアルバムから外しますか？<br>キャラ図鑑の発見と、思い出（名前・姿）は残ります。${isFav?'<br><b>この子はお気に入りです。外すと、お気に入りもなくなります。</b>':''}</p>
+      modal(`<h2>アルバムから外す</h2><img class="pix apic" src="${formPic(r.form)}"><p class="tleft">「${esc(r.name)}」をアルバムから外しますか？<br>進化図鑑の発見と、思い出（名前・姿）は残ります。${isFav?'<br><b>この子はお気に入りです。外すと、お気に入りもなくなります。</b>':''}</p>
         <button class="pbtn red" id="rm1">外す</button><button class="pbtn gray" id="rmno">やめる</button>`);
       $('rmno').onclick=()=>albumDetail(id);
       $('rm1').onclick=()=>{modal(`<h2>本当に外しますか？</h2><p class="tleft">「${esc(r.name)}」はアルバムからいなくなります。<br>まちがえたときは、せっていの「データの復旧」で「アルバムから外す前のデータ」に戻せます。</p>
@@ -2055,7 +2325,7 @@ const K=(()=>{
   function nextUI1(){
     const c=canNext(); if(!c.ok)return albumUI(NEXT_WHY[c.why]);
     modal(`<h2>🌱 次の子を育てる</h2><img class="pix apic" src="${charPic()}"><p class="tleft">「${esc(S.name)}」をアルバムに入れて、新しい子を育てます。<b>たねを1つ</b>使います（いま ${S.seeds}こ）。</p>
-      <table class="atbl"><tr><td>そのまま</td><td>持ち物・料理・飾り・レシピ・行ける場所・キャラ図鑑</td></tr><tr><td>新しく</td><td>名前・なかよし・元気・食べた記録・気質</td></tr></table>
+      <table class="atbl"><tr><td>そのまま</td><td>持ち物・料理・飾り・レシピ・行ける場所・進化図鑑</td></tr><tr><td>新しく</td><td>名前・なかよし・元気・食べた記録・気質</td></tr></table>
       <button class="pbtn" id="nx1">次へ</button><button class="pbtn gray" id="nxno">やめる</button>`);
     $('nxno').onclick=()=>albumUI(); $('nx1').onclick=()=>nextUI2();
   }
@@ -2073,60 +2343,106 @@ const K=(()=>{
       close(); ui(); draw(); say(`「${prev}」はアルバムに入りました。新しいたねを植えたよ！ 種をタップして、芽を出させよう`)};
     $('nxy').onclick=()=>go(true); $('nxn').onclick=()=>go(false);
   }
-  // ===== AL5：キャラ図鑑・発見記録 =====
+  // ===== AL5：進化図鑑・発見記録 =====
   // はじめての姿のお祝い（保存できた記録にあるときだけ。保存がまだなら少し待つ）
   function newFormUI(fm,tries=0){
     if(LOCK||!S)return;
     const D=dexSaved(); if(!D.sp[fm]){ if(tries<10)setTimeout(()=>newFormUI(fm,tries+1),1500); return; }
     const found=ZUKAN.filter(([k])=>D.sp[k]).length, left=ZUKAN.length-found;
     if($('kmodal').classList.contains('on'))close();
-    modal(`<h2>✨ 新しい子が<br>キャラ図鑑に登録されたよ！</h2><img class="pix apicl" src="${formPic(fm)}"><p><b>${fnm(fm)}</b></p>
+    modal(`<h2>✨ 新しい子が<br>進化図鑑に登録されたよ！</h2><img class="pix apicl" src="${formPic(fm)}"><p><b>${fnm(fm)}</b></p>
       <p>見つけた姿 ${found} / ${ZUKAN.length}</p>
       <p class="tleft">${left?`あと${left}種類！ どんな姿がいるかな？<br>いろんなごはんを食べさせて、集めてみてね`:'全部の姿を見つけたよ！ すごい！'}</p>
       <button class="pbtn" id="nfback">戻る</button>`);
-    $('nfback').onclick=()=>{close();say('📖 キャラ図鑑で、また見られるよ！');setTimeout(()=>speak('図鑑にのったよ、うれしいな','happy'),400)};
+    $('nfback').onclick=()=>{close();say('📖 進化図鑑で、また見られるよ！');setTimeout(()=>speak('図鑑にのったよ、うれしいな','happy'),400)};
   }
   const ZUKAN=[['hana','くだものが大好きな子は、どんな姿になるのかな…'],['umi','海の幸をたくさん食べた子は…？'],['mori','森のめぐみ（きのこ）をよく食べた子は…？'],['okashi','あまいものばかり食べていると…？']];   // 今の版で見つけられる姿（隠し・特殊は、その版まで出さない）
   const shadowPic=k=>{const sp=SPR[k]||SPR.child,c=document.createElement('canvas');c.width=sp.w+2;c.height=sp.h+2;const g=c.getContext('2d');drawSprite(g,sp,1,1,'normal',false);g.globalCompositeOperation='source-in';g.fillStyle='#3a2f45';g.fillRect(0,0,c.width,c.height);return c.toDataURL()};
   const dexNow=()=>DEXS||dexRead()||dexNew();             // 判断用（メモリの未保存分も含む：戻す質問で外した子を出さないため）
   const dexSaved=()=>dexRead()||dexNew();                  // 画面用：保存場所に実際に保存された記録だけ
+  // ===== v2.1 プロフィール帳（その子への愛着）=====
+  // 項目は表 PROF_Q（上から並べるだけ。項目を足すときは1行足す）。show：出す子だけ、v：中身（HTMLにして返す）、fm：丸ゴシックで出す。
+  // 記録にないことは書かない。性格・個性は確定した子だけ（子どもの仮の性格は出さない）
+  const PROF_Q=[
+    {id:'pq_name',n:'なまえ',v:d=>esc(d.name||'ぽこ')},
+    {id:'pq_born',n:'誕生日',show:d=>d.stage!=='seed',v:d=>dstr(d.born)+(d.bornGuess?'ごろ':''),fm:1},
+    {id:'pq_adult',n:'大人になった日',show:d=>d.stage==='adult'&&typeof d.adultAt==='number',v:d=>dstr(d.adultAt),fm:1},
+    {id:'pq_form',n:'姿',v:d=>d.stage==='adult'?esc(fnm(d.form)):d.stage==='seed'?'種':`${esc(fnm(d.stage))}<small>（進化はこれから）</small>`},
+    {id:'pq_temper',n:'気質',v:d=>esc(tnm(d.temper))},
+    {id:'pq_pers',n:'性格',v:d=>d.pers&&PERS[d.pers]?esc(PERS[d.pers].n):'<small>まだ見つかっていない</small>'},
+    {id:'pq_kosei',n:'こんな子',show:d=>!!voiceCell(d),v:d=>esc(voiceCell(d).d),fm:1},
+    {id:'pq_aff',n:'なかよし',v:d=>String(d.aff||0)},
+    {id:'pq_memo',n:'メモ',show:d=>!!d.memo,v:d=>esc(d.memo),fm:1},
+  ];
+  const lineText=x=>x.t.replaceAll('{n}','〇〇');
+  function profileUI(id,back){
+    if(LOCK||!S)return;
+    const cur=id===S.id, d=cur?S:albumSaved(S).find(r=>r.id===id); if(!d)return albumUI();
+    const pic=cur?charPic():formPic(d.form), W=wordsSaved(), mine=W.w[id]||{}, byId=new Map(ALL_LINES.map(x=>[x.id,x]));
+    const heardL=Object.entries(mine).filter(([k])=>byId.has(k)).sort((a,b)=>a[1]-b[1]);
+    modal(`<div class="zk"><h2>📖 プロフィール帳</h2><img class="pix apicl" src="${pic}">
+      <table class="atbl ptbl">${PROF_Q.filter(q=>!q.show||q.show(d)).map(q=>`<tr><td class="fd">${q.n}</td><td class="${q.fm?'fm':''}">${q.v(d)}</td></tr>`).join('')}</table>
+      <div class="sbox"><b class="fd">聞いたセリフ ${heardL.length}本</b>
+        ${heardL.length?heardL.map(([k,t])=>`<div class="wrow"><span class="wt fm">${esc(lineText(byId.get(k)))}<small>${dstr(t)}</small></span></div>`).join(''):'<p class="fm"><small>まだありません。話しかけたり、一緒に過ごしたりすると増えていくよ</small></p>'}</div>
+      <button class="pbtn gray" id="pfback">もどる</button></div>`);
+    $('pfback').onclick=()=>back?back():(cur?albumUI():albumDetail(id));
+  }
+  // ===== v2.1 ことば図鑑（セリフを埋める楽しさ）：プレイヤー全体の記録。聞いたセリフだけ発見済み、未発見は伏せる =====
+  const C6=['日常','性格','気分','成長','特別','秘密','豆知識'];
+  function kotobaUI(tab){
+    if(LOCK)return; tab=tab||'全部';
+    const W=wordsSaved(), L=ALL_LINES.filter(lineUsable), has=x=>!!W.wl[x.id], found=L.filter(has).length, no=new Map(L.map((x,i)=>[x.id,i+1]));
+    const cnt=c=>{const a=c==='全部'?L:L.filter(x=>x.c6===c);return [a.filter(has).length,a.length]};
+    const list=tab==='全部'?L:L.filter(x=>x.c6===tab), pc=L.length?Math.floor(found/L.length*100):0;
+    modal(`<div class="zk"><h2>📖 進化図鑑</h2>
+      <div class="ztabs"><button class="ztab fd" id="zkSp">すがた</button><button class="ztab fd on">ことば</button></div>
+      <p class="fd">見つけたことば ${found} / ${L.length}（${pc}%）</p>
+      <div class="ztabs">${['全部',...C6].map(c=>{const [a,b2]=cnt(c);return `<button class="ztab zc fd${c===tab?' on':''}" data-c="${c}">${c}<small>${a}/${b2}</small></button>`}).join('')}</div>
+      <div class="wlist">${list.length?list.map(x=>{const f=W.wl[x.id];return `<div class="wrow"><span class="wno fd">No.${String(no.get(x.id)).padStart(3,'0')}</span>
+        <span class="wt fm">${f?`${esc(lineText(x))}<small>${dstr(f[0])}</small>`:'<span class="wq fd">？？？</span>'}</span></div>`}).join(''):'<p class="fm"><small>まだこの分類のことばはないみたい。これから増えるかも…</small></p>'}</div>
+      <p class="tleft fm"><small>ぽこが話したことばが、ここに集まります。ことば図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</small></p>
+      <button class="pbtn gray" onclick="K.close()">とじる</button></div>`);
+    $('zkSp').onclick=()=>zukanUI();
+    $('kmbody').querySelectorAll('.zc').forEach(b=>b.onclick=()=>kotobaUI(b.dataset.c));
+  }
   function zukanUI(){
     if(LOCK)return; const D=dexSaved(), found=ZUKAN.filter(([k])=>D.sp[k]).length, pets=Object.entries(D.pets);
-    modal(`<h2>📖 キャラ図鑑</h2><p>見つけた姿 ${found} / ${ZUKAN.length}（${Math.floor(found/ZUKAN.length*100)}%）</p>
+    modal(`<div class="zk"><h2>📖 進化図鑑</h2><div class="ztabs"><button class="ztab fd on">すがた</button><button class="ztab fd" id="zkWd">ことば</button></div>
+      <p class="fd">見つけた姿 ${found} / ${ZUKAN.length}（${Math.floor(found/ZUKAN.length*100)}%）</p>
       ${ZUKAN.map(([k,h])=>{const f=D.sp[k];if(!f)return `<div class="place"><img class="pix apic" src="${shadowPic(k)}"><span>？？？<small>${h}</small></span></div>`;
         const by=f.by&&D.pets[f.by]?D.pets[f.by].name:null, n=pets.filter(([,v])=>v.form===k).length;
         return `<div class="place"><img class="pix apic" src="${formPic(k)}"><span>${fnm(k)}<small>はじめて：${f.at?dstr(f.at):'？'}${by?`・${esc(by)}`:''}<br>この姿になった子：${n}匹</small></span></div>`}).join('')}
       <button class="pbtn" id="zkpets">💭 大人になった子の思い出（${pets.length}匹）</button>
-      <p class="tleft"><small>キャラ図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</small></p>
-      <button class="pbtn gray" onclick="K.close()">とじる</button>`);
-    $('zkpets').onclick=()=>memoryUI();
+      <p class="tleft"><small>進化図鑑の記録は、ぽこのデータとは別に保存しています。「最初から」でも消えません。</small></p>
+      <button class="pbtn gray" onclick="K.close()">とじる</button></div>`);
+    $('zkpets').onclick=()=>memoryUI(); $('zkWd').onclick=()=>kotobaUI();
   }
   function memoryUI(){
     const D=dexSaved(), inAlbum=new Set(S?albumSaved(S).map(r=>r.id):[]), L=Object.entries(D.pets).sort((a,b)=>(b[1].adultAt||0)-(a[1].adultAt||0));
     const where=id=>S&&id===S.id?'いま育てている子':S&&id===S.fav?'⭐ 一緒に暮らしている':inAlbum.has(id)?'アルバム':'思い出';
-    modal(`<h2>💭 思い出</h2><p class="tleft"><small>大人になった子の記録です。アルバムから外した子も残ります。</small></p>
+    modal(`<div class="zk"><h2>💭 思い出</h2><p class="tleft"><small>大人になった子の記録です。アルバムから外した子も残ります。</small></p>
       ${L.length?L.map(([id,v])=>`<div class="place"><img class="pix apic" src="${formPic(v.form)}"><span>${esc(v.name||'ぽこ')}<small>${fnm(v.form)}${v.adultAt?`・大人になった日 ${dstr(v.adultAt)}`:''}・${where(id)}</small></span></div>`).join(''):'<p>まだいません</p>'}
-      <button class="pbtn gray" id="mmback">もどる</button>`);
+      <button class="pbtn gray" id="mmback">もどる</button></div>`);
     $('mmback').onclick=()=>zukanUI();
   }
   // ===== AL7：「最初から」の2択・アルバムの子を戻す・保存の容量 =====
   function resetUI(){
     if(LOCK)return; if(!S){$('kconfirm').classList.add('on');return}
     modal(`<h2>最初から</h2><p class="tleft">どちらにしますか？ どちらも、始める前に今のデータを退避します（せってい → データの復旧 で戻せます）。</p>
-      <button class="place" id="rsone"><em>🌱</em><span>今の子だけやり直す<small>消える：今の子（${esc(S.name)}）の名前・なかよし・元気・食べた記録<br>残る：アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・キャラ図鑑</small></span></button>
-      <button class="place" id="rsall"><em>🧹</em><span>全部消して最初から<small>消える：今の子・アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね<br>残る：キャラ図鑑（発見記録・思い出）</small></span></button>
+      <button class="place" id="rsone"><em>🌱</em><span>今の子だけやり直す<small>消える：今の子（${esc(S.name)}）の名前・なかよし・元気・食べた記録<br>残る：アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・進化図鑑</small></span></button>
+      <button class="place" id="rsall"><em>🧹</em><span>全部消して最初から<small>消える：今の子・アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね<br>残る：進化図鑑（発見記録・思い出）</small></span></button>
       <button class="pbtn gray" onclick="K.close()">やめる</button>`);
     $('rsone').onclick=()=>restartUI();
     $('rsall').onclick=()=>{close();$('kconfirm').classList.add('on')};
   }
   function restartUI(){
     if(S.explore){modal(`<h2>今の子だけやり直す</h2><p>探検・お散歩から帰ってきてからにしてね</p><button class="pbtn gray" onclick="K.close()">とじる</button>`);return}
-    const lost=S.stage==='adult'?'<br><b>この子はアルバムに入っていません。やり直すと、この子とはお別れになります（キャラ図鑑の思い出には残ります）。アルバムに入れたいときは「アルバム」から「次の子を育てる」を選んでね。</b>':'<br><b>今の子とはお別れになります。</b>';
+    const lost=S.stage==='adult'?'<br><b>この子はアルバムに入っていません。やり直すと、この子とはお別れになります（進化図鑑の思い出には残ります）。アルバムに入れたいときは「アルバム」から「次の子を育てる」を選んでね。</b>':'<br><b>今の子とはお別れになります。</b>';
     modal(`<h2>🌱 今の子だけやり直す</h2><img class="pix apic" src="${charPic()}"><p class="tleft">「${esc(S.name)}」の名前・なかよし・元気・食べた記録が消えて、新しいたねから育てます（たねは使いません）。${lost}</p>
       <input id="rsname" maxlength="12" placeholder="新しい子の名前（12文字まで）" style="width:100%;font-size:17px;padding:8px;border:3px solid #3a2f45;border-radius:10px">
       <button class="pbtn red" id="rsgo">やり直す</button><button class="pbtn gray" onclick="K.close()">やめる</button>`);
     $('rsgo').onclick=()=>{const nm=($('rsname').value||'').trim()||'ぽこ';
-      modal(`<h2>本当にやり直しますか？</h2><p class="tleft">「${esc(S.name)}」とはお別れになります。<br>アルバム・持ち物・キャラ図鑑は残ります。</p><button class="pbtn red" id="rsok">やり直す</button><button class="pbtn gray" onclick="K.close()">やめる</button>`);
+      modal(`<h2>本当にやり直しますか？</h2><p class="tleft">「${esc(S.name)}」とはお別れになります。<br>アルバム・持ち物・進化図鑑は残ります。</p><button class="pbtn red" id="rsok">やり直す</button><button class="pbtn gray" onclick="K.close()">やめる</button>`);
       $('rsok').onclick=()=>{const prev=S.name,r=restartPet(nm);if(!r.ok){modal(`<p>⚠ ${FAIL_MSG(r)}</p><button class="pbtn gray" onclick="K.close()">とじる</button>`);return}
         close();ui();draw();say(`新しいたねを植えたよ！ 種をタップして、芽を出させよう`)}};
   }
@@ -2334,40 +2650,5 @@ if(TEST_BUILD&&location.search.includes('debug'))$('kff').style.display='';
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 K.open();
 </script>
-<div id="tst_label" style="position:fixed;left:0;top:0;z-index:99999;background:#e0457b;color:#fff;font:bold 11px/1.4 sans-serif;padding:2px 6px;border-bottom-right-radius:6px;pointer-events:none">🧪 テスト用サイト（本番とは別）v2.0 アルバム・図鑑（修正4）</div>
-<button id="tst_btn" style="position:fixed;right:4px;bottom:4px;z-index:99999;font:bold 12px sans-serif;background:#e0457b;color:#fff;border:0;border-radius:8px;padding:6px 8px">🧪</button>
-<div id="tst_pan" style="display:none;position:fixed;inset:8px;z-index:100000;background:#fff;border:3px solid #e0457b;border-radius:10px;padding:10px;overflow:auto;font:14px/1.5 sans-serif;color:#333">
-<b>🧪 テスト用パネル（テスト版だけ）</b><br><small>ここで変えるのはテスト用サイトの保存だけです。ボタンを押すと、自動で読み直します。</small>
-<div style="display:grid;gap:6px;margin-top:8px">
-<button data-t="child">① v1.8形式の見本（子ども）を入れる</button>
-<button data-t="adult">② v1.8形式の見本（大人・海の子）を入れる</button>
-<button data-t="v2adult">⑨ v2見本：大人（たね1）＋アルバム3匹（花の子2匹）＋お気に入り</button>
-<button data-t="v2lost">⑩ v2見本：v1.9で「最初から」を押した後（アルバムは退避の中だけ）</button>
-<button data-t="v2pre">⑪ v2見本：子ども・なかよし59（なでると大人に）</button>
-<button data-t="newer">③ 新しい版のデータ（形式99）を入れる → 停止画面</button>
-<button data-t="broken">④ 壊れたデータを入れる → 停止画面</button>
-<button data-t="fill">⑤ 保存領域をいっぱいにする</button>
-<button data-t="unfill">⑥ いっぱいを解除する</button>
-<button data-t="list">⑦ 保存されている中身を見る</button>
-<button data-t="clear">⑧ テスト用の保存を全部消す</button>
-<button data-t="close">閉じる</button>
-</div><pre id="tst_out" style="white-space:pre-wrap;font-size:12px;background:#f6f6f6;padding:6px;margin-top:8px"></pre></div>
-<script>(()=>{const K='pokohouse_v1',SM={"child": {"name": "もち", "stage": "child", "form": null, "taps": 5, "genki": 4, "aff": 40, "inv": {"kinomi": 4, "sakana": 2, "kinoko": 2, "ringo": 2, "mitsu": 2, "komugi": 2}, "dishes": {"pie": 1}, "decor": {"hana": 1}, "recipes": ["pie"], "tags": {"fruit": 1}, "sleep": false, "lucky": false, "justBack": false, "last": 0, "skew": 0, "explore": null, "tut": 0, "petN": 0, "petAt": 0}, "adult": {"name": "もち", "stage": "adult", "form": "umi", "taps": 5, "genki": 4, "aff": 70, "inv": {"kinomi": 4, "sakana": 2, "kinoko": 2, "ringo": 2, "mitsu": 2, "komugi": 2}, "dishes": {"pie": 1}, "decor": {"hana": 1}, "recipes": ["pie"], "tags": {"fruit": 1}, "sleep": false, "lucky": false, "justBack": false, "last": 0, "skew": 0, "explore": null, "tut": 0, "petN": 0, "petAt": 0}},P=document.getElementById('tst_pan'),O=document.getElementById('tst_out');
-const go=()=>setTimeout(()=>location.reload(),300);const V2={"v2adult": {"ver": 2, "name": "いまのこ", "stage": "adult", "form": "umi", "taps": 200, "genki": 4, "aff": 75, "inv": {"kinomi": 4, "sakana": 3, "ringo": 2, "mitsu": 2, "komugi": 2, "kinoko": 2}, "dishes": {"juice": 1, "pie": 1}, "decor": {}, "recipes": ["juice", "pie"], "tags": {"fish": 6, "fruit": 2}, "explore": null, "sleep": false, "lucky": false, "justBack": false, "last": 1795236563310, "skew": 0, "album": [{"id": "ptestalb0001", "name": "はなこ", "form": "hana", "stage": "adult", "aff": 70, "tags": {"fruit": 5}, "taps": 300, "born": 1794346563310, "bornGuess": false, "temper": "amaenbo", "traitVer": 1, "adultAt": 1794746563310, "seedGiven": true, "log": {}, "logFixed": null, "archivedAt": 1795146563310, "gen": 0}, {"id": "ptestalb0002", "name": "はなみ", "form": "hana", "stage": "adult", "aff": 88, "tags": {"fruit": 7}, "taps": 300, "born": 1794356563310, "bornGuess": false, "temper": "cool", "traitVer": 1, "adultAt": 1794756563310, "seedGiven": true, "log": {}, "logFixed": null, "archivedAt": 1795156563310, "gen": 0}, {"id": "ptestalb0003", "name": "もりお", "form": "mori", "stage": "adult", "aff": 66, "tags": {"mush": 4}, "taps": 300, "born": 1794366563310, "bornGuess": false, "temper": "kokishin", "traitVer": 1, "adultAt": 1794766563310, "seedGiven": true, "log": {}, "logFixed": null, "archivedAt": 1795166563310, "gen": 0}, {"id": "ptestcur0001", "live": true}], "unlocked": ["umi", "yama"], "seeds": 1, "fav": "ptestalb0001", "seen": {}, "book": {}, "id": "ptestcur0001", "born": 1794936563310, "bornGuess": false, "temper": "ottori", "traitVer": 1, "adultAt": 1795136563310, "seedGiven": true, "log": {}, "logFixed": null, "tut": 0}, "v2lost": {"ver": 2, "name": "ふるいばん", "stage": "baby", "form": null, "taps": 200, "genki": 4, "aff": 3, "inv": {"kinomi": 2}, "dishes": {}, "decor": {}, "recipes": [], "tags": {}, "explore": null, "sleep": false, "lucky": false, "justBack": false, "last": 1795236563310, "skew": 0, "album": [], "unlocked": ["umi", "yama"], "seeds": 0, "fav": null, "seen": {}, "book": {}, "id": "ptestnew0001", "born": 1794936563310, "bornGuess": false, "temper": "ottori", "traitVer": 1, "log": {}, "logFixed": null, "tut": 0}, "v2pre": {"ver": 2, "name": "いまのこ", "stage": "child", "form": null, "taps": 200, "genki": 4, "aff": 59, "inv": {"kinomi": 4, "sakana": 3, "ringo": 2, "mitsu": 2, "komugi": 2, "kinoko": 2}, "dishes": {"juice": 1, "pie": 1}, "decor": {}, "recipes": ["juice", "pie"], "tags": {"sweet": 3}, "explore": null, "sleep": false, "lucky": false, "justBack": false, "last": 1795236563310, "skew": 0, "album": [{"id": "ptestalb0001", "name": "はなこ", "form": "hana", "stage": "adult", "aff": 70, "tags": {"fruit": 5}, "taps": 300, "born": 1794346563310, "bornGuess": false, "temper": "amaenbo", "traitVer": 1, "adultAt": 1794746563310, "seedGiven": true, "log": {}, "logFixed": null, "archivedAt": 1795146563310, "gen": 0}], "unlocked": ["umi", "yama"], "seeds": 0, "fav": null, "seen": {}, "book": {}, "id": "ptestpre0001", "born": 1794936563310, "bornGuess": false, "temper": "ottori", "traitVer": 1, "log": {}, "logFixed": null, "tut": 0}};
-document.getElementById('tst_btn').onclick=()=>{P.style.display='block'};
-P.onclick=e=>{const t=e.target.dataset&&e.target.dataset.t;if(!t)return;try{
- if(t==='close'){P.style.display='none';return}
- if(t==='child'||t==='adult'){if(!confirm('今のテスト用データを、見本データで上書きします。よいですか？'))return;const d=JSON.parse(JSON.stringify(SM[t]));d.last=Date.now();
-  Object.keys(localStorage).filter(k=>k.startsWith(K)).forEach(k=>localStorage.removeItem(k));localStorage.setItem(K,JSON.stringify(d));go();return}
- if(V2[t]){if(!confirm('今のテスト用データを消して、見本を入れます（キャラ図鑑の記録も消えます）。よいですか？'))return;Object.keys(localStorage).filter(k=>k.startsWith(K)).forEach(k=>localStorage.removeItem(k));
-  const d=JSON.parse(JSON.stringify(V2[t]));d.last=Date.now();if(t==='v2lost'){const o=JSON.parse(JSON.stringify(V2.v2adult));localStorage.setItem(K+'_before_reset_'+(Date.now()-60000),JSON.stringify(o))}
-  localStorage.setItem(K,JSON.stringify(d));go();return}
- if(t==='newer'){if(!confirm('新しい版のデータで上書きします。よいですか？'))return;localStorage.setItem(K,JSON.stringify({ver:99,name:'みらい',stage:'baby'}));go();return}
- if(t==='broken'){if(!confirm('壊れたデータで上書きします。よいですか？'))return;localStorage.setItem(K,'{"name":"こわれ","stage":');go();return}
- if(t==='fill'){let n=0,s='x'.repeat(1<<20);while(s.length>=16){try{localStorage.setItem('tst_fill_'+n,s);n++}catch(e){s=s.slice(s.length/2)}}O.textContent='いっぱいにしました（'+n+'個）。ゲームで何か操作すると「保存できませんでした」が出るはずです。';return}
- if(t==='unfill'){Object.keys(localStorage).filter(k=>k.startsWith('tst_fill_')).forEach(k=>localStorage.removeItem(k));O.textContent='解除しました。';return}
- if(t==='list'){O.textContent=Object.keys(localStorage).sort().map(k=>k+'  '+Math.round((localStorage.getItem(k)||'').length/1024*10)/10+'KB').join('\n')||'（空）';return}
- if(t==='clear'){if(!confirm('テスト用サイトの保存を全部消します。よいですか？'))return;localStorage.clear();go();return}
-}catch(err){O.textContent='エラー: '+err}};})();</script>
 </body>
 </html>
