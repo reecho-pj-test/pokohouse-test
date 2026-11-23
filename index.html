@@ -35,8 +35,12 @@ button{font-family:inherit;cursor:pointer}
 .rcv{border:2px solid #3a2f45;border-radius:10px;padding:8px;margin:8px 0;text-align:left;font-size:13px;background:#fbf8ff}
 .toast{position:absolute;left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100% - 16px);top:12px;background:#3a2f45;color:#fff;font-size:14px;padding:7px 14px;border-radius:99px;opacity:0;transition:opacity .3s;z-index:30;white-space:nowrap}
 .toast.on{opacity:1}
-.fx{position:absolute;font-size:24px;pointer-events:none;animation:float 1.3s ease-out forwards;z-index:6}
-@keyframes float{from{opacity:1;transform:translateY(0) scale(.8)}to{opacity:0;transform:translateY(-70px) scale(1.2)}}
+.fx{position:absolute;font-size:24px;pointer-events:none;animation:float 1.3s steps(8,end) forwards;z-index:6}
+/* v2.4：12×12のドット絵を整数倍（2倍・3倍）で表示し、拡大・縮小せず、ドット単位（8段）で上がる。最後は点滅させずに消える */
+@keyframes float{0%{opacity:1;transform:translateY(0)}85%{opacity:1}100%{opacity:0;transform:translateY(-64px)}}
+@keyframes float3{0%{opacity:1;transform:translateY(0)}85%{opacity:1}100%{opacity:0;transform:translateY(-72px)}}
+@keyframes fxrm{0%{opacity:1}100%{opacity:0}}
+#kzz.up{transform:translateY(-6px)}
 
 /* ===== こども ===== */
 #kid{background:#bfeccd}
@@ -129,7 +133,9 @@ img.ii{width:1.3em;height:1.3em;vertical-align:-.28em;image-rendering:pixelated;
 .sq .ic{display:flex;width:66%;height:66%;align-items:center;justify-content:center}
 .sq .ic img.ii{width:100%;height:100%}
 .mt img.ii{width:66%;height:66%}
-.fx img{width:30px;height:30px;image-rendering:pixelated}
+.fx img{width:24px;height:24px;image-rendering:pixelated}
+@media (min-width:360px){.fx{animation-name:float3}.fx img{width:36px;height:36px}}
+@media (prefers-reduced-motion:reduce){.fx{animation:fxrm 1.1s steps(1,end) forwards}}
 .tleft{text-align:left}
 .sbox{border:3px solid #3a2f45;border-radius:12px;padding:8px 10px;margin:10px 0;text-align:left;font-size:14px}
 .sbox .pbtn{margin-top:8px}
@@ -323,7 +329,8 @@ img.pcd{image-rendering:pixelated}
 .kbar em img.pcd{width:18px;height:16px}
 #kaffn{flex:none;font-family:'DotGothic16','Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:400;font-size:16px;line-height:18px;min-width:26px;text-align:right}
 .kpr3{grid-column:1/-1;display:flex;gap:8px;align-items:stretch;margin-top:6px}
-.knext{flex:1;min-width:0;display:flex;align-items:center;gap:6px;background:#fffbe6;border:2px dashed #c9b8d6;border-radius:8px;padding:3px 8px;font-size:13px;line-height:1.45;color:#2f5a35;overflow-wrap:anywhere}
+.knext{flex:1;min-width:0;display:flex;align-items:center;gap:6px;background:#fffbe6;border:2px dashed #c9b8d6;border-radius:8px;padding:3px 8px;font-size:13px;line-height:1.45;color:#2f5a35;overflow-wrap:anywhere;height:calc(2.9em + 10px)}
+#knextt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-width:0}   /* いつも2行ぶんの高さ（文が変わってもカードの高さが動かない）。3行になる長い文は2行で切る */
 .knext .kml{flex:none;font-size:11px;font-weight:900;color:#fff;background:#6cc08a;border:2px solid #3a2f45;border-radius:6px;padding:0 4px;line-height:15px}
 .knext img.ii{width:1.2em;height:1.2em}
 #klbbtn{position:relative;flex:none;display:flex;align-items:center;gap:5px;min-height:44px;border:3px solid #3a2f45;border-radius:12px;background:#ffe3ee;color:#3a2f45;box-shadow:0 2px 0 #3a2f45;padding:2px 12px 2px 6px}
@@ -358,6 +365,8 @@ img.pcd{image-rendering:pixelated}
 }
 /* v2.2b：ノッチ・時計の帯があるスマホ（セーフエリアが0より大きいとき）だけ：上は帯の下のぼかしにかからないよう少しあけ、下はホームバーの余白があるのでゲーム側の余白をへらす */
 .sa-top .kprof{margin-top:16px}
+.ios-br .kprof{margin-top:20px}   /* iPhoneのSafari（ホーム画面に追加していないとき）：上の端にiOSがかけるぼかしの帯をよける */
+@media (max-height:520px){.ios-br .kprof{margin-top:14px}}
 .sa-bot #kid .foot{margin-bottom:0;padding-bottom:2px}
 @media (max-width:359px){   /* 320px：ゲージは次の段に（文字・ゲージを小さくしない） */
   .kpaffl{display:none}.kpr2{gap:5px}.kbar{min-width:60px;margin-right:4px}   /* ゲージは同じ行のまま（「なかよし」の文字だけ省く。読み上げは aria-label） */
@@ -422,6 +431,22 @@ img.pcd{image-rendering:pixelated}
 .cpast b{float:right}.cpast .tot{border-top:2px dashed #E9CAD8;margin-top:4px;padding-top:4px;color:#e0457b;font-weight:900}
 .cpast img.pcd,.kcard h2 img.pcd{width:18px;height:18px;vertical-align:-3px}
 @media (prefers-reduced-motion:reduce){.lbc.today,.lbkr,.kcoin.bump,.lbmsg.pop{animation:none}.lbs .stk.peta{animation:none}.lbpt{animation:none;opacity:1}}
+.secp{background:#fffbe6;border:3px solid #3a2f45;border-radius:12px;padding:10px;margin:8px 0;text-align:center;
+  background-image:linear-gradient(rgba(91,75,154,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(91,75,154,.08) 1px,transparent 1px);background-size:12px 12px}
+.secpic img.pcd{width:44px;height:44px}.secl{font-size:16px;font-weight:900;line-height:1.7;margin:6px 0;min-height:3.4em;text-wrap:balance}.secn{color:#8a7a98;font-weight:900}
+.sevl{word-break:keep-all;overflow-wrap:anywhere}.sevpic img{width:52px;height:auto;image-rendering:pixelated}.sevq{font-weight:900;margin:6px 0 2px}.sevc{display:flex;gap:8px}.sevc .pbtn{flex:1;margin:4px 0;font-size:15px;padding-left:4px;padding-right:4px;white-space:nowrap}
+.secget img.pcd,.pcsec img.pcd{width:16px;height:16px;vertical-align:-3px}
+.kfull{font-size:14px;font-weight:900;color:#5a4868;margin:-4px 0 6px;letter-spacing:1px}
+.pcbond{margin-top:10px;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:6px 8px 8px;box-shadow:0 3px 0 var(--mint)}
+.pcbh{display:flex;justify-content:space-between;align-items:center;font-size:16px;border-bottom:2px dashed var(--lpink);padding-bottom:4px}
+.pcbr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:6px}
+.pcbi{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 1px;border-radius:10px;background:#faf6fc;border:2px dashed #d7c6e2;min-width:0}
+.pcbi.ok{background:#fff0f6;border:2px solid #f58bb0}
+.pcbi img.pix{width:36px;height:36px;image-rendering:pixelated}
+.pcbi i{position:absolute;right:2px;top:2px;line-height:0}.pcbi i img.pcd{width:18px;height:16px}
+.pcbi span.fm{font-size:12px;font-weight:900;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcbond p{font-size:13px;color:#6a5478;text-align:center;margin-top:6px;line-height:1.5;text-wrap:balance}
+.atbl td img.pcd{width:16px;height:14px;vertical-align:-2px}
 @media (prefers-reduced-motion:reduce){.kfind{transition:opacity .2s;transform:none}.kfind.on{transform:none}}
 </style>
 </head>
@@ -502,6 +527,17 @@ const SPR=(()=>{
   seed: mk([
     "....KK","...KBB","..KBWB","..KBBB",".KBbBB",".KBBBB","KBbBBB","KBBBBB","KBbBBB",".KBBBB",".KbBBB","..KbbB","...KKK"],
     {B:'#c08a50',b:'#9a6a3a',W:'#e8c08a'}, null),
+  sseed: mk([   // v2.4：ひみつの種（形はふつうの種と同じ・夜空色に星）
+    "....KK","...KBB","..KBWB","..KBBB",".KBSBB",".KBBBB","KBBBSB","KBBBBB","KBSBBB",".KBBBB",".KbBBB","..KbbB","...KKK"],
+    {B:'#6a5aa8',b:'#4e4090',W:'#9a8ad8',S:'#ffe680'}, null),
+  sbaby: mk([   // v2.4：ひみつっこ（赤ちゃん）。芽のかわりに小さな星。どの大人になる子も同じ見た目
+    "......Y","....YYY","......Y","...KKKK","..KKBBB",".KBWBBB",".KBBBBB","KBSBBBB","KBBBBBB","KbBBSBB",".KbbBBB","..KKKKK"],
+    {B:'#9a8ad8',b:'#7a6abc',W:'#d8d0ff',Y:'#ffd84d',S:'#fff3a0'},
+    {ew:1,eyes:[[4,6],[9,6]],mouth:[6,9],blush:[[3,8],[10,8]],nose:[6,8],quirk:'hair'}),
+  schild: mk([   // v2.4：ひみつっこ（子ども）。星が少しふえる。どの大人になる子も同じ見た目
+    "...YY....","....YY...",".....YYYY","........Y","....KKKKK","..KKBBBBB",".KBWWBBBB",".KBWBSBBB","KBBBBBBBB","KBSBBBBBB","KBBBBBBBB","KBBBBSBBB","KbBBBBBBB",".KbbBSBBB","..KKKKKKK","...KbbK.."],
+    {B:'#9a8ad8',b:'#7a6abc',W:'#d8d0ff',Y:'#ffd84d',S:'#fff3a0'},
+    {ew:1,eyes:[[5,9],[12,9]],mouth:[8,13],blush:[[3,11],[14,11]],nose:[8,11],quirk:'hanamizu'}),
   baby: mk([
     "....GG.","....GGG","......G","...KKKK","..KKBBB",".KBWBBB",".KBBBBB","KBBBBBB","KBBBBBB","KbBBBBB",".KbbBBB","..KKKKK"],
     {B:'#fff1d6',b:'#ecd3ae',W:'#ffffff',G:'#5bb85b'},
@@ -530,16 +566,18 @@ const SPR=(()=>{
 })();
 // ctx に (ox,oy) から描く。expr: normal/happy/sleep/sad/eat
 // v1.8 デザイン調整：ほっぺ2ピクセル・鼻を少し濃く・赤ちゃんと子どもの目に光。face.plus でキャラごとのくせを強調
-function drawSprite(g,s,ox,oy,expr='normal',blush=true){
+function drawSprite(g,s,ox,oy,expr='normal',blush=true,look=0){   // v2.4：expr 'blink'＝待機中のまばたき（1行の閉じた目）、look＝待機中に目だけ左右へ1ドット（ふつうの顔のときだけ）
   s.rows.forEach((r,y)=>{for(let x=0;x<r.length;x++){const c=r[x];if(c!=='.'){g.fillStyle=s.pal[c];g.fillRect(ox+x,oy+y,1,1)}}});
   const f=s.face; if(!f) return;
   const P=(x,y,c)=>{g.fillStyle=c;g.fillRect(ox+x,oy+y,1,1)};
   const E='#2a2238', W='#ffffff', mid=s.w/2, q=f.quirk||'', plus=f.plus||'';
   if(blush) f.blush.forEach(([x,y])=>{const a=f.ew===2?x:(x<mid?x-1:x); P(a,y,'#ff8fa6');P(a+1,y,'#ff8fa6')});
   // 目：ふだんは、たれたじと目
-  f.eyes.forEach(([x,y])=>{
-    const left=x<mid, w=f.ew;
-    if(expr==='happy'){ if(w===2){P(x-1,y+1,E);P(x,y,E);P(x+1,y,E);P(x+2,y+1,E)} else {P(x-1,y+1,E);P(x,y,E);P(x+1,y+1,E)} }
+  const lk=expr==='normal'?(look|0):0;
+  f.eyes.forEach(([x0,y])=>{
+    const left=x0<mid, w=f.ew, x=x0+lk;
+    if(expr==='blink'){ for(let i=-1;i<=w;i++)P(x+i,y+1,E) }   // 閉じた目（ねむい顔の目尻の下がりは付けない）
+    else if(expr==='happy'){ if(w===2){P(x-1,y+1,E);P(x,y,E);P(x+1,y,E);P(x+2,y+1,E)} else {P(x-1,y+1,E);P(x,y,E);P(x+1,y+1,E)} }
     else if(expr==='sleep'){ for(let i=-1;i<=w;i++)P(x+i,y+1,E); if(w===2)P(left?x-1:x+2,y+2,E) }
     else if(expr==='sad'){ P(x,y+1,E); if(w===2){P(x+1,y+1,E);P(left?x+1:x,y-1,E);P(left?x+2:x-1,y-2,E)} }
     else { // じと目
@@ -548,7 +586,7 @@ function drawSprite(g,s,ox,oy,expr='normal',blush=true){
     }
   });
   if(q.includes('kuma')) f.eyes.forEach(([x,y])=>{P(x,y+2,'#8f72bf');P(x+1,y+2,'#8f72bf');if(plus==='kuma')P(x<mid?x-1:x+2,y+2,'#b9a2dc')});
-  if(q.includes('matsuge')&&expr!=='sleep') f.eyes.forEach(([x,y])=>{const l=x<mid;P(l?x-2:x+3,y-1,E);P(l?x-1:x+2,y-1,E);P(x,y-1,E);if(plus==='lash')P(l?x-3:x+4,y-2,E)});
+  if(q.includes('matsuge')&&expr!=='sleep') f.eyes.forEach(([x0,y0])=>{const l=x0<mid, x=x0+lk, y=y0+(expr==='blink'?1:0);P(l?x-2:x+3,y-1,E);P(l?x-1:x+2,y-1,E);P(x,y-1,E);if(plus==='lash')P(l?x-3:x+4,y-2,E)});
   if(f.nose){const [nx,ny]=f.nose;P(nx,ny,'#e0606e');if(f.ew===2||s.w%2===0)P(nx+1,ny,'#e0606e')}
   // 口
   const [mx,my]=f.mouth, two=f.ew===2||s.w%2===0;
@@ -638,17 +676,26 @@ const dishPix=(()=>{const cache={};return k=>{
 const SND=(()=>{
   let ac=null, master=null, on=true, cur=null, timer=null, step=0;
   try{ on=localStorage.getItem('poko_snd')!=='0' }catch(e){}
-  function ctx(){
-    if(!ac){ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null;
-      ac=new AC(); master=ac.createGain(); master.gain.value=0.22; master.connect(ac.destination); }
-    if(ac.state!=='running'&&ac.state!=='closed') tryResume();
+  // 音の部品を作る。iPhone(Safari)はタップの中で作らないと鳴らないことがあるので、作るのはタップの中だけ（make=true のとき）
+  let gestureMade=false, tries=0;
+  function make(){
+    const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null;
+    try{ if(ac&&ac.close) ac.close().catch(()=>{}); }catch(e){}
+    try{ ac=new AC(); }catch(e){ ac=null; return null; }
+    master=ac.createGain(); master.gain.value=0.22; master.connect(ac.destination);
+    try{ ac.onstatechange=()=>{ if(ac&&ac.state!=='running'&&ac.state!=='closed') unlocked=false; }; }catch(e){}
+    return ac;
+  }
+  function ctx(mk){
+    if(!ac||ac.state==='closed'){ if(!mk) return null; make(); gestureMade=true; tries=0; }
+    if(ac&&ac.state!=='running') tryResume();
     return ac;
   }
   // 再開を試す（ブラウザが断っても例外を出さない。断られたら次のタップで unlock がもう一度試す）
   function tryResume(){ try{ const r=ac&&ac.resume&&ac.resume(); if(r&&r.catch) r.catch(()=>{}); }catch(e){} }
   const hz=n=>261.63*Math.pow(2,n/12); // 0 = ド(C4)
   function tone(f,d,type='square',v=0.12,t0=0,slide=0){
-    if(!on) return; const a=ctx(); if(!a||a.state!=='running') return;
+    if(!on) return; const a=ac; if(!a||a.state!=='running') return;
     const o=a.createOscillator(), gn=a.createGain(), t=a.currentTime+t0;
     o.type=type; o.frequency.setValueAtTime(f,t); if(slide) o.frequency.linearRampToValueAtTime(Math.max(40,f+slide),t+d);
     gn.gain.setValueAtTime(v,t); gn.gain.exponentialRampToValueAtTime(0.001,t+d);
@@ -692,6 +739,7 @@ const SND=(()=>{
   // ---- 鳴き声（姿ごとにちがう） ----
   function cry(k){
     if(k==='baby'){ tone(1200,.08,'square',.1,0,300); tone(1300,.08,'square',.1,.11,300); }
+    else if(k==='sbaby'||k==='schild'){ tone(k==='sbaby'?1400:980,.1,'sine',.12,0,-200); tone(k==='sbaby'?1760:1240,.14,'sine',.1,.12,120); }   // v2.4：ぴぃん（ひみつっこ）
     else if(k==='child'){ tone(820,.09,'square',.1,0,80); tone(600,.12,'square',.1,.11,-60); }       // ぽこっ
     else if(k==='umi'){ [0,.07,.14].forEach((t,i)=>tone(420+i*120,.06,'sine',.16,t,350)); }          // ぷくぷく
     else if(k==='mori'){ tone(260,.18,'triangle',.2,0,-70); tone(200,.16,'triangle',.18,.17,-40); }  // もふぅ
@@ -714,18 +762,27 @@ const SND=(()=>{
   // 最初のタップで音を有効にする（ブラウザの決まり）
   // スマホは「指を離した時」「クリック」でないと音の許可が出ないので、そこで鳴らせる状態にする
   let unlocked=false;
+  // 無音を1回鳴らして、音の出口を開ける（iPhone の決まり）
+  function blip(a){ try{ const b=a.createBuffer(1,1,22050), src=a.createBufferSource(); src.buffer=b; src.connect(a.destination); src.start(0); }catch(e){} }
   const unlock=()=>{
-    const a=ctx(); if(!a) return;
-    if(a.state!=='running') tryResume();
-    if(!unlocked){ try{ const b=a.createBuffer(1,1,22050), src=a.createBufferSource(); src.buffer=b; src.connect(a.destination); src.start(0); unlocked=true; }catch(e){} }
+    if(unlocked&&ac&&ac.state==='running') return;
+    if(!on&&!ac) return;                       // 音OFFのときは部品を作らない（ONにしたタップで作る）
+    let a=ctx(true); if(!a) return;
+    // タップの外で作られた／何度試しても動かない部品は、このタップの中で作り直す
+    if(a.state!=='running'&&(!gestureMade||tries>=2)){ a=make(); gestureMade=true; tries=0; if(!a) return; }
+    tries++;
+    blip(a); tryResume();
+    if(a.state==='running') unlocked=true;
+    else{ try{ const r=a.resume&&a.resume(); if(r&&r.then) r.then(()=>{ if(a.state==='running'){ unlocked=true; tries=0; } }).catch(()=>{}); }catch(e){} }
   };
-  ['touchend','click','pointerup','keydown'].forEach(ev=>document.addEventListener(ev,unlock,{passive:true}));
+  // 「指を離した時」「クリック」「キー」だけで試す（pointerup は iPhone で許可にならないので使わない）。他の処理に止められないよう先に受け取る
+  ['touchend','click','keydown'].forEach(ev=>window.addEventListener(ev,unlock,{passive:true,capture:true}));
   // 画面に戻ったとき：音がONで、すでに音の部品があるときだけ再開を試す（iPhoneは断ることがある→次のタップで再開）
-  const wake=()=>{ if(!on||!ac||document.visibilityState==='hidden') return; if(ac.state!=='running'&&ac.state!=='closed') tryResume(); };
+  const wake=()=>{ if(!on||!ac||document.visibilityState==='hidden') return; if(ac.state!=='running'&&ac.state!=='closed'){ unlocked=false; tryResume(); } };
   document.addEventListener('visibilitychange',wake); window.addEventListener('pageshow',wake); window.addEventListener('focus',wake);
   return { bgm, cry, sfx,
     get on(){return on},
-    toggle(){ on=!on; try{localStorage.setItem('poko_snd',on?'1':'0')}catch(e){} if(on) ctx(); return on; } };
+    toggle(){ on=!on; try{localStorage.setItem('poko_snd',on?'1':'0')}catch(e){} if(on){ unlocked=false; unlock(); } return on; } };
 })();
 
 // ===== ボタン用ドット絵アイコン（12x12） =====
@@ -833,7 +890,8 @@ function pixify(h){ if(!_emo)_emo=EMO_SRC(); for(const [e,src] of _emo){ if(h.in
 const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function kfx(box,e,n=1,top=40){ for(let i=0;i<n;i++){const d=document.createElement('div');d.className='fx';
   if(e.startsWith('dish:')) d.innerHTML=`<img class="pix" src="${dishPix(e.slice(5))}">`; else d.innerHTML=pixify(e);
-  d.style.left=(32+Math.random()*30)+'%';d.style.top=(top+Math.random()*14)+'%';d.style.animationDelay=(i*.12)+'s';box.appendChild(d);setTimeout(()=>d.remove(),1700+i*120)} }
+  const bw=box.clientWidth, bh=box.clientHeight, lp=32+Math.random()*30, tp=top+Math.random()*14;   // v2.4：位置は整数の画素（にじみ防止）
+  if(bw&&bh){d.style.left=Math.round(bw*lp/100)+'px';d.style.top=Math.round(bh*tp/100)+'px'} else {d.style.left=lp+'%';d.style.top=tp+'%'}d.style.animationDelay=(i*.12)+'s';box.appendChild(d);setTimeout(()=>d.remove(),1700+i*120)} }
 let _toastT=0;function ktoast(m){const t=$('ktoast');t.innerHTML=pixify(esc(m));t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(()=>t.classList.remove('on'),Math.max(1900,Math.min(6000,String(m).length*90)))}
 // ===== プレイ分析（Google Analytics 4）=====
 // ▼ GA4の測定ID（「G-」で始まる文字）をここに入れてください。例： const GA_MEASUREMENT_ID='G-ABC123XYZ';
@@ -898,6 +956,10 @@ ANA.init();
 // ================= こども（たんけん育成） =================
 const K=(()=>{
   const KEY='pokohouse_v1', cv=$('kcv'), g=cv.getContext('2d',{willReadFrequently:true});
+  // v2.4：ゲーム画面の中は2倍の細かさで持つ（今の絵は1ドットを2×2で描くので見た目・大きさは同じ。新しい細かい絵は半分のドットで描ける）。
+  // 座標はこれまでどおり「1ドット＝1」で数える（LW・LH が見える範囲のドット数）。描くときの基本の変形は RES 倍
+  const RES=2, LW=()=>cv.width/RES, LH=()=>cv.height/RES, gBase=()=>{g.setTransform(RES,0,0,RES,0,0);g.imageSmoothingEnabled=false};
+  gBase();
   const OUT='#3a2f45', MIN=60000;
   const now=()=>Date.now()+(S?S.skew:0);
   // ---- データ ----
@@ -911,6 +973,7 @@ const K=(()=>{
   const hasIT=k=>Object.prototype.hasOwnProperty.call(IT_RAW,k);
   const IT=new Proxy(IT_RAW,{get:(t,k)=>hasIT(k)?t[k]:(typeof k==='string'&&/^[a-z0-9_]{1,30}$/.test(k)?IT_UNKNOWN:undefined)});
   const fnm=k=>(FORMS[k]||{nm:'？？？'}).nm;
+  const stageNm=d=>d.kind==='secret'&&d.stage!=='adult'?({seed:'ひみつの種',baby:'ひみつっこ',child:'ひみつっこ・子ども'}[d.stage]||'ひみつっこ'):d.stage==='seed'?'種':fnm(d.stage==='adult'?d.form:d.stage);   // v2.4
   const PLACES={
     mori:{e:'🌳',n:'森',need:0,min:5,t:[['kinomi',5],['ringo',3],['kinoko',3],['hana',1],['hane',1]]},
     umi:{e:'🏖️',n:'海',need:10,min:10,t:[['sakana',5],['kai',2],['oosakana',1],['kinomi',1]]},
@@ -949,6 +1012,9 @@ const K=(()=>{
     'oosakana+oosakana':{k:'don',e:'🍚',n:'大漁丼',g:5,a:10,tag:'fish'},
     'hoshi+hoshi':{k:'parfait',e:'🍨',n:'流れ星パフェ',g:5,a:20,tag:'sweet'}};
   const FUSHIGI={k:'fushigi',e:'🫕',n:'ふしぎな料理',g:1,a:1,tag:null};
+  // v2.4 おなか（0〜10）：料理の量は元気の増え方から（元気+1＝軽い2・+2＝ふつう3・+3＝重い4）。8以上は食べない・食べて9以上はぽんぽこ・2以下はぺこぺこ
+  const FULL_MAX=10, FULL_STOP=8, FULL_PON=9, FULL_HUNGRY=2, fullAmt=d=>clamp((d&&d.g||1)+1,2,4);
+  const fullDots=()=>{const n=Math.round(clamp(S.full||0,0,FULL_MAX)/2);return '●'.repeat(n)+'○'.repeat(5-n)};
   const DISH_RAW={}; Object.values(R).concat([FUSHIGI]).forEach(d=>DISH_RAW[d.k]=d);
   const hasDISH=k=>Object.prototype.hasOwnProperty.call(DISH_RAW,k);
   const DISH=new Proxy(DISH_RAW,{get:(t,k)=>hasDISH(k)?t[k]:(typeof k==='string'&&/^[a-z0-9_]{1,30}$/.test(k)?{k,e:'❓',n:'？？？',g:0,a:0,tag:null,unknown:true}:undefined)});
@@ -961,6 +1027,90 @@ const K=(()=>{
     okashi:{rx:6.5,ry:6,col:'#ffe49a',deco:'bow',nm:'お菓子の子'}};
   const TAG2FORM={fish:'umi',mush:'mori',fruit:'hana',sweet:'okashi'};
   const GOALS=[[10,'海に行けるようになる'],[15,'子どもに成長'],[30,'山に行けるようになる'],[60,'大人に成長']];
+  // v2.4：育つ条件（あとで数字を調整しやすいよう1か所に）。ひみつっこは なかよし45で子ども・200＋遊んだ日5日（＋生まれてから4日以上）で大人
+  const GROW={normal:{child:15,adult:60}, secret:{child:45,adult:200,days:5,minMs:4*86400000}};
+  const CARE_GROW={normal:{child:15,adult:60,days:3,minMs:48*3600000},secret:{child:45,adult:200,days:10,minMs:216*3600000}};
+  const careNew=d=>!!(d&&isO(d.care)&&d.care.v===1&&d.care.of===d.id);
+  const growOf=d=>(careNew(d)?CARE_GROW:GROW)[d&&d.kind==='secret'?'secret':'normal'];
+  const SECRET_FORMS=[];   // v2.4：ひみつっこの大人の姿（STEP4で足す。空のあいだは大人にならない＝データがこわれない）
+  function secretEvolve(){ /* v2.4 STEP3/4 で作る。それまでは呼ばれない（SECRET_FORMS が空） */ }
+  const goalsOf=d=>d&&d.kind==='secret'?[[10,'海に行けるようになる'],[30,'山に行けるようになる'],[GROW.secret.child,'子どもに成長'],[GROW.secret.adult,'……？']]:GOALS;
+  const sDays=d=>{ if(!Array.isArray(d.sdays))return 0; const t=dayNo(); return d.sdays.filter(v=>v<=t).length; };   // 時計を進めて記録した「未来の日」は、その日が来るまで数えない
+  // ひみつっこが大人になれるか：なかよし・遊んだ日・生まれてからの時間がそろい、大人の姿が用意されているとき（STEP2 では用意がないので false）
+  function secretReady(d){ const G=growOf(d); return d.kind==='secret'&&d.stage==='child'&&d.aff>=G.adult&&(careNew(d)?careDays(d):sDays(d))>=G.days&&typeof d.born==='number'&&Date.now()-d.born>=G.minMs&&sevDone(d); }
+  // ===== v2.4 STEP3：ひみつっこの進化先の判定（docs/v24_secret.md「STEP3」）=====
+  // 判定は保存データだけから決まる（乱数・今の時刻は使わない）。条件がそろった瞬間に一度だけ sfate に書き、その後は二度と変えない
+  const SF_IDS=['kage','medama','tsuki','tsumi'];   // かげふわり・めだまだけ・つきくらげ・つみぽこ
+  const SF_NAME={kage:'かげふわり',medama:'めだまだけ',tsuki:'つきくらげ',tsumi:'つみぽこ'};
+  const SF_W={life:1.0, ev:0.3, pers:0.3, kick:0.4}, SF_RULE=1;
+  // 暮らし方（おうち／おでかけ × 甘い・果物／海・森の味）→ 2つの姿
+  const SF_LIFE={home_sweet:['kage','medama'], home_wild:['kage','tsuki'], out_sweet:['medama','tsumi'], out_wild:['tsuki','tsumi']};
+  const SF_OUT=1.0;   // おでかけ（探検・お散歩・釣り）とおうち（ごはん・料理・なでる）の点をそのまま比べる（シミュレーションで、まんべんなく遊ぶ人がだいたい半々になる）
+  // 性格 → 1つの姿（2つずつ）
+  const SF_PERS={pr_amae:'kage',pr_kenkyu:'kage',pr_fushigi:'medama',pr_kuishinbo:'medama',pr_nonbiri:'tsuki',pr_kodawari:'tsuki',pr_bouken:'tsumi',pr_jishin:'tsumi'};
+  // 途中の出来事（3つ・2択）。どちらの答えも2つの姿に点が入る（どれか1つに決まる答えはない）
+  const SEV_AT=[60,110,160];   // なかよしがこの数になった、次の日以降（1日に1つまで）
+  const SEV=[
+    {pages:['{n}が、へやのすみっこを じーっと見ている。','なにもないのに、ときどき 小さく うなずいている。'],q:'どうする？',c:['見まもる','だっこする'],pt:[['kage','tsumi'],['medama','tsuki']]},
+    {pages:['まどのほうから、コン、コン、と小さな音。','{n}は、しっぽの先まで ぴたっと止まった。'],q:'どうする？',c:['あけてみる','しーっと待つ'],pt:[['kage','medama'],['tsuki','tsumi']]},
+    {pages:['{n}が、ゆめの話をしてくれた。','「あのね、ずーっと ふわふわ おちていく ゆめ。ちっとも こわくなかったよ」'],q:'なんて言う？',c:['こわかったね','たのしそう'],pt:[['medama','tsumi'],['kage','tsuki']]},
+  ];
+  function sevFix(d){
+    if(d.kind!=='secret')return null;
+    let v=d.sev; if(!isO(v))v=d.sev={v:1};
+    if(!Array.isArray(v.a)||v.a.length!==3)v.a=[null,null,null]; v.a=v.a.map(x=>x===0||x===1?x:null);
+    if(!Array.isArray(v.at)||v.at.length!==3)v.at=[0,0,0]; v.at=v.at.map(x=>Number.isInteger(x)?x:0);
+    if(!isO(v.k))v.k={}; ['night','boot'].forEach(k=>{if(!Number.isInteger(v.k[k])||v.k[k]<0)v.k[k]=0});
+    return v;
+  }
+  const sevDone=d=>{const v=sevFix(d);return !!v&&v.a.every(x=>x!==null)};
+  // 次に出す出来事の番号（なければ -1）。順番どおり・1日に1つ・前の答えと同じ日には出さない
+  function sevNext(d){
+    const v=sevFix(d); if(!v||d.stage!=='child')return -1;
+    const i=v.a.indexOf(null); if(i<0||d.aff<SEV_AT[i])return -1;
+    if(i>0&&v.at[i-1]===dayNo())return -1;
+    return i;
+  }
+  // ひみつのきっかけ（各0.4・いくつ重なってもよい）。遊んだ長さで変わらないよう「割合」で見る。どれも おうち・おでかけ・昼にできる道がある（夜は必須ではない）
+  const SF_KICK={pet:.25, walk:.35, odd:.10, mori:.47, night:.35, umi:.42, feed:.25, boot:.20, yama:.36, cook:.26};   // シミュレーションで、それぞれ上位2〜3割くらいの人が届く数（docs/v24_secret.md）
+  function sfKicks(d){
+    const L=isO(d.log)?d.log:{}, k=(isO(d.sev)&&isO(d.sev.k))?d.sev.k:{}, n=a=>L['n_'+a]||0, K=SF_KICK, out=[];
+    const tot=PR_ACTS.reduce((s,a)=>s+n(a),0), outn=n('go')+n('walk')+n('fish'), sh=(x,y)=>y>0?x/y:0;
+    const umi=L.n_go_umi||0, mori=L.n_go_mori||0, yama=L.n_go_yama||0, odd=L.n_odd||0, boot=k.boot||0;
+    if(sh(n('pet'),tot)>=K.pet||(n('walk')>=3&&sh(n('walk'),outn)>=K.walk))out.push('kage');                                   // なでることが多い／お散歩が多い
+    if((odd>=2&&sh(odd,n('cook'))>=K.odd)||(mori>=3&&sh(mori,n('go'))>=K.mori))out.push('medama');                               // ふしぎな料理をよく作る／森によく行く
+    if(sh(k.night||0,tot)>=K.night||(umi>=3&&sh(umi,n('go'))>=K.umi)||sh(n('feed'),tot)>=K.feed)out.push('tsuki');                // 夜のお世話が多い／海によく行く／ごはんが多い
+    if((boot>=2&&sh(boot,L.n_fishok||0)>=K.boot)||(yama>=3&&sh(yama,n('go'))>=K.yama)||sh(n('cook'),tot)>=K.cook)out.push('tsumi'); // 長ぐつがよく釣れる／山によく行く／料理が多い
+    return out;
+  }
+  function sfLife(d){
+    const L=isO(d.log)?d.log:{}, P=a=>(L['p_'+a]||0)/2+Math.min(3,Math.max(0,(L['d_'+a]||0)-1));
+    const home=P('feed')+P('cook')+P('pet'), out=SF_OUT*(P('go')+P('walk')+P('fish'));
+    const t=isO(d.tags)?d.tags:{}, sweet=(t.fruit||0)+(t.sweet||0), wild=(t.fish||0)+(t.mush||0);
+    const h=crc32(`${d.id}:sflife`);
+    const isOut=out>home||(out===home&&parseInt(h.slice(0,2),16)%2===1);
+    const isWild=wild>sweet||(wild===sweet&&parseInt(h.slice(2,4),16)%2===1);
+    return (isOut?'out':'home')+'_'+(isWild?'wild':'sweet');
+  }
+  // 判定の本体（保存データ d と性格 p から。何度呼んでも同じ答え）
+  function sfCalc(d,p){
+    const v=sevFix(d)||{a:[null,null,null]}, sc={}, ev={}; SF_IDS.forEach(f=>{sc[f]=0;ev[f]=0});
+    const life=sfLife(d); SF_LIFE[life].forEach(f=>sc[f]+=SF_W.life*10);
+    v.a.forEach((c,i)=>{if(c===0||c===1)SEV[i].pt[c].forEach(f=>{sc[f]+=SF_W.ev*10;ev[f]++})});
+    if(SF_PERS[p])sc[SF_PERS[p]]+=SF_W.pers*10;
+    const kk=sfKicks(d); kk.forEach(f=>sc[f]+=SF_W.kick*10);
+    Object.keys(sc).forEach(f=>sc[f]=Math.round(sc[f]));   // 10倍の整数で比べる（小数の誤差を出さない）
+    const ord=f=>parseInt(crc32(`${d.id}:${f}`),16);
+    const best=SF_IDS.slice().sort((a,b)=>(sc[b]-sc[a])||(ev[b]-ev[a])||(SF_LIFE[life].includes(b)-SF_LIFE[life].includes(a))||((SF_PERS[p]===b)-(SF_PERS[p]===a))||(ord(a)-ord(b)))[0];
+    return {f:best,life,kicks:kk,sc};
+  }
+  // 条件がそろったら一度だけ進化先を決めて保存（STEP4 で絵ができるまでは姿は変えない）
+  function secretCheck(){
+    if(!S||S.kind!=='secret'||S.stage!=='child'||!secretReady(S))return false;
+    if(!isO(S.sfate)){const p=prDecide(S,PR_MIN_NEW)||prFallback(S), r=sfCalc(S,p); S.sfate={v:SF_RULE,f:r.f,p,life:r.life,day:dayNo()}; save();}
+    if(SECRET_FORMS.length&&SECRET_FORMS.includes(S.sfate.f))secretEvolve();
+    return true;
+  }
 
   const TUT={1:'まずは木の実🍒を2つ選んで「料理」してみよう',2:'料理ができた！「ごはん」であげてみよう',3:'元気になった！「探検」に出かけてみよう',4:'探検中も料理はできます。帰ってきたら「なでる」と、おまけをくれるかも'};
   function setTut(n){S.tut=n;setTimeout(()=>say(TUT[n]),n===1?1500:2400)}
@@ -975,7 +1125,54 @@ const K=(()=>{
       P(X,Y,(!ins(X-1,Y)||!ins(X+1,Y)||!ins(X,Y-1)||!ins(X,Y+1))?OUT:col)}
   }
   const per=()=>{const h=new Date(now()).getHours();return h>=5&&h<11?'morning':h>=11&&h<16?'day':h>=16&&h<19?'evening':'night'};
+  // ===== v2.4：新しいおうちの背景（朝B・昼・夕方・夜B。docs/hq_renewal_plan.md）=====
+  // 2倍の細かさの絵（空・地上・雲2つ）を時間帯ごとに持つ。読み込めないとき・BG_NEW を false にしたときは、今までの絵（sceneOld）を描く
+  const BG_NEW=true;
+  const BG_ART={"morning":{"sky":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAA+CAYAAADj/hPOAAAB0klEQVR42u2avVLCQBRG72Ki2TBg6Zv4DBbqe9qqhc/AjJVQoZU2OBYCQ4KEYS0YNEEkQHnvORX52SK7Z757N8TdPH4GAbNEDebAuACOSSABgAQAEgBIACABgAQAQwIcMQckANADAAkACACUACABgAQAEgB4EQQkANADgHIB+CYUAQABAAEAAcCeAAEBSABAAG14P9p6Pc/brL5WAeoWX0Sk6YdIoFGAZIfFX5H6oUyNSxA5RU1g4sdS9vm0uN143zC+/k2LZCTTvGVWAPfee1NhwIkfV47bxd3yx9l59cZBR0RERvFV5fSXUQncR+9VhQDHJQFaxf3mxV+TYBxf/pyaGRVATQ/w51/t/xZ/dW3QqYyxuh1WI8Ahz1EeY1cAJU3gIc1seYzVN6J6S8CeYygB2krAoFPbBJbHBKMCuGn3RcWTN/ykchzPH7ZuA4voonJ6kTdtCjDrPqtR3/msGm8rCdaYry1+yFOxips/9VVln0uzve4Pmd3FFxGJRFntC5nfWYLl4gfjAijc/oSJF5fmtaII30LoFGApQVJ3h4BIJLJgFkgAQADggxBgGwj2SgBNID0AUAKABAAEAHvbQEoAuwCgBAC7ACABAAGAXQAY4hs+e6KwgX5cgQAAAABJRU5ErkJggg==","land":"data:image/png;base64,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","c1":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAYAAADwdn+XAAAAUklEQVR42mNkQAL/////z0AAMDIyMiLzmRhIBOiWkGwAuiFMpDgfmyGMpGpEByw/L9+lRD95YYASKzDGj0t3/jMwMDBw6Kkw4lIMUwMDHHoqjACoWSKlRlU2lAAAAABJRU5ErkJggg==","c2":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAGCAYAAAAVMmT4AAAAO0lEQVR42mNkgIL/////Z8ACGBkZGWFsJgYCANkQJnymomtgJKQQGbD8vHyXgSTw49Kd/z8u3flPSA4ANcUlOIGXoeYAAAAASUVORK5CYII=","top":"#a9cdf0","spark":"#fff6d0"},"day":{"sky":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAA+CAYAAADj/hPOAAABy0lEQVR42u2bvVLCQBRG7zLpUH4at1dn/HkNbUTzWpb2+hqgNthbWGmhzgSspVFjglpJA5p1EnAXi42c0wWyw0zuN2fv3gnq8HL4KbCwBIpnsOABIAEEAPxmqz6Y+v3ty4p7ACo8X6/ZnFF8EZHt+kDuHEOAAUpe/C9LNNxCECgS4CUbtUfjer/Zyb3v9OnACMx9rK1+Rx1dvXEM9Lz4rUnxq+vmjWkkIiJnmRCIiFUIggoC8I6slPcaBcWffJZG0mp25Pz5OwQ2NaUH8DwAhcX/EYLsGqUYBJU7AHOuUVbHQBTgYQDUXGtsasoWUIYtwHINW8B/I42K+4DxScB1C8EAnvcA3TiU3Vo7PwTj4nfj0OwBLGqqjq/fmQN4yNqSOQvYWW7n3nfxGhrXvcRyEHRy80EAShKCWdgWnx7Ac/qJ/nUIeol2Oj4yCfSch1TLanV6CPqpFtc60gSWIQRD/efHRrYAYBIIbAEEgFfCMAAsdg/AQ+CPIYABgB4AOAUABgAmgYABgB4AMAAwBwAmgYABgB4AOAUABgAmgcApANgCAAMABgAMABgAMABgAMAAgAEAAwAGAAwAGAAwAGAAwACAAQADAO8Egm+MAO6xUxOxczM2AAAAAElFTkSuQmCC","land":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABgCAYAAADVenpJAAAIu0lEQVR42u1dW2wUVRj+W7aNFMqWtnubbVe57KW1trQ82ERBQCXREC/4RgxseNDEGBUwiPXBaIIJRo2XaIjxBiYaTTTlATWSSAPG4AOXAvaqVLbt3tput4VWLuL4MDvTnd3Z2ZmdM2f28n/NydmdM/85Z/7/O/9/5szZKQACgUAgEAgEAoFAIBAIBAKBQCAQCAQCgUAgEAgEAoFAIBAIBKLgUUa6wm2b/Wzqsa9+/qIMVZ2fMJE2/of3WQEAYCYQBACArhETarnYPcC2zX72jRX/ZizvGjGhFyhWAmzb7GefWTap6NyPZuuRCMVEgGSXnwo+BKBHKEICZHP5SoAkKEACqHH3GBKKjABy7l5tCEBvUGAEIOHykQgFSADSLh/DQoEQQK271xoC0BPkEQFouXskQh4SwAiXj2EhDwhAwuWTDAHoDSgS4O+nn2QLpbNIAoqTwB1P1BnasUPfTaGxwcDHweZlt6F2SpkAS5dWonZKmQArW9p1bXh+Jir6Hp+IojUMQDmqAD2AIix2rs96zj/jJ1CjRb0nsMIMPWPcxw22GeiJmIWiDbYZ1GaxE6BnDGBDAwgkQCjDieAp2bWW9UxnWcHsCqZp/FTFGakoLQYOzcovr+89vl9S/s2Nr5TlFQFS3bzebp9X3OlQr6SiaCgom3GVGFgO/LVlIobe16guBKTE/J6IGbzLAQan9SNDNgVt8d4veIaP+w6rWtZ+qnl7WTajazGulmvjseP73eyhre8QJwGvK82/2hiclrnAk7/B1591y8q//u6LmhT06alvhYsJxMI5KSEZvhqPaqNn6udaR5sm3Uamp4gbnAevKyo/22m6g3vSOBGfB0tNlfB5Mn6ViILUGj5VCZlgLq/VNIpPh3pzJkGy8XmPpGYOlMngaSEg2d3l6yRL79GRSVGuWnkyKPFQP/T9Ag83b9J0bbxHkpsUnwieYgfiQ4rJLRCAFzKX1woNHPQfzItJIG3j84jF41BbU6OKDLn0c62jLY1EqTLJ5EkNTclGH4gP5eQJTbyQqxZgJh6TPKn3WDcAdCuqsO3Bx4gZorKiAm7cvCmroEarnTgBamtqFHsGrSRNCxGO7DIz/3F2monHRP3iiauKAFJslzLq+VO/Z62stfNu4saorKjQ3eCk5w6kPRRv8GztqzU+AIBJqZAexi10KPFQ9/jW6GbwvHs/QKmSQM5DBWJhRSGDlsHzggDP7jPDq/vmS4YkNA0KhbAfYPDcVMl6jFg8jgQ49lPpRp5cJmqGhIArMTpbtK7NzeFEAreEIQzzAKvq0ld/L+VJ56T6Vuxo/otb7f1y6c7ivQtAyINxMcBO0fnBlunKjXjeKiKf+6YfuD0XvPntVYsAACA8fyvtTBJlunqAuWUt8MgLLcJ3d1IZ//niBECLZQqHfRKCgSAA99QcwnO3Mp5HoiwjAXa9/GvBK/JyKAi3OxghN7oeVSFgknwI2NC4BNY5q+Dk+Dz0jHJ3XyapZiq3XgVbXT1EpiZFuR6Qa0OrClwOBk73/wEdTXdqqkuqnkAoCC4HI+RKoVhOhylAT2AOegLi2+6y9851STZ1ZqAPOnzNQq4naLShBoFwKJ0EdgcEwiFw2R2a+y0n1znGLRR9vtgvHNvoWhi5xwNk100yEoAWnpvfDu9XHVZkFCkjkDpfykgAIBiKFkk7x2qAcTGwP7q5NBaC/IF9ytyw3QFnBvoUG1Pt+ano8DWLDJ6r8XlvIuVV5MAm/phqEzDVJuF78h+JsnI2EW6MSqDi3HZfs6q6lZ4fCIdEuZqUTbYxQcRGu0OxPoKBILAsAMsCjM3ehLHZm8L35ESiTNYDjCZYm5qTRLvMyNKz3WQ02h1wNmEkPWTbVXoPxsUAxWcBmfnYaLcnLm4hp+kfaLbb7mtSfO7zqzw5yyrzAQAsy1JJ5dn60+5tEuWZ0mg4LMpJpWztKk1a+5cs7z/arWtMDOb4hrUHVlTDa/fa4IEV1fSfBTTa7HB2sJ8zWB5Ca/+S5Rttdv0XgnLYRHRs5AocG7miLgSQJO8ab5Pk8dFIWJQbleprlmvqR6brY4kHgIUDLnMluMyVkieTKKNyG9hgs8O5wX5osBm7pVtrP8YiYVGu57MA/pbtcvw6XI5fl7ydI1FWTmv8rfH6DBn3nLEWciX9SJXhU4PNliCQTVcfwLgYyds3PVJB7Agai0REubpRb4NzgwMJo2mX4QhUPDCxBfCiWKeVM0ibxwe59FeN3Hg0Ak6rjZsvsMY9DmYXsYWxFDwejYhyvdDm8VEjW+/QADitNjByR5Dhu4L5kcDnqQZPVRgtA9FAPlwL731W1nGv7L00dU0oe8hthnXOKvjkwnRaGQ8pOamyjJNAp9UKvUMDwj0JZ3ju+GR8Gibj0+C0WmE8GoE2j5fKhG6XWzyB4/vE50Ylsv0QLwRdmrqWZsQfh2egqyckWSYnJ1Umuw7Q6vECY7VC79AgMFar6Hirx5t2XO/kP9ot+i7VNyMSyX4s3AXQWgpWgFaPV9XxrJOcaFSUK4VUe8nHcq2XRJ9z1YXchiAaqdyIIcNYrHB+aBAYi9XweoPRqCgnWfdud5P6cg3PAvJyQ0gw8RbwYMrbwFvdXl3aU1svY7HC+eGEYQnX7T/anVM55RCg73BnLJaEgi1E6uOItJCTSK1ujy7Xnq1e6XIx3JYqcFuqJImipOzAJids8S7PKFf21um91Jc79nQcgLfPvJSz/IXhIbjL7YFixLoQtzP6A3Zb8e4J9H/zuCZ5vYy/x6N90+ee6zsLaiHIEALk6+iVismhiQlRTmqTa/aFIDpzABMUzD+No0DM1Z60MOyot3AhR6JMaR25PQ4GeLSpVvg9wJH+mE4Pg5ABWdGy2g009cS4GIARgCN9MTjSFwNDQ0B4clKUlzJo6oLfvOGzLwGffYnkxg4SZVn3BNrr6+Hin8PQstpd8gSgpYtgICiEkf5Q5hdqkygrV+oCEfR0wbgYikvBiJLG/wpsuH7y0TkHAAAAAElFTkSuQmCC","c1":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAYAAADwdn+XAAAAUklEQVR42mNkQAL/////z0AAMDIyMiLzmRhIBOiWkGwAuiFMpDgfmyGMpGpEByxPP/+hRD95YYASKzDGk0+//zMwMDDI8LEy4lIMUwMDMnysjADMmSLQ7/OHhwAAAABJRU5ErkJggg==","c2":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAGCAYAAAAVMmT4AAAAO0lEQVR42mNkgIL/////Z8ACGBkZGWFsJgYCANkQJnymomtgJKQQGbA8/fyHgSTw5NPv/08+/f5PSA4AUwImD3dkWrIAAAAASUVORK5CYII=","top":"#86c8f6","spark":"#e6f6ff"},"evening":{"sky":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAA+CAYAAADj/hPOAAAB/klEQVR42u2awU7CQBRF75QaBUxUjEHADRD/waXf5d7E+Cn+gFuW/INB3AgaETARXCjURYFiJCiFxJE5J2lIp9Okfe/2zpthzOVZNRA4i58wQ6LgsgB8gwEgAEAAgADATQFQBOIAgADA2XUABIADAAIAZgGAAwACAAQACAAoAoGFIGAIAAQA7AmEtRWA5yEApwVgcAAcAFwWgBkQBbcFgAMwBAAOAAgAGALAwXUAZgE4AFADAAIAhgDAASAWiXxy7vVB443/AtYVL5+SFH1IGy83kqT3neMo0IVNDRt9hoB1w+TC5Pvd2rdrYyFI0sduWYnCloJmn/0A65P8tKRAic5t2HB6MrtjpSq/W9NgrySTTypo9ux5h8HVOZsC43C4Hdp/uz4/+VMikKRhphieP7zaUgOQ/3ifzlTcfkr+uE+lqkm8LYm7L0Mu/0ZAltQA8lBAvNLfSE/1xe97vpMOirIl7jgADoAC4jmApGxRelzQBbLFyEFwABwAB/jPNcD0FO+X08DJfZbE3ZMZqZFjsaM1WszJlb4meF7yx31bPWvewwTXFywELMN+Ovxt1Ob3y5dHs4CeVY9PDbAs7V4ogkI5arsfiWG6bZx8y+JNDbAKOn0pk4rOj8ozhNKXjbHGAVYpgn9Q9eMAgAMADgA4AOAAgAMgABwABwAcABzlE+62frenk07iAAAAAElFTkSuQmCC","land":"data:image/png;base64,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","c1":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAYAAADwdn+XAAAAU0lEQVR42mNkQAInu1b8Z0ADZp4cKHxG3QBGZD4TA4ng/+UN/ykyAN0QJnzOJ8YQFlI1ohvCxEAhYCGk4NT2H3jlGdHDwLwsghGXYnTvmpdFMAIA+f8ihHtxh+UAAAAASUVORK5CYII=","c2":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAGCAYAAAAVMmT4AAAAPklEQVR42mNkgIKTXSv+w9hmnhwwJgOjbgAjjM3EQAD8v7zhP4piZFPxaWAipBBZAxMDqeBk14r/uGxAlgMAa7MgaT8jVgkAAAAASUVORK5CYII=","top":"#8a7ac8","spark":"#ffd08a"},"night":{"sky":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAA+CAYAAADj/hPOAAACaklEQVR42u2cMWgTURjH/68Idk2ayyA2bZSoUIe61LlLFxGnKihIqZRCk1hqUhBKCQ6CUAqtVkEK3ZzcRFwLdlK7OLjHZjPJJasuOkSkpye5Bmvu7v1+8A3v7ksuvPe9//ved3cxp09NfRdYywnJ0AtWB4AhAKwOAEMAWM2AjFFYrViu6KD2RsVyRWH+nVE2kxm+QhJ4RBwn7Xu8Xv8SLwUolFb1+eC1CqVVZstPc9LpTt7sY51zEVOAkZGrKEBAUiknkF+jUScHiLLll1ZUrb5Sfmnl17GU453d+3tl7e+Vlc0MKpsZ9Jz73TfUCjCavYYCdJv5QylP+8PbkiRp+taW53i19tWrBM0GhaB4YA4N/r2/eo0On1S19s33c9QB4jH+R/KNQt9SCQw0qKY3XxMJBRhggLtOav+BfPmi8EcecNg3Cn1rzuSmjyUJfLb9RAtzxVgEwFAy6Wm/31309ZuY3PS0m64b/gA4m7vOLqCHIHi3e9fTvjz5OHKD3wmAczcIgMBBkAjk13Rb4m5gDHFbbSUTiS4+LUWpT2NbCdx6vnEs3+u22z2dC20lMHfhJkuAeCIIeCIICAD4Z2w+XdNifjn828DzY7fJAVAAIAkEFABsDAD6QLwXgMXKZmbn9enjjmZm57tXAsfG77ALsFkBjDHqh61vPFS/rh2G64fGLl6aQwHYBQABABSCgDoAsATA/+TRWkX3lx/07fpmfGKBXQAKAPxLGKAAQACAfXUAOsHyOgARQCUQbM4B6AQUANgFAAoA3A0ElgBgCQC2gYACADkAKP6vhgEKAOQAwC4AUAAgBwACACziBwyrdDn5AThnAAAAAElFTkSuQmCC","land":"data:image/png;base64,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","c1":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAYAAADwdn+XAAAAVUlEQVR42mNkQAJ2bkX/GdCAjIwcCn/ZvAJGZD4TA4kgKmnCf4oMQDeECZ/ziTGEkZBG9DBAB2R5ARmwEFLw5MkjvPKM6GFwaFcfIy7F6N49tKuPEQBRiRnb1fAgbQAAAABJRU5ErkJggg==","c2":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAGCAYAAAAVMmT4AAAAP0lEQVR42mNkgAI7t6L/MLaMjByMybBsXgEjjM3EQABEJU34j6IY2VR8GhixKUR2BjIg6AwMYOdW9B+XU5DlAAThFLNTMl3OAAAAAElFTkSuQmCC","top":"#1c1a46","spark":"#fff3c0"}};
+  const BG_IMG={};
+  function bgImg(p,k){const key=p+':'+k; let im=BG_IMG[key]; if(!im){im=new Image(); im.onerror=()=>{im._bad=1}; im.src=BG_ART[p][k]; BG_IMG[key]=im} return im.complete&&im.naturalWidth&&!im._bad?im:null}
+  function bgReady(p){ if(!BG_NEW||!BG_ART[p])return false; let ok=true; ['sky','land','c1','c2'].forEach(k=>{if(!bgImg(p,k))ok=false}); return ok }
+  const bgDraw=(im,x,y)=>g.drawImage(im,x,y,im.naturalWidth/RES,im.naturalHeight/RES);   // 絵の1画素＝画面の1画素
   function scene(){
+    const p=per(); if(!bgReady(p)){sceneOld();return}
+    const A=BG_ART[p];
+    bgDraw(bgImg(p,'sky'),0,0);
+    const c1=bgImg(p,'c1'), c2=bgImg(p,'c2');
+    bgDraw(c2,Math.round(9-c2.naturalWidth/RES/2),Math.round(4-c2.naturalHeight/RES/2));
+    bgDraw(c1,21+(frame>>4)%20-Math.round(c1.naturalWidth/RES/2),Math.round(6-c1.naturalHeight/RES/2));   // 今と同じように、ゆっくり右へ流れる
+    bgDraw(bgImg(p,'land'),0,0);
+    g.fillStyle=A.spark; for(let i=0;i<4;i++)g.fillRect(51+((frame+i*5)%12),33+i*4,1,0.5);   // 川のきらめき（動き）
+    if(p==='night')decorNight(); else drawDecor();
+  }
+  // v2.4：夜の飾り。光らない飾りだけ、背景になじむよう少し暗くする（形・位置・動きは同じ。キャラ・窓の明かり・光る飾りは暗くしない）
+  const DECOR_GLOW=new Set([]);   // 光る飾りの名前（今はなし。光る飾りを足したらここに入れる）
+  const DECOR_BOX=[[2,6,25,29],[47,43,5,4]];   // 飾りを描く範囲（今のドット）：おうちのまわり・川の岸
+  const DECOR_NIGHT=[26,24,64,0.32];   // 夜の色（R,G,B, まぜる割合）
+  function decorNight(){
+    const t=g.getTransform(), cw=cv.width, ch=cv.height;
+    const snaps=DECOR_BOX.map(([bx,by,bw,bh])=>{
+      let x=Math.round(t.e+bx*t.a), y=Math.round(t.f+by*t.d), w=Math.round(bw*t.a), h=Math.round(bh*t.d);
+      const x0=Math.max(0,x), y0=Math.max(0,y), x1=Math.min(cw,x+w), y1=Math.min(ch,y+h);
+      return x1>x0&&y1>y0?[x0,y0,x1-x0,y1-y0,g.getImageData(x0,y0,x1-x0,y1-y0).data]:null; });
+    drawDecor(true,'normal');
+    const [nr,ng,nb,a]=DECOR_NIGHT;
+    snaps.forEach(sn=>{ if(!sn)return; const [x,y,w,h,before]=sn, after=g.getImageData(x,y,w,h), d=after.data; let changed=false;
+      for(let i=0;i<d.length;i+=4){ if(d[i]===before[i]&&d[i+1]===before[i+1]&&d[i+2]===before[i+2])continue;   // 飾りで色が変わった画素だけ
+        d[i]=d[i]*(1-a)+nr*a|0; d[i+1]=d[i+1]*(1-a)+ng*a|0; d[i+2]=d[i+2]*(1-a)+nb*a|0; changed=true }
+      if(changed)g.putImageData(after,x,y); });
+    drawDecor(true,'glow');
+  }
+  function drawDecor(kai=true,which=null){
+    // 飾り（決まった場所に置く）。v2.4：新しい背景と今までの背景の両方から呼ぶ。which：'normal'＝光らない飾りだけ／'glow'＝光る飾りだけ／null＝全部
+    const D=k=>S&&S.decor&&S.decor[k]&&!(S.hideDecor||{})[k]&&(which===null||(which==='glow')===DECOR_GLOW.has(k));
+    if(D('hana')){g.fillStyle='#8a5a3a';g.fillRect(3,32,9,2);[[4,'#ff8fb8'],[6,'#ffd84d'],[8,'#ff8fb8'],[10,'#ffffff']].forEach(([a,c])=>{P(a,30,c);P(a,31,'#5bb85b')})}
+    if(D('hane')){P(11,9,'#ffffff');P(12,8,'#ffffff');P(12,9,'#e8e8f0');P(13,7,'#ffffff');P(11,10,'#9a8aa8')}
+    if(D('ishi')){P(18,29,'#7fe8f0');P(19,29,'#c8f8ff');P(18,30,'#4ac0d0');P(19,30,'#7fe8f0');P(18,28,'#ffffff')}
+    if(D('kutsu')){g.fillStyle='#e0405a';g.fillRect(13,31,2,2);g.fillRect(13,33,3,1);P(14,31,'#ff7a8f')}
+    if(D('takara')){g.fillStyle='#8a5a3a';g.fillRect(20,29,5,4);g.fillStyle='#ffd84d';g.fillRect(20,30,5,1);P(22,31,'#ffd84d');g.fillStyle=OUT;g.fillRect(20,33,5,1)}
+    if(kai&&D('kai')){P(48,44,'#ffb3c8');P(49,44,'#ffd0dc');P(48,45,'#ff9ab8');P(49,45,'#ffb3c8');P(50,45,'#ffd0dc')}
+  }
+  function sceneOld(){
     const p=per(), sky={morning:'#bfe3ff',day:'#9fd8ff',evening:'#ffb38a',night:'#2d2a5a'}[p];
     g.fillStyle=sky;g.fillRect(0,0,64,30);
     if(p==='night'){[[8,4],[20,8],[40,3],[56,9],[30,12]].forEach(([a,b])=>P(a,b,'#fff'));g.fillStyle='#ffe27a';g.fillRect(50,4,3,3)}
@@ -988,13 +1185,7 @@ const K=(()=>{
     g.fillStyle='#f3d9a8';g.fillRect(3,18,16,14);g.fillStyle=OUT;g.fillRect(3,31,16,1);
     g.fillStyle='#8a5a3a';g.fillRect(12,24,4,7);
     g.fillStyle=p==='night'?'#ffe27a':'#bfe3ff';g.fillRect(5,21,4,4);g.fillStyle='#fff';g.fillRect(7,21,1,4);g.fillRect(5,23,4,1);
-    // 飾り（決まった場所に置く）
-    const D=k=>S&&S.decor&&S.decor[k]&&!(S.hideDecor||{})[k];
-    if(D('hana')){g.fillStyle='#8a5a3a';g.fillRect(3,32,9,2);[[4,'#ff8fb8'],[6,'#ffd84d'],[8,'#ff8fb8'],[10,'#ffffff']].forEach(([a,c])=>{P(a,30,c);P(a,31,'#5bb85b')})}
-    if(D('hane')){P(11,9,'#ffffff');P(12,8,'#ffffff');P(12,9,'#e8e8f0');P(13,7,'#ffffff');P(11,10,'#9a8aa8')}
-    if(D('ishi')){P(18,29,'#7fe8f0');P(19,29,'#c8f8ff');P(18,30,'#4ac0d0');P(19,30,'#7fe8f0');P(18,28,'#ffffff')}
-    if(D('kutsu')){g.fillStyle='#e0405a';g.fillRect(13,31,2,2);g.fillRect(13,33,3,1);P(14,31,'#ff7a8f')}
-    if(D('takara')){g.fillStyle='#8a5a3a';g.fillRect(20,29,5,4);g.fillStyle='#ffd84d';g.fillRect(20,30,5,1);P(22,31,'#ffd84d');g.fillStyle=OUT;g.fillRect(20,33,5,1)}
+    drawDecor(false);
     // かわ
     g.fillStyle='#5ab4e6';g.fillRect(50,30,14,18);
     for(let i=0;i<4;i++)P(51+((frame+i*5)%12),33+i*4,'#cdeeff');
@@ -1002,22 +1193,104 @@ const K=(()=>{
     if(p==='night'){g.fillStyle='rgba(20,15,60,.22)';g.fillRect(0,0,64,48)}
     if(p==='evening'){g.fillStyle='rgba(255,140,80,.12)';g.fillRect(0,0,64,48)}
   }
+  // ===== v2.4 リアクション（docs/reaction_ux.md）：表示だけ。セーブ・なかよし・元気・おなか・性格・成長には触れない =====
+  // 動きを減らす設定（OS）：ジャンプ・寝返り・ハートの上昇・きょろきょろを止め、光る演出は弱く短くする
+  const RM=()=>{try{return !!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)}catch(e){return false}};
+  const RX={jump:0,hearts:[],hn:0,roll:0,rollDir:1,flash:0,flashDur:0,flashA:[],tapAt:0,cryAt:0,tapWant:null,zzUntil:0,hatch:false,
+    blinkAt:0,blinkEnd:0,lookAt:0,lookEnd:0,iv:0};
+  const JUMP=[[120,2],[300,3],[420,2]];   // [始まりからのミリ秒まで, 高さ]：0→2→3→2→0（約0.5秒）。キャラ全体を1ドット単位で動かす（変形しない）
+  const HEART_SIDE=[1,-1,1];               // ハートの出る位置（顔の右・左・右。頭の上は吹き出しと重なるため使わない。最大3個）
+  function jumpH(t){ if(!RX.jump)return 0; const d=t-RX.jump; for(const [e,h] of JUMP)if(d<e)return h; RX.jump=0; return 0 }
+  function rollDx(t){ if(!RX.roll)return 0; if(t-RX.roll<400)return RX.rollDir; RX.roll=0; return 0 }
+  function rxActive(t){ return !!RX.jump||RX.hearts.length>0||!!RX.roll||!!(RX.flash&&t-RX.flash<RX.flashDur) }
+  function rxKick(){   // 演出しているあいだだけ 0.1秒ごとに描きなおす（ふだんは今までどおり0.2秒ごと）
+    if(RX.iv)return;
+    RX.iv=setInterval(()=>{const t=Date.now(); RX.hearts=RX.hearts.filter(h=>t-h.t<h.d); try{draw();placeBub()}catch(e){}
+      if(!rxActive(t)){clearInterval(RX.iv);RX.iv=0}},100);
+  }
+  let HEART_IMG=null;
+  function heartImg(){ if(!HEART_IMG){HEART_IMG=new Image();HEART_IMG.src=ICON('heart')} return HEART_IMG.complete&&HEART_IMG.naturalWidth?HEART_IMG:null }
+  function drawHearts(t){   // 既存の12×12ハートを 6×6ドット（＝1画素ずつ）で描く。0.2秒ごとに1ドット上がる
+    if(!RX.hearts.length)return; const im=heartImg(); if(!im)return;
+    RX.hearts.forEach(h=>{const d=t-h.t; if(d<0||d>=h.d)return; const up=h.rm?0:Math.min(3,Math.floor(d/200)); g.drawImage(im,h.x,h.y-up,6,6)});
+  }
+  function addHeart(t){
+    if(RX.hearts.length>=3)return;
+    const sp=SPR[ckey()]||SPR_Q, i=RX.hn++%3, side=HEART_SIDE[i], half=Math.ceil(sp.w/2), cx=Math.round(x);
+    const hx=side>0?cx+half-1:cx-half-5, hy=47-sp.h+(i===2?-1:2);   // 顔の横（3つ目は少し上）
+    const rm=RM(); RX.hearts.push({t,d:rm?600:800,rm,x:hx,y:Math.max(-(LH()-48),hy)});
+  }
+  // 待機中のまばたき・きょろきょろ：顔の崩れを確かめたキャラだけ（tests/v24_react.py の比較画像で確認）。それ以外は今までどおり
+  const EYE_OK={blink:new Set(['baby','sbaby','child','schild','umi','mori','hana','okashi']),look:new Set(['baby','sbaby','child','schild','mori','hana','okashi'])};   // umi：目が輪郭に重なるため、きょろきょろはしない（従来どおり）
+  function idleEyes(key,expr,t){
+    const r={expr,look:0};
+    if(expr!=='normal'||!S||S.sleep||S.explore||busy||RX.jump){return r}
+    if(!RX.blinkAt)RX.blinkAt=t+3000+Math.random()*3000;
+    if(t>=RX.blinkAt){ if(!RX.blinkEnd)RX.blinkEnd=t+150; if(t<RX.blinkEnd){if(EYE_OK.blink.has(key))r.expr='blink'} else {RX.blinkEnd=0;RX.blinkAt=t+3000+Math.random()*3000} }
+    if(!RX.lookAt)RX.lookAt=t+12000+Math.random()*8000;
+    if(!RM()&&r.expr==='normal'&&EYE_OK.look.has(key)&&t>=RX.lookAt){ const d=t-RX.lookAt; if(d<400)r.look=-1; else if(d<800)r.look=1; else RX.lookAt=t+12000+Math.random()*8000 }
+    return r;
+  }
+  function petTap(){   // 起きているぽこをタップ
+    const t=Date.now(); if(t-RX.tapAt<150)return; RX.tapAt=t;    // 0.15秒以内の続けてのタップは1回
+    if(!busy){busy='happy';setTimeout(()=>{if(busy==='happy')busy=null},1400)}
+    if(!RX.jump&&!RM())RX.jump=t;                                  // 跳んでいる間のタップは跳び直さない（ハートだけ）
+    addHeart(t);
+    if(t-RX.cryAt>=800){RX.cryAt=t;SND.cry(ckey())}                // 鳴き声は0.8秒に1回まで
+    if(!RX.tapWant)RX.tapWant={pid:S.id};                          // 待たせるタップのセリフは1つまで（中身は出すときに選ぶ）
+    tapLineTry(); rxKick(); draw();
+  }
+  function tapLineTry(){   // セリフが出ている間と、出終わってから3秒は、タップのセリフを出さない
+    const w=RX.tapWant; if(!w)return;
+    if(!S||w.pid!==S.id||S.stage==='seed'||S.sleep||S.explore){RX.tapWant=null;return}
+    if(bubCur||bubOps.length||modalOpen()||Date.now()<bubUntil+3000)return;
+    RX.tapWant=null; speak(lineOf('tap'),'happy');
+  }
+  function sleepTap(){   // 寝ているぽこをタップ：起こさない・セリフも鳴き声もなし。1ドット寝返りして Zz
+    const t=Date.now(); if(t-RX.tapAt<150)return; RX.tapAt=t;
+    if(!RX.roll&&!RM()){RX.roll=t;RX.rollDir=-RX.rollDir}
+    RX.zzUntil=t+1200; zzUI(); setTimeout(zzUI,1250); rxKick(); draw();
+  }
+  function zzUI(){
+    const el=$('kzz'), on=!!(S&&S.sleep&&present()), burst=on&&Date.now()<RX.zzUntil;
+    el.textContent=on?(burst?'Z z Z':(frame%4<2?'Z z':'z Z')):''; el.classList.toggle('up',burst&&!RM());
+  }
+  function flashThen(cb){   // 孵化・成長：1回だけ明るくなって戻る（約0.4秒）。動きを減らす設定では弱く短く
+    const rm=RM(); RX.flash=Date.now(); RX.flashDur=rm?200:400; RX.flashA=rm?[.3,.12]:[.75,.5,.28,.1]; rxKick(); draw();
+    setTimeout(()=>{RX.flash=0;try{cb()}catch(e){console.error(e)}},RX.flashDur+20);
+  }
+  function drawFlash(){ if(!RX.flash)return; const d=Date.now()-RX.flash; if(d<0||d>=RX.flashDur)return;
+    g.fillStyle=`rgba(255,255,255,${RX.flashA[Math.min(RX.flashA.length-1,Math.floor(d/100))]})`; g.fillRect(0,0,LW(),LH()) }
   function pet(expr){
-    const key=S.stage==='adult'?S.form:S.stage, sp=SPR[key]||SPR_Q, bob=frame%4<2?0:1, ox=Math.round(x-sp.w/2);
-    footShadow(sp,ox,bob);
-    drawSprite(g,sp,ox,47-sp.h-bob,expr,true);
+    const key=ckey(), sp=SPR[key]||SPR_Q, t=Date.now(), jh=jumpH(t), bob=jh?0:(frame%4<2?0:1), ox=Math.round(x-sp.w/2)+rollDx(t);
+    footShadow(sp,ox,bob,jh);
+    const ie=idleEyes(key,expr,t);
+    drawSprite(g,sp,ox,47-sp.h-bob-jh,ie.expr,true,ie.look);
+    drawHearts(t);
   }
   // 足元の影：地面の色を1回だけ読み取って少し暗くする（跳ねると小さくなる）
-  function footShadow(sp,ox,bob){
+  function footShadow(sp,ox,bob,jh=0){
+    if(S&&!S.explore&&per()==='night'&&bgReady('night')){nightShadow(sp,ox,bob,jh);return}   // v2.4：夜B
     try{
-      const w=Math.max(6,sp.w-6-(bob?2:0)), x0=ox+Math.round((sp.w-w)/2), tx=-Math.round(camX), ty=cv.height-48;
-      const d=g.getImageData(x0+tx,46+ty,w,2).data;
-      for(let r=0;r<2;r++)for(let i=r;i<w-r;i++){const k=(r*w+i)*4; if(!d[k+3])continue;
+      const w=jh?Math.max(4,sp.w-6-2-jh*2):Math.max(6,sp.w-6-(bob?2:0)), x0=ox+Math.round((sp.w-w)/2), tx=-Math.round(camX), ty=LH()-48;
+      const d=g.getImageData((x0+tx)*RES,(46+ty)*RES,w*RES,2*RES).data;   // 画素は RES 倍（各ドットの左上の画素を読む）
+      for(let r=0;r<2;r++)for(let i=r;i<w-r;i++){const k=(r*RES*w*RES+i*RES)*4; if(!d[k+3])continue;
         g.fillStyle=`rgb(${d[k]*.78|0},${d[k+1]*.78|0},${d[k+2]*.82|0})`; g.fillRect(x0+i,46+r,1,1)}
     }catch(e){}
   }
+  // v2.4：夜の足元の影（夜B）。キャラの足元の幅と「浮いている高さ」から形と濃さを決める。キャラより先に描くので、顔や輪郭には重ならない
+  // sp.hover：地面から足元までの画素数（2倍の細かさ）。設定のないキャラは 0（地面に立つ）
+  function footWidth(sp){ const r=sp.rows?sp.rows[sp.rows.length-1]:null; if(!r)return Math.max(4,sp.w-4); let a=-1,b=-1; for(let i=0;i<r.length;i++)if(r[i]!=='.'){if(a<0)a=i;b=i} return a<0?Math.max(4,sp.w-4):b-a+1 }
+  function nightShadow(sp,ox,bob,jh=0){
+    const hv=Math.max(0,+sp.hover||0)+jh*RES,k=Math.max(0.25,1-hv/40), kw=Math.max(0.5,1-hv/80);
+    const rx=(footWidth(sp)/2+1)*kw-(bob?0.5:0), ry=1.4*kw, cx=ox+sp.w/2, cy=46.6;
+    for(let y=Math.floor((cy-ry)*RES);y<=Math.ceil((cy+ry)*RES);y++)for(let x=Math.floor((cx-rx)*RES);x<=Math.ceil((cx+rx)*RES);x++){
+      const d=Math.hypot((x+.5)/RES-cx,((y+.5)/RES-cy)*rx/ry)/rx; if(d>=1)continue;
+      g.fillStyle=`rgba(20,32,28,${(0.45*k*(1-d*0.6)).toFixed(3)})`; g.fillRect(x/RES,y/RES,1/RES,1/RES);
+    }
+  }
   function seed(){
-    const sp=SPR.seed, w=S.taps>0&&frame%2?1:0, ox=34-6+w, oy=46-sp.h;
+    const sp=S&&S.kind==='secret'?SPR.sseed:SPR.seed, w=S.taps>0&&frame%2?1:0, ox=34-6+w, oy=46-sp.h;
     drawSprite(g,sp,ox,oy);
     const G='#5bb85b';
     if(S.taps>=2){P(ox+5,oy+4,OUT);P(ox+6,oy+5,OUT);P(ox+5,oy+6,OUT)}
@@ -1073,7 +1346,7 @@ const K=(()=>{
     // もうすぐ見つかるものを地面に置く
     E.ev.forEach(v=>{ if(!v.got&&v.t-t<8000&&!EX.marks.some(m=>m.v===v)) EX.marks.push({v,x:8+Math.floor(Math.random()*48)}); });
     // 光るおまけ
-    if(!EX.spark&&!PL(E.p).walk&&!PL(E.p).unknown&&(E.sparkN||0)<3&&t>EX.nextSpark){const L=Math.round(camX)+6,Rr=Math.round(camX)+cv.width-6;const lo=x-16-L, hi=Rr-(x+16); let sx; if(lo<0&&hi<0) sx=x-L>Rr-x?L:Rr; else if(lo>=hi) sx=L+Math.floor(Math.random()*(lo+1)); else sx=x+16+Math.floor(Math.random()*(hi+1));EX.spark={x:sx,until:t+20000};say('何か光ってる！ 光っている所をタップしてみよう');speak(lineOf('spark'))}
+    if(!EX.spark&&!PL(E.p).walk&&!PL(E.p).unknown&&(E.sparkN||0)<3&&t>EX.nextSpark){const L=Math.round(camX)+6,Rr=Math.round(camX)+LW()-6;const lo=x-16-L, hi=Rr-(x+16); let sx; if(lo<0&&hi<0) sx=x-L>Rr-x?L:Rr; else if(lo>=hi) sx=L+Math.floor(Math.random()*(lo+1)); else sx=x+16+Math.floor(Math.random()*(hi+1));EX.spark={x:sx,until:t+20000};say('何か光ってる！ 光っている所をタップしてみよう');speak(lineOf('spark'))}
     if(EX.spark&&t>EX.spark.until&&!EX.run){EX.spark=null;EX.nextSpark=t+15000+Math.random()*15000;if(($('kmsg').textContent||'').includes('光っている所をタップ'))say('光が消えちゃった。また光るかも？')}
     // 行き先
     let tx=null;
@@ -1118,30 +1391,36 @@ const K=(()=>{
   }
   function exTap(e){
     if(!EX||!EX.spark)return;
-    const gx=Math.round(camX)+e.offsetX/cv.clientWidth*cv.width;
+    const gx=Math.round(camX)+e.offsetX/cv.clientWidth*LW();
     if(Math.abs(gx-EX.spark.x)<10){EX.run=true;EX.spark.until=now()+20000;say('{n}がダッシュ！')}
   }
   function fit(){
     const box=cv.parentElement, w=box.clientWidth, h=box.clientHeight; if(!w||!h)return;
     const VW=h/w>0.95?50:h/w>0.82?56:64, H=Math.max(48,Math.min(110,Math.round(VW*h/w)));
-    if(cv.width!==VW)cv.width=VW; if(cv.height!==H)cv.height=H;
+    if(cv.width!==VW*RES||cv.height!==H*RES){cv.width=VW*RES;cv.height=H*RES;gBase()}   // 大きさを変えると変形が戻るので、基本の変形をかけ直す
   }
   let camX=0;
   function skyTop(){
-    const off=cv.height-48; if(off<=0)return;
+    const off=LH()-48; if(off<=0)return;
     const pr=per(), sky={morning:'#bfe3ff',day:'#9fd8ff',evening:'#ffb38a',night:'#2d2a5a'}[pr];
-    g.setTransform(1,0,0,1,0,0); g.fillStyle=sky; g.fillRect(0,0,cv.width,off+1);
+    if(bgReady(pr)){   // v2.4：新しい背景の空のいちばん上の色。星は1画素、雲は新しい雲の絵
+      gBase(); g.fillStyle=BG_ART[pr].top; g.fillRect(0,0,LW(),off+1);
+      if(pr==='night'){g.fillStyle='#fff';for(let i=0;i<off*0.4;i++)g.fillRect((i*23+7)%64,(i*11+3)%off,0.5,0.5)}
+      else{const c=bgImg(pr,'c2'),cx=(40+(frame>>5))%80-10;bgDraw(c,cx,Math.floor(off*0.4)-2)}
+      return;
+    }
+    gBase(); g.fillStyle=sky; g.fillRect(0,0,LW(),off+1);
     if(pr==='night'){for(let i=0;i<off*0.4;i++)P((i*23+7)%64,(i*11+3)%off,'#fff')}
     else{g.fillStyle='#fff';const cx=(40+(frame>>5))%80-10;g.fillRect(cx,Math.floor(off*0.4),8,2);g.fillRect(cx+2,Math.floor(off*0.4)-1,4,1)}
     if(pr==='night'){g.fillStyle='rgba(20,15,60,.22)';g.fillRect(0,0,64,off)}
     if(pr==='evening'){g.fillStyle='rgba(255,140,80,.12)';g.fillRect(0,0,64,off)}
   }
   function draw(){
-    fit(); g.setTransform(1,0,0,1,0,0); g.clearRect(0,0,cv.width,cv.height);
-    const VW=cv.width, want=VW<64&&S&&S.stage!=='seed'&&!favHere()?Math.max(0,Math.min(64-VW,x-VW/2)):(64-VW)/2;   // お気に入りがいるときは真ん中に固定（2匹とも入る範囲だけを歩く）
-    camX+=(want-camX)*0.08; const cx=Math.round(camX);
-    skyTop(); g.setTransform(1,0,0,1,-cx,cv.height-48);
-    drawMain(); g.setTransform(1,0,0,1,0,0);
+    fit(); g.setTransform(1,0,0,1,0,0); g.clearRect(0,0,cv.width,cv.height); gBase();
+    const VW=LW(), want=VW<64&&S&&S.stage!=='seed'&&!favHere()?Math.max(0,Math.min(64-VW,x-VW/2)):(64-VW)/2;   // お気に入りがいるときは真ん中に固定（2匹とも入る範囲だけを歩く）
+    camX+=(want-camX)*0.08; camX=Math.max(0,Math.min(Math.max(0,64-VW),camX)); const cx=Math.round(camX);   // v2.2b：画面の幅が変わった直後でも、背景（64ドット）の外を見せない（右に空いた帯が出ない）
+    skyTop(); g.setTransform(RES,0,0,RES,-cx*RES,(LH()-48)*RES);
+    drawMain(); gBase(); drawFlash();
   }
   function drawMain(){
     scene(); if(!S)return;
@@ -1158,7 +1437,7 @@ const K=(()=>{
   const favX=()=>Math.round(x)+favGap();
   // お気に入りがいるとき、今の子が歩ける範囲（2匹とも画面の中に入るように）
   // カメラを動かさなくても2匹とも画面に入る範囲にする（画面の幅 VW は縦横・機種で 50〜64）
-  const walkRange=()=>{const f=favHere();if(!f)return [24,44];const cw=(SPR[ckey()]||SPR_Q).w,fw=(SPR[f.form]||SPR_Q).w,VW=cv.width,g2=favGap();
+  const walkRange=()=>{const f=favHere();if(!f)return [24,44];const cw=(SPR[ckey()]||SPR_Q).w,fw=(SPR[f.form]||SPR_Q).w,VW=LW(),g2=favGap();
     const lo=Math.max(Math.ceil(cw/2)+1,Math.ceil(32-VW/2+cw/2)+1), hi=Math.min(Math.floor(63-fw/2-g2),Math.floor(32+VW/2-fw/2-g2)-1);
     return lo<=hi?[lo,hi]:[Math.round((lo+hi)/2),Math.round((lo+hi)/2)]};
   function favDraw(){
@@ -1170,7 +1449,7 @@ const K=(()=>{
   const FAV_LINES=['いっしょにいられて、うれしいな','{n}、大きくなったね！','なでなで、ありがと〜','今日はなにして遊ぶ？','おうちって、いいね','{n}のこと、見てるよ'];
   function favTap(e){   // お気に入りの子をさわったら true（なでる・話す。なかよしは変えない）
     const f=favHere(); if(!f||S.sleep)return false;
-    const sp=SPR[f.form]||SPR_Q, gx=Math.round(camX)+e.offsetX/cv.clientWidth*cv.width, gy=e.offsetY/cv.clientHeight*cv.height-(cv.height-48);
+    const sp=SPR[f.form]||SPR_Q, gx=Math.round(camX)+e.offsetX/cv.clientWidth*LW(), gy=e.offsetY/cv.clientHeight*LH()-(LH()-48);
     if(Math.abs(gx-favX())>sp.w/2+1||gy<47-sp.h-2)return false;
     favBusy=Date.now()+1200; favN++;
     kfx($('kov'),'💗',1); SND.cry(f.form);
@@ -1180,31 +1459,32 @@ const K=(()=>{
   }
 
   // ---- 状態 ----
-  const save=()=>{if(LOCK||!S)return false;let txt;try{txt=JSON.stringify(S)}catch(e){setSaveFail(true);return false}
+  const save=()=>{if(LOCK||!S)return false;careSync(S);let txt;try{txt=JSON.stringify(S)}catch(e){setSaveFail(true);return false}
     const r=writeMain(txt); if(r.why==='conflict'||r.why==='lock')return false; setSaveFail(!r.ok); if(r.ok&&dexDirty)dexFlush(); return r.ok};
   const showMsg=t=>{$('kmsg').innerHTML=pixify(esc(t.replaceAll('{n}',S?S.name:'ぽこ'))).replace(/\n/g,'<br>')};
   const say=t=>{msgLock=Date.now()+20000; showMsg(t)};
   const cnt=(o,k)=>o[k]||0;
   const add=(o,k,n=1)=>{o[k]=(o[k]||0)+n;if(o[k]<=0)delete o[k]};
   const present=()=>S.stage!=='seed'&&!S.explore;
-  let profGk=null, profFace=null;
+  let profGk=null, profFace=null, profNext=null;
   function ui(){
     if(!S)return;
     $('kname2').textContent=S.name;
-    $('kstage').textContent=S.stage==='seed'?'種':fnm(S.stage==='adult'?S.form:S.stage);   // v2.2b：成長段階は小さなタグ
+    $('kstage').textContent=stageNm(S);   // v2.2b：成長段階は小さなタグ
     const gk=Math.round(clamp(S.genki,0,5)); if(profGk!==gk){profGk=gk; const el=$('kgenki'); el.innerHTML=[0,1,2,3,4].map(i=>PCD(i<gk?'heart':'heartE')).join(''); el.setAttribute('aria-label',`元気 ${gk}/5`)}
     const fk=ckey(); if(profFace!==fk){profFace=fk; $('kpfimg').src=charPic('happy')}
-    const nx=GOALS.find(g=>S.aff<g[0]), pct=nx?Math.min(100,S.aff/nx[0]*100):100;
+    const GL=goalsOf(S), nx=GL.find(g=>S.aff<g[0]), pct=nx?Math.min(100,S.aff/nx[0]*100):100;
     $('kaff').style.width=pct+'%'; $('kaffk').style.left=`clamp(9px,${pct}%,calc(100% - 9px))`; if(!$('kaffk').firstChild)$('kaffk').innerHTML=PCD('heart'); $('kaffn').textContent=S.aff;
     if(S.explore){const E=S.explore,m=Math.max(0,Math.ceil((E.end-now())/MIN)),got=(E.ev||[]).filter(v=>v.got).map(v=>IT[v.k].e).concat((E.bonus||[]).map(k=>IT[k].e)).join('');
-      $('knextl').textContent='おでかけ'; $('knextt').innerHTML=pixify(`${PL(E.p).walk?'お散歩中':'探検中：'+PL(E.p).n} あと${m}分　拾った物 ${got||'まだなし'}`)}
-    else {$('knextl').textContent='つぎ'; $('knextt').textContent=nx?`なかよし${nx[0]}で${nx[1]}`:'すべて解放しました！'}
+      const h=pixify(`${PL(E.p).walk?'お散歩中':'探検中：'+PL(E.p).n} あと${m}分　拾った物 ${got||'まだなし'}`); if(profNext!==h){profNext=h; $('knextl').textContent='おでかけ'; $('knextt').innerHTML=h}}   // v2.2b：中身が変わったときだけ作り直す（毎回作り直すとiPhoneで高さがゆれて画面がガタつく）
+    else {const g=growOf(S),days=careNew(S)?careDays(S):sDays(S),h=S.kind==='secret'&&S.stage==='child'&&!nx?`いっしょにすごした日 ${Math.min(days,g.days)}/${g.days}　${days>=g.days?'なにかが起こりそうな気配……':'ゆっくり育っている'}`:nx?`なかよし${nx[0]}で${nx[1]}`:'すべて解放しました！'; if(profNext!==h){profNext=h; $('knextl').textContent='つぎ'; $('knextt').textContent=h}}
+    let careEl=$('kcare');if(careNew(S)){if(!careEl){careEl=document.createElement('p');careEl.id='kcare';careEl.className='fm';careEl.style.cssText='font-size:12px;line-height:1.6;margin:6px 14px;color:#5a4868';$('kbtns').after(careEl)}const hint=careHint();if(careEl.textContent!==hint)careEl.textContent=hint;careEl.hidden=false}else if(careEl)careEl.hidden=true;
     const ds=Object.keys(S.decor), pos=[[24,70],[50,62],[6,90],[72,90],[40,92],[66,72]];
     $('kdecor').innerHTML='';
     document.querySelectorAll('#kbtns button').forEach(b=>b.classList.toggle('hint',!!b.dataset.k&&b.dataset.k===({1:'cook',2:'feed',3:'explore'})[S.tut]));
     {const eb=document.querySelector('#kbtns [data-k=explore]'), onMap=S.explore&&!PL(S.explore.p).walk&&!PL(S.explore.p).unknown&&!(S.explore.map&&S.explore.map.done);
      const want=onMap?'sugoroku':'explore'; if(eb.dataset.cur!==want){eb.dataset.cur=want;eb.innerHTML=`<em><img class="pix bi" src="${ICON(want)}"></em>${onMap?'すごろく':'探検'}`;} if(onMap)eb.classList.add('hint');}
-    $('kzz').textContent=S.sleep&&present()?(frame%4<2?'Z z':'z Z'):'';
+    zzUI();
     coinUI();
   }
   // ===== v2.1 WD1.5：性格（docs/v21_pers.md 22章が正。persRule＝1）=====
@@ -1218,6 +1498,69 @@ const K=(()=>{
   const PERS_FALLBACK={cool:'pr_kenkyu'};   // 記録不足のとき、相性の最高値が並ぶ気質の決め方（正式の表では並ばないが、安全のため残す）
   const PERS_RULE=1, PR_ACTS=['feed','cook','pet','go','walk','fish'], PR_MIN_NEW=10, PR_MIN_OLD=30;
   const dayNo=()=>{const t=now();return Math.floor((t-new Date(t).getTimezoneOffset()*60000)/864e5)};   // 端末の日付の日番号
+  // 育成ルール1：個体の履歴と、プレイヤー共通の日次予算を分ける。旧個体は変更しない。
+  const CAREKEEP=KEY+'_carekeep', CARE_CAP={feed:10,pet:6,back:4}, CARE_COUNT=['feed','pet','back','total','petLog','backLog'];
+  let careKeepFailed=false;
+  const careDay=()=>{const t=Date.now();return Math.floor((t-new Date(t).getTimezoneOffset()*60000)/864e5)};
+  const careEmpty=day=>({v:1,day,feed:0,pet:0,back:0,total:0,petLog:0,backLog:0,set:{feed:false,pet:false,back:false,done:false}});
+  function careClean(v){
+    if(!isO(v)||v.v!==1||!Number.isInteger(v.day)||Math.abs(v.day)>1e7)return null;
+    const c=careEmpty(v.day), limits={...CARE_CAP,total:20,petLog:6,backLog:2};
+    for(const k of CARE_COUNT){if(!Number.isInteger(v[k])||v[k]<0||v[k]>limits[k])return null;c[k]=v[k]}
+    if(!isO(v.set))return null;
+    for(const k of Object.keys(c.set)){if(typeof v.set[k]!=='boolean')return null;c.set[k]=v.set[k]}
+    return c;
+  }
+  function careMerge(a,b){
+    if(!a)return b;if(!b)return a;if(a.day!==b.day)return a.day>b.day?a:b;
+    const c=careEmpty(a.day);for(const k of CARE_COUNT)c[k]=Math.max(a[k],b[k]);
+    for(const k of Object.keys(c.set))c.set[k]=a.set[k]||b.set[k];return c;
+  }
+  function careSync(d){
+    if(!d||(!careNew(d)&&d.careDaily===undefined))return null;
+    let kept=null;try{kept=careClean(JSON.parse(localStorage.getItem(CAREKEEP)||'null'))}catch(e){}
+    let c=careMerge(careClean(d.careDaily),kept);const today=careDay();
+    if(!c||today>c.day)c=careEmpty(today);d.careDaily=c;return c;
+  }
+  function careKeepWrite(d){
+    if(!d||!careClean(d.careDaily))return;
+    try{const txt=JSON.stringify(d.careDaily);if(localStorage.getItem(CAREKEEP)!==txt)localStorage.setItem(CAREKEEP,txt);if(localStorage.getItem(CAREKEEP)!==txt)throw 0;careKeepFailed=false}catch(e){careKeepFailed=true}
+  }
+  function careInit(d){d.care={v:1,of:d.id,days:[]};careSync(d)}
+  const careDays=d=>careNew(d)?d.care.days.filter(x=>x<=careDay()).length:0;
+  function careTouch(){
+    if(!careNew(S)||S.stage==='seed')return;
+    const c=careSync(S),day=careDay();if(c.day!==day)return;   // 時計を戻しても予算・日数を増やさない
+    if(!S.care.days.includes(day)){S.care.days.push(day);S.care.days=S.care.days.slice(-60)}
+  }
+  function foodAff(d){return !careNew(S)?d.a:d.a===1?1:d.a<=4?2:d.a<=8?3:4}
+  function earnAff(n,source){
+    if(LOCK||!S)return 0;
+    let gain=n;
+    if(careNew(S)){
+      const c=careSync(S);gain=c.day===careDay()?Math.min(n,20-c.total,source in CARE_CAP?CARE_CAP[source]-c[source]:n):0;
+      c.total+=gain;if(source in CARE_CAP)c[source]+=gain;
+    }
+    addAff(gain);return gain;
+  }
+  function careAction(a){
+    if(!careNew(S)||LOCK)return;careTouch();const c=careSync(S);
+    if(c.day!==careDay())return;
+    if(a in c.set&&a!=='done')c.set[a]=true;
+    if(!c.set.done&&c.set.feed&&c.set.pet&&c.set.back){c.set.done=true;earnAff(7,'set')}
+    checkGrowth();
+  }
+  function carePetRecord(back){
+    if(!careNew(S)){prRec('pet');return}
+    careTouch();const c=careSync(S),k=back?'backLog':'petLog';
+    if(c.day===careDay()&&c[k]<(back?2:6)){c[k]++;prRec('pet')}
+  }
+  function careHint(){
+    const c=careSync(S),g=growOf(S),days=careDays(S),hours=Math.max(0,Math.ceil((g.minMs-(Date.now()-S.born))/3600000));
+    const set=c.set.done?'達成':`${Number(c.set.feed)+Number(c.set.pet)+Number(c.set.back)}/3`;
+    return `今日のなかよし ${c.total}/20（ごはん ${c.feed}/10・なでる ${c.pet}/6・おかえり ${c.back}/4）／お世話セット ${set}`+
+      (S.stage!=='adult'?` ／ お世話 ${Math.min(days,g.days)}/${g.days}日・大人の時間条件 あと${Number.isFinite(hours)?hours:Math.ceil(g.minMs/3600000)}時間`:'');
+  }
   // px：その子用の拡張の入れ物（v21_evo）。持ち主の id（of）を入れる。料理ごとの回数 food.c（作った）・food.e（食べた）
   function pxOf(d){ d=d||S; if(d.px!==undefined&&!isO(d.px))return null; if(!d.px)d.px={of:d.id}; const p=d.px; if(p.of!==d.id)return null;
     if(!isO(p.food))p.food={}; if(!isO(p.food.c))p.food.c={}; if(!isO(p.food.e))p.food.e={}; return p }
@@ -1225,13 +1568,19 @@ const K=(()=>{
   // 行動を1回記録：回数 n_、有効回数 v_（その日の6回目まで）、点 p_（半点の整数：1〜3回目+4、4〜6回目+2）、日数 d_、今日の回数 c_・日番号 t_
   function prRec(a,more){
     if(!S||S.stage==='seed'||!isO(S.log))return;
+    careTouch();
     const L=S.log, d=dayNo(), inc=k=>{L[k]=Math.min(1e9,(L[k]||0)+1)};
     if(typeof L.from!=='number')L.from=d;
     if(typeof L['t_'+a]!=='number'||d>L['t_'+a]){L['t_'+a]=d;L['c_'+a]=0;inc('d_'+a)}   // 時計を戻したときは同じ日として続ける（得をしない）
     inc('c_'+a); inc('n_'+a); const k=L['c_'+a];
     if(k<=6){inc('v_'+a); L['p_'+a]=Math.min(1e9,(L['p_'+a]||0)+(k<=3?4:2))}
     (more||[]).forEach(inc);
+    if(S.kind==='secret'&&S.stage!=='adult'){   // v2.4：ひみつっこ。お世話をした日も遊んだ日に数える（なかよし200のあとも数え続ける）・夜のお世話の回数
+      if(!Array.isArray(S.sdays))S.sdays=[]; if(!S.sdays.includes(d)){S.sdays.push(d);if(S.sdays.length>60)S.sdays=S.sdays.slice(-60)}
+      const v=sevFix(S); if(v&&per()==='night')v.k.night=Math.min(1e9,v.k.night+1);
+    }
     prLegacy();
+    if(careNew(S))checkGrowth();
   }
   // 性格の点（0〜1 の同じ尺度）。L：log、F：px.food
   function prScores(L,F){
@@ -1293,20 +1642,31 @@ const K=(()=>{
   function addAff(n){
     const b=S.aff; S.aff+=n; if(!Array.isArray(S.unlocked))S.unlocked=[];
     Object.entries(PLACES).forEach(([k,p])=>{if(p.need>0&&b<p.need&&S.aff>=p.need&&!S.unlocked.includes(k)){S.unlocked.push(k);setTimeout(()=>{say(`新しい場所「${p.n}」に行けるようになった！`);ktoast(`${p.e} ${p.n} 解放！`)},1600)}});
-    if(S.stage==='baby'&&S.aff>=15)grow('child');
-    else if(S.stage==='child'&&S.aff>=60){
+    if(S.kind==='secret'&&(n>0||!careNew(S))){const t=dayNo();if(!Array.isArray(S.sdays))S.sdays=[];if(!S.sdays.includes(t)){S.sdays.push(t);if(S.sdays.length>60)S.sdays=S.sdays.slice(-60)}}   // v2.4：遊んだ日（なかよしが増えた日）を数える。同じ日は1回
+    checkGrowth();
+  }
+  function checkGrowth(){
+    if(LOCK||!S||S.stage==='seed')return;
+    if(careNew(S)&&conflict()){enterConflict();return}
+    if(S.stage==='baby'&&S.aff>=growOf(S).child)grow('child');
+    else if(S.kind==='secret'){ secretCheck(); }   // v2.4：ひみつっこはここで止める（ふつうの進化には進まない）
+    else if(S.stage==='child'&&S.aff>=GROW.normal.adult&&(!careNew(S)||(careDays(S)>=CARE_GROW.normal.days&&typeof S.born==='number'&&Date.now()-S.born>=CARE_GROW.normal.minMs))){
       S.form=baseForm(S.tags);S.adultAt=now();prOnAdult();ensureIntegrity(S);grow('adult')}
+    if(S.stage==='adult')try{bondLive();kakeraBond()}catch(e){}   // v2.4：解放のあとの新しい子のなかよし100でかけら。v2.3：初期4種類の大人がなかよし100になったら、きずなのしるしを記録
     if(S.stage==='adult'&&!(S.album||[]).some(r=>r&&r.id===S.id)){ensureIntegrity(S);const nw=!(DEXS&&DEXS.sp[S.form]);dexAddPet(S,false);if(nw){const fm=S.form;setTimeout(()=>newFormUI(fm),2400)}}   // AL3：大人になった直後に、アルバムの目印・たね（1匹1回：seedGiven）・図鑑の記録を付ける
   }
   function grow(st){
-    S.stage=st; let n=0; SND.sfx.fanfare(); ANA.track('grow',{stage:st,form:st==='adult'?S.form:'none'});
-    const iv=setInterval(()=>{g.fillStyle=n%2?'#fff':'#ffd84d';g.fillRect(0,0,64,48);if(++n>6){clearInterval(iv);draw();
-      say((st==='child'?'{n}が少し大きくなった！':`{n}が「${FORMS[S.form].nm}」になった！ 食べた料理で姿が変わったみたい`)); setTimeout(()=>speak(lineOf('grow'),'happy'),500);kfx($('kov'),'✨',4,30)}},120);
+    S.stage=st; SND.sfx.fanfare(); ANA.track('grow',{stage:st,form:st==='adult'?S.form:'none'});
+    flashThen(()=>{{draw();   // v2.4：速い点滅をやめ、1回だけ明るくなって戻る
+      say((st==='child'?'{n}が少し大きくなった！':`{n}が「${FORMS[S.form].nm}」になった！ 食べた料理で姿が変わったみたい`)); if(S.kind!=='secret')setTimeout(()=>speak(lineOf('grow'),'happy'),500);   /* v2.4：ひみつっこは葉っぱのセリフを言わない */kfx($('kov'),'✨',4,30)}});
   }
   function tick(){
+    if(LOCK||!S)return;
+    if(careNew(S))checkGrowth();
     const t=now(), dt=(t-S.last)/MIN; if(dt<=0)return; S.last=t;
     if(S.stage==='seed')return;
     if(S.sleep)S.genki=clamp(S.genki+dt/20,0,5); else if(!S.explore)S.genki=clamp(S.genki-dt/60,0,5);
+    S.full=clamp((S.full||0)-dt/(S.sleep?40:20),0,FULL_MAX);   // v2.4：おなかは起きていると20分で1、寝ていると40分で1へる
     if(S.explore&&t>=S.explore.end)backHome();
   }
   function wpick(t){t=t.filter(x=>canGet(x[0]));if(!t.length)return null;const sum=t.reduce((a,b)=>a+b[1],0);let r=Math.random()*sum;for(const [k,w] of t){if((r-=w)<0)return k}return t[0][0]}
@@ -1317,21 +1677,24 @@ const K=(()=>{
     got.forEach(k=>{ if(hasIT(k)) IT[k].d?add(S.decor,k):add(S.inv,k); else { if(!Array.isArray(S.hold))S.hold=[]; S.hold.push(k); held++; } });
     ANA.track('explore_end',{place:E.p,items:got.length});
     S.explore=null; S.lucky=false; S.justBack=true; if(pl.walk)S.backFrom='walk'; else if(!pl.unknown)S.backFrom='explore'; else delete S.backFrom; EX=null; x=34;
+    const kk=!pl.walk&&!pl.unknown?kakeraExplore(E.p):false;   // v2.4：山・海でまれに、ひみつのかけら（週に1つまで）
     const cr=pl.walk?coinAct('walk'):!pl.unknown?coinAct('go'):null;   // v2.2：帰ってきた（行動が終わった）ときだけ。今日の回数の上限まで
     if(pl.walk)prRec('walk'); else if(!pl.unknown)prRec('go',['n_go_'+E.p].concat(Object.keys(PLACES).filter(k=>!PLACES[k].walk&&(PLACES[k].need<=0||(S.unlocked||[]).includes(k))).length>=2?['q_'+E.p]:[]));   // v2.1 性格の記録
+    if(!pl.unknown)careAction('back');
     save();
     say('おかえり！');   // 探検中の案内（光・おまけ・ダッシュ・あと○分など）は、帰ったら残さない SND.sfx.ding(); setTimeout(()=>speak(lineOf('back'),'happy'),400);
     modal(`<h2>${pl.e} ただいま！</h2><p>${esc(S.name)}が${pl.n}から帰ってきた！</p><div class="got">${got.map(k=>IT[k].e).join('')}</div>
-      <p>${[...new Set(got)].map(k=>IT[k].n).join('、')}を拾ってきた${(E.bonus||[]).length?`<br>（すごろくや光るおまけで拾った ${E.bonus.length}個 込み）`:''}${held?`<br>（このバージョンで使えない物 ${held}個は、なくさないように保管しました）`:''}<br>「なでる」とおまけをくれるかも？</p>${coinLine(cr)}<button class="pbtn" onclick="K.close()">やったね！</button>`);
+      <p>${[...new Set(got)].map(k=>IT[k].n).join('、')}を拾ってきた${(E.bonus||[]).length?`<br>（すごろくや光るおまけで拾った ${E.bonus.length}個 込み）`:''}${held?`<br>（このバージョンで使えない物 ${held}個は、なくさないように保管しました）`:''}<br>「なでる」とおまけをくれるかも？</p>${coinLine(cr)}${kk?`<p class="kcoinl">${PCD('kakera')} ひみつのかけらを見つけた！（${secFix(S).kakera}/${KAKERA_NEED}${secFix(S).kakera===0?'・ひみつの種ができた！':''}）</p>`:''}<button class="pbtn" onclick="K.close()">やったね！</button>`);
   }
 
   // ---- モーダル ----
   let fishTimer=null;
   function modal(html){$('kmbody').innerHTML=pixify(html);$('kmodal').classList.add('on')}
-  function close(){$('kmodal').classList.remove('on');$('kcol').classList.remove('on');$('klb').classList.remove('on');clearInterval(fishTimer);fishTimer=null;ui();draw()}
+  function close(){const wasFish=$('kmodal').classList.contains('on')&&!!$('fbtn'); $('kmodal').classList.remove('on');$('kcol').classList.remove('on');$('klb').classList.remove('on');clearInterval(fishTimer);fishTimer=null;ui();draw();
+    try{if(wasFish&&!$('kfind').classList.contains('on'))findNext(500)}catch(e){}}   // v2.4：釣りの画面を閉じたら、待たせた発見カード（ほかは findTick が空いたときに出す）
 
   // ---- こうどう ----
-  const ckey=()=>!S?'baby':S.stage==='adult'?S.form:S.stage;
+  const ckey=()=>!S?'baby':S.kind==='secret'&&S.stage!=='adult'?({seed:'sseed',baby:'sbaby',child:'schild'}[S.stage]||'sbaby'):S.stage==='adult'?S.form:S.stage;   // v2.4：ひみつっこは専用の絵
   // ---- ぽこのセリフ ----
   // 1つのセリフは文字列か {t:'セリフ', st:['baby'], form:['umi'], pers:['amaenbo'], odd:true}
   //   st   … 成長段階（seed/baby/child/adult）でしぼる
@@ -1575,8 +1938,8 @@ const K=(()=>{
   function bubSpeaker(who){ const f=who==='fav'?favHere():null; return {f,sp:f?(SPR[f.form]||SPR_Q):(SPR[ckey()]||SPR.baby),px:f?favX():x} }
   function bubRoom(who){   // 頭の上に使える高さ（px）と、吹き出しの最大の幅
     const cw=cv.clientWidth,ch=cv.clientHeight; if(!cw)return {h:999,w:240,cw:240};
-    const scy=ch/cv.height, {sp}=bubSpeaker(who), other=favHere()?(who==='fav'?(SPR[ckey()]||SPR.baby):(SPR[favHere().form]||SPR_Q)):null;
-    const top=s2=>(47-s2.h+(cv.height-48)-(s2.face&&s2.face.quirk==='hair'?3:0))*scy;
+    const scy=ch/LH(), {sp}=bubSpeaker(who), other=favHere()?(who==='fav'?(SPR[ckey()]||SPR.baby):(SPR[favHere().form]||SPR_Q)):null;
+    const top=s2=>(47-s2.h+(LH()-48)-(s2.face&&s2.face.quirk==='hair'?3:0))*scy;
     const headTop=Math.min(top(sp),other?top(other):Infinity);
     return {h:headTop-12-2-4, w:Math.min(cw*0.86,cw-8)-BUB_PAD-4, cw};
   }
@@ -1641,6 +2004,9 @@ const K=(()=>{
     if(LOCK||!lid||findShown.has(lid))return; findShown.add(lid);
     const x=ALL_LINES.find(l=>l.id===lid); if(!x)return;
     const el=$('kfind'); clearTimeout(findT);
+    if(el.classList.contains('on')&&el.dataset.kind==='bond'){if(!findWait.includes(lid))findWait.push(lid);findShown.delete(lid);findSave();return}
+    if($('kmodal').classList.contains('on')&&$('fbtn')){if(!findWait.includes(lid))findWait.push(lid);findShown.delete(lid);findSave();return}   // v2.4：釣りの画面が開いているあいだは出さない（閉じたあとに出す。釣りのタップのじゃまをしない）   // v2.3：きずなのお知らせが出ているあいだは、閉じてから出す
+    el.dataset.kind='word';
     el.innerHTML=`<span class="kfd d1">${PCD('heart')}</span><span class="kfd d2">${PCD('star')}</span><span class="kfd d3">${PCD('sparkle')}</span><span class="kfd d4">${PCD('sparkle')}</span>
       <button class="kfx" id="kfindx" aria-label="とじる">×</button><b class="kft">新しいことばを発見！</b><p class="kfl">${findWrap(lineText(x))}</p><small class="kfs">ことば図鑑に記録されたよ ${PCD('heart')}</small>${COIN_WNEW.has(lid)?`<small class="kfc">${PCD('coin')} コイン +${COIN_WORD}</small>`:''}`;
     findPlace(); el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
@@ -1665,11 +2031,169 @@ const K=(()=>{
       return out.map(c=>`<span class="kfw">${esc(c)}</span>`).join('');
     }catch(e){return esc(t)}
   }
-  function findClose(){clearTimeout(findT);$('kfind').classList.remove('on')}
+  // 待たせた発見カード（釣りのあいだ等）。再読み込みしても次に開いたときに出せるよう、ID だけ残す（記録とコインはもう保存ずみ）
+  const FINDQ=KEY+'_findq'; let findWait=[], findLoaded=false;
+  const findLoad=()=>{ if(findLoaded)return; findLoaded=true; try{const a=JSON.parse(localStorage.getItem(FINDQ)||'[]'); if(Array.isArray(a))a.filter(x=>typeof x==='string'&&KEY_RE.test(x)).slice(0,30).forEach(x=>{if(!findWait.includes(x))findWait.push(x)})}catch(e){} };   // 起動のあと（必要なものがそろってから）読む
+  const findSave=()=>{findLoad();try{findWait.length?localStorage.setItem(FINDQ,JSON.stringify(findWait.slice(0,30))):localStorage.removeItem(FINDQ)}catch(e){}};
+  function findClose(){clearTimeout(findT);$('kfind').classList.remove('on'); findNext(350)}
+  // 待たせていた発見カードを1枚ずつ出す（閉じたら次）。同じことばは1回だけ
+  function findNext(ms){ if(!findWait.length)return; const l=findWait.shift(); findWait=findWait.filter(x=>x!==l); findSave(); setTimeout(()=>{try{findPop(l)}catch(e){}},ms) }
+  function findTick(){ findLoad(); if(!findWait.length||LOCK||!S||Date.now()<coinWait||modalOpen()||$('kfind').classList.contains('on')||$('klock').classList.contains('on'))return;
+    const W=wordsNow(); findWait=findWait.filter(l=>isO(W.wl)&&W.wl[l]&&!findShown.has(l)); findSave(); findNext(0); }   // 記録にあることばだけ・出したことばは出さない
   // v2.2b：真ん中に置く位置を整数の px で決める（translate(-50%) の0.5pxずれで、iPhoneの文字・絵がぼやけるのを防ぐ）
   function findPlace(){const el=$('kfind'),P=$('kid'),W=P.clientWidth,H=P.clientHeight; if(!W)return; const w=Math.floor(Math.min(300,W*.84)); el.style.width=w+'px'; const h=el.offsetHeight; el.style.left=Math.round((W-w)/2)+'px'; el.style.top=Math.max(4,Math.round((H-h)/2))+'px'}
   window.addEventListener('resize',()=>{try{if($('kfind').classList.contains('on'))findPlace()}catch(e){}});
 
+
+  // ===== v2.3 きずなのしるし（docs/v23_bond.md）=====
+  // 初期4種類の大人が「なかよし100」になったことを、進化図鑑の保存場所の achv に記録する（日時の数）。
+  // achv は v2.1 以降の本番も消さずに残す欄。「最初から」でも消えない・2タブでも合わさる・引っ越しコード/バックアップにも入る。
+  //   bond100_<姿>：達成した日時 / bondseen_<姿>：お知らせを出した日時 / bond4：4種類そろった日時 / bondscan：退避データを一度見た日時
+  // 進化・なかよし・セーブ本体は変えない。ひみつの種は配らない（bond4 は印だけ）
+  const BOND_FORMS=['umi','mori','hana','okashi'], BOND_AFF=100, bondK=f=>'bond100_'+f;
+  const bondOk=(D,f)=>!!(D&&isO(D.achv)&&typeof D.achv[bondK(f)]==='number');
+  // データ1つ（セーブ・退避）の中で、確かな証拠がある姿：大人で、初期4種類で、なかよしが100以上（なかよしは下がらないので、その時点で達成していた）
+  function bondEv(d,out){
+    if(!isO(d))return out; const one=r=>{if(isO(r)&&!r.live&&(r.stage==='adult'||r.archivedAt)&&BOND_FORMS.includes(r.form)&&Number.isInteger(r.aff)&&r.aff>=BOND_AFF&&r.aff<=1e7)out.add(r.form)};
+    one(d); if(Array.isArray(d.album))d.album.forEach(one); return out;
+  }
+  function bondMark(forms){
+    if(LOCK)return 0; if(!DEXS)DEXS=dexRead()||dexNew(); if(!isO(DEXS.achv))DEXS.achv={};
+    const t=Date.now(); let n=0;
+    for(const f of forms)if(BOND_FORMS.includes(f)&&!bondOk(DEXS,f)){DEXS.achv[bondK(f)]=t;n++}
+    if(BOND_FORMS.every(f=>bondOk(DEXS,f))&&typeof DEXS.achv.bond4!=='number'){DEXS.achv.bond4=t;n++}   // 4種類そろった印だけ（報酬は将来の更新で、この印を見て1回だけ）
+    if(n){dexDirty=true;dexFlush()} return n;
+  }
+  // 開いたとき・復元したとき：今のデータ（今の子・アルバム）＋（1回だけ）この端末の退避データから、証拠がある分を記録
+  function bondScan(){
+    if(LOCK||!S)return; const set=bondEv(S,new Set()); if(!DEXS)DEXS=dexRead()||dexNew(); if(!isO(DEXS.achv))DEXS.achv={};
+    if(typeof DEXS.achv.bondscan!=='number'){
+      try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i); if(!k||!k.startsWith(KEY+'_')||k.startsWith(DEXK)||k===WORDSK||k===COINKEEP||k===SECKEEP||k===FINDQ)continue;
+        const raw=localStorage.getItem(k); if(!raw||raw.length>MAX_IMPORT)continue; let o=null; try{o=JSON.parse(raw)}catch(e){continue}
+        if(isO(o))bondEv(isO(o.data)?o.data:o,set)}}catch(e){}
+      DEXS.achv.bondscan=Date.now(); dexDirty=true;
+    }
+    bondMark([...set]); dexFlush();
+  }
+  function bondLive(){ if(S&&S.stage==='adult'&&S.aff>=BOND_AFF&&BOND_FORMS.includes(S.form)&&!bondOk(DEXS,S.form))bondMark([S.form]) }
+  // お知らせ：まだ出していない達成を、発見カードと同じ小さなカードでまとめて1回だけ（出した時点で bondseen を記録。再読み込みで繰り返さない）
+  function bondTick(){
+    if(LOCK||!S||!DEXS||Date.now()<coinWait||modalOpen()||$('klock').classList.contains('on')||$('kfind').classList.contains('on'))return;
+    const A=isO(DEXS.achv)?DEXS.achv:{}, nw=BOND_FORMS.filter(f=>typeof A[bondK(f)]==='number'&&typeof A['bondseen_'+f]!=='number');
+    if(!nw.length)return;
+    const t=Date.now(); nw.forEach(f=>A['bondseen_'+f]=t); dexDirty=true; dexFlush(); bondPop(nw);
+  }
+  function bondPop(forms){
+    const el=$('kfind'), have=BOND_FORMS.filter(f=>bondOk(DEXS,f)).length;
+    el.dataset.kind='bond';
+    el.innerHTML=`<span class="kfd d1">${PCD('heart')}</span><span class="kfd d2">${PCD('heart')}</span><span class="kfd d3">${PCD('sparkle')}</span><span class="kfd d4">${PCD('sparkle')}</span>
+      <button class="kfx" id="kfindx" aria-label="とじる">×</button><b class="kft">きずなのしるし</b><p class="kfl">${findWrap(forms.map(f=>fnm(f)).join('・')+'と絆が結ばれた！')}</p>
+      <small class="kfs">${PCD('heart')} きずなのしるし ${have}/4</small>${have>=4?'<small class="kfc">4つの絆が、すべて結ばれた……</small>':''}`;
+    findPlace(); el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+    $('kfindx').onclick=e=>{e.stopPropagation();findClose()};
+    try{SND.sfx.fanfare()}catch(e){}
+  }
+
+  // ===== v2.4 ひみつの種・ひみつのかけら（STEP1：受け取り・保存・交換・引き継ぎ。docs/v24_secret.md）=====
+  // セーブ本体 S.secret（引っ越しコード・バックアップに入る。古い版は知らない項目として残す）
+  //   {v:1, got:初めて種をもらった日時|null, seeds:持っているひみつの種, kakera:持っているかけら(0〜2。3でたねに換える),
+  //    made:かけらから作った種の数, kb:{子のID:1/0}（なかよし100のかけら：1=もらった・0=対象外）, ka:{子のID:1}（ひみつっこの大人のかけら）, wk:探検のかけらを見つけた週番号}
+  // 図鑑の achv.gift_secret1：初めての種を受け取った日時（「全部消して」でも消えない＝二度と配らない）
+  const SEC_MAX=99, KAKERA_NEED=3, KAKERA_P=0.15, SECKEEP=KEY+'_secretkeep', SEC_OK=new WeakSet();
+  const secWeek=d=>Math.floor(((d===undefined?dayNo():d)+3)/7);   // 週番号（日番号から。端末の日付）
+  function secFix(d){
+    if(!d)return null; if(isO(d.secret)&&SEC_OK.has(d.secret))return d.secret;
+    if(!isO(d.secret))d.secret={v:1,got:null,seeds:0,kakera:0,made:0,kb:{},ka:{},wk:null};
+    const c=d.secret, int=(v,lo,hi,def)=>Number.isInteger(v)&&v>=lo&&v<=hi?v:def;
+    c.v=int(c.v,1,99,1); c.got=Number.isFinite(c.got)&&c.got>0?c.got:null; c.seeds=int(c.seeds,0,SEC_MAX,0); c.kakera=int(c.kakera,0,KAKERA_NEED-1,0); c.made=int(c.made,0,9999,0);
+    c.wk=Number.isInteger(c.wk)?c.wk:null;
+    for(const f of ['kb','ka']){const o=isO(c[f])?c[f]:{}; c[f]={}; for(const k of Object.keys(o).slice(0,2000))if(KEY_RE.test(k)&&(o[k]===1||o[k]===0))c[f][k]=o[k]}
+    SEC_OK.add(c); return c;
+  }
+  const secGotAchv=()=>!!(DEXS&&isO(DEXS.achv)&&typeof DEXS.achv.gift_secret1==='number');
+  // かけらを足す：3つたまったら種に換えるのはプレイヤーが選ぶ（自動では換えない）。換えないまま3つ以上にはしない（そのときは自動で種に）
+  function kakeraAdd(n){ const c=secFix(S); c.kakera+=n; while(c.kakera>=KAKERA_NEED&&c.seeds<SEC_MAX){c.kakera-=KAKERA_NEED;c.seeds++;c.made++} c.kakera=Math.min(c.kakera,KAKERA_NEED-1); }
+  // 初めての種：bond4 があって、まだ受け取っていない（セーブにも図鑑にも記録がない）とき
+  function secCanGift(){ if(!S||!DEXS||!isO(DEXS.achv)||typeof DEXS.achv.bond4!=='number')return false; const c=secFix(S); return !c.got&&!secGotAchv() }
+  function secGift(){
+    if(LOCK||!secCanGift())return false;
+    const c=secFix(S), prev=clone(c), t=Date.now();
+    c.got=t; c.seeds=Math.min(SEC_MAX,c.seeds+1);
+    // 今の子がすでになかよし100の初期4種類の大人なら、その子は「解放のあとに達成」ではないので、かけらの対象外にする（さかのぼって配らない）
+    if(S.stage==='adult'&&BOND_FORMS.includes(S.form)&&S.aff>=BOND_AFF)c.kb[S.id]=0;
+    if(!save()){if(S&&S.secret===c){S.secret=prev;SEC_OK.delete(prev);secFix(S)}return false}   // 先にセーブ本体（種）を書く。書けなければ受け取っていない
+    DEXS.achv.gift_secret1=t; dexDirty=true; dexFlush(); ANA.track('secret_gift',{});
+    return true;
+  }
+  // セーブには受け取りがあるのに図鑑に記録がない（書く途中で閉じた・引っ越し）→ 図鑑にも書く（二度と配らないため）
+  function secSync(){ if(!S||!DEXS||!isO(DEXS.achv))return; const c=secFix(S); if(c.got&&!secGotAchv()){DEXS.achv.gift_secret1=c.got;dexDirty=true;dexFlush()} }
+  // B：解放のあと、新しく育てた初期4種類の子がなかよし100になったら、その子1匹につき1回かけら1つ
+  function kakeraBond(){
+    if(!S||S.stage!=='adult'||!BOND_FORMS.includes(S.form)||S.aff<BOND_AFF)return; const c=secFix(S); if(!c.got||S.id in c.kb)return;
+    c.kb[S.id]=1; kakeraAdd(1); setTimeout(()=>{try{kakeraPop('なかよし100の絆から、ひみつのかけらが生まれた！')}catch(e){}},1600);
+  }
+  // C：山・海から帰ったとき、まれに（15%）。週に1つまで。既存の拾い物・コインはそのまま
+  function kakeraExplore(p){
+    if(!S||(p!=='yama'&&p!=='umi'))return false; const c=secFix(S); if(!c.got)return false;
+    const w=secWeek(); if(c.wk!==null&&w<=c.wk&&c.wk-w<3)return false;   // 同じ週は1つまで（時計を大きく戻したときだけ数え直す）
+    if(Math.random()>=KAKERA_P)return false; c.wk=w; kakeraAdd(1); return true;
+  }
+  function kakeraPop(msg){
+    const el=$('kfind'); if(el.classList.contains('on')){setTimeout(()=>{try{kakeraPop(msg)}catch(e){}},1500);return}
+    const c=secFix(S); el.dataset.kind='secret';
+    el.innerHTML=`<span class="kfd d1">${PCD('kakera')}</span><span class="kfd d2">${PCD('sparkle')}</span><span class="kfd d3">${PCD('sparkle')}</span><span class="kfd d4">${PCD('kakera')}</span>
+      <button class="kfx" id="kfindx" aria-label="とじる">×</button><b class="kft">ひみつのかけら</b><p class="kfl">${findWrap(msg)}</p>
+      <small class="kfs">${PCD('kakera')} かけら ${c.kakera}/${KAKERA_NEED}　${PCD('sseed')} ひみつの種 ${c.seeds}こ</small>`;
+    findPlace(); el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); $('kfindx').onclick=e=>{e.stopPropagation();findClose()};
+    try{SND.sfx.ding()}catch(e){}
+  }
+  // 解放イベント（3ページの紙芝居）。始まった時点で種を渡して保存する＝途中で閉じても種はなくならない
+  const SEC_PAGES=['ある日、おうちに差出人不明の小包が届いた。','中には、見たことのない種がひとつ。','どうやら、4つの絆に反応しているらしい。'];
+  function secEvent(){
+    if(!secGift())return;
+    let i=0; const page=()=>{
+      modal(`<h2 class="cph">${PCD('gift')} ふしぎな小包</h2><div class="secp"><div class="secpic">${PCD(i<1?'gift':'sseed')}</div><p class="secl">${esc(SEC_PAGES[i])}</p><small class="secn">${i+1} / ${SEC_PAGES.length}</small></div>
+        ${i<SEC_PAGES.length-1?'<button class="pbtn" id="secnx">▼ つぎへ</button>':`<p class="tleft secget">${PCD('sseed')} <b>ひみつの種</b>を1こ手に入れた！<br><small>次の子を育てるときに、使う種を選べるよ（今の子はそのまま）</small></p><button class="pbtn" onclick="K.close()">たいせつにする</button>`}`);
+      if($('secnx'))$('secnx').onclick=()=>{i++;page()};
+    };
+    page(); try{SND.sfx.fanfare()}catch(e){}
+  }
+  // v2.4 STEP3：途中の出来事。答えを選ぶまで閉じられない（再読み込みしたら、あとでもう一度出る）。選んだ瞬間に保存
+  let sevAt=0;
+  function sevShow(i){
+    const E=SEV[i], nm=t=>esc(t.replace(/\{n\}/g,S.name||'ぽこ')); let pg=0; sevAt=Date.now();
+    const page=()=>{
+      const last=pg>=E.pages.length-1;
+      modal(`<h2 class="cph">ふしぎなできごと</h2><div class="secp"><div class="secpic sevpic"><img class="pix" alt="" src="${formPic('schild')}"></div><p class="secl sevl">${nm(E.pages[pg])}</p><small class="secn">${i+1} / 3</small></div>
+        ${last?`<p class="sevq">${nm(E.q)}</p><div class="sevc"><button class="pbtn" id="sev0">${esc(E.c[0])}</button><button class="pbtn" id="sev1">${esc(E.c[1])}</button></div>`:'<button class="pbtn" id="sevnx">▼ つぎへ</button>'}`);
+      if($('sevnx'))$('sevnx').onclick=()=>{pg++;page()};
+      [0,1].forEach(c=>{const b=$('sev'+c); if(b)b.onclick=()=>sevAnswer(i,c)});
+    };
+    page();
+  }
+  function sevAnswer(i,c){
+    const v=sevFix(S); if(!v||v.a[i]!==null){close();return}   // もう答えてある（2タブなど）→ 何も変えない
+    v.a[i]=c; v.at[i]=dayNo(); save();
+    close(); busy='happy'; setTimeout(()=>{if(busy==='happy')busy=null},1500);
+    say(['{n}は、すこしだけ ほっとしたみたい。','{n}は、なにか考えている。','{n}は、にこっと笑った。'][i]);
+    try{secretCheck()}catch(e){}
+  }
+  function sevTick(){
+    if(LOCK||!S||S.kind!=='secret'||S.stage!=='child'||S.sleep||S.explore||busy||modalOpen()||Date.now()<coinWait+20000||Date.now()-sevAt<3*60000)return;
+    if($('klock').classList.contains('on')||$('kfind').classList.contains('on'))return;
+    try{secretCheck()}catch(e){}
+    const i=sevNext(S); if(i>=0)sevShow(i);
+  }
+  let hungryAt=0;
+  function hungryTick(){ if(LOCK||!S||S.stage==='seed'||S.sleep||S.explore||busy||modalOpen()||S.full>FULL_HUNGRY||Date.now()-hungryAt<15*60000||Date.now()<coinWait+20000)return;
+    hungryAt=Date.now(); busy='sad'; say('{n}「おなかすいた……」 ごはんをあげよう'); setTimeout(()=>{if(busy==='sad')busy=null},1800); }   // v2.4：ぺこぺこのときだけ、15分に1回まで
+  function secTick(){
+    if(LOCK||!S||!DEXS||Date.now()<coinWait||modalOpen()||$('klock').classList.contains('on')||$('kfind').classList.contains('on'))return;
+    secSync(); if(secCanGift())secEvent();
+  }
+  // かけら3つ → ひみつの種（アルバムの画面のボタン）。いまは3つたまると自動で種になるので、ここは表示だけ
+  function secLine(){ if(!S)return ''; const c=secFix(S); if(!c.got&&!c.seeds&&!c.kakera)return '';
+    return `<p class="pcsub fm pcsec">${PCD('sseed')} ひみつの種 ${c.seeds}こ　${PCD('kakera')} かけら ${c.kakera}/${KAKERA_NEED}</p>`; }
   // ===== v2.2 コイン（docs/v22_coins.md）=====
   // 保存はセーブ本体の S.coin（引っ越しコード・バックアップ・復元にそのまま入る。v2.1/v1.9 は知らない項目として残す）。
   // {v:1, n:残高, past:過去分を精算したら1, day:回数を数えている日番号, c:{walk,fish,go}:その日に実際に払った回数,
@@ -1761,6 +2285,7 @@ const K=(()=>{
   let coinWait=Date.now()+2200;
   function coinTick(){
     if(LOCK||!S||Date.now()<coinWait||modalOpen()||$('klock').classList.contains('on')||$('kfind').classList.contains('on'))return;   // 発見カードが出ているあいだは待つ（重ねない）
+    if(secCanGift())return;   // v2.4：ひみつの種のイベントを先に
     const p=coinPast(); if(p){ save(); if(p.total>0){pastUI(p);return} }
     const c=coinFix(S), t=dayNo(); if(lbCan()&&c.lb.shown!==t){c.lb.shown=t;save();lbOpen()}
   }
@@ -1801,10 +2326,11 @@ const K=(()=>{
     const el=$('kbub'); if(!el.classList.contains('on'))return;
     const {f,sp,px}=bubSpeaker(bubWho); if(bubWho==='fav'&&!f){el.classList.remove('on');return}
     const cw=cv.clientWidth, ch=cv.clientHeight; if(!cw)return;
-    const sc=cw/cv.width, scy=ch/cv.height, sx=(px-Math.round(camX))*sc, M=4, T=12;
-    const top=s2=>(47-s2.h+(cv.height-48)-(s2.face&&s2.face.quirk==='hair'?3:0))*scy;
+    const sc=cw/LW(), scy=ch/LH(), sx=(px-Math.round(camX))*sc, M=4, T=12;
+    const jh=jumpH(Date.now());   // v2.4：跳んでいる間は、ぽこの頭の高さに合わせる（頭と吹き出しが重ならない）
+    const top=(s2,main)=>(47-s2.h-(main?jh:0)+(LH()-48)-(s2.face&&s2.face.quirk==='hair'?3:0))*scy;
     const two=!!favHere(), other=two?(f?(SPR[ckey()]||SPR.baby):(SPR[favHere().form]||SPR_Q)):null;
-    const headTop=Math.min(top(sp),other?top(other):Infinity);
+    const headTop=Math.min(top(sp,!f),other?top(other,!!f):Infinity);
     el.style.fontSize=bubFs+'px'; el.style.maxWidth='none';
     if(bubMode==='above'){
       el.classList.remove('sl','sr');
@@ -1827,6 +2353,7 @@ const K=(()=>{
   }
   function bubTick(){
     const t=Date.now();
+    tapLineTry();   // v2.4：待たせているタップのセリフ（1つまで）
     if(bubCur&&!bubValid(bubCur)){bubCur=null;$('kbub').classList.remove('on')}   // 話している子が入れ替わった・いなくなった
     if(bubCur){
       const more=bubCur.i<bubCur.chunks.length-1;
@@ -1856,14 +2383,14 @@ const K=(()=>{
 
 
   function act(k){
-    if(LOCK)return; tick(); if(!S)return;
+    if(LOCK)return;if(conflict()){enterConflict();return} tick(); if(!S)return;
     if(S.stage==='seed'){say('まずは種をタップしてみよう');return}
     const sleepNG=()=>{say('{n}は寝ています。「寝る」でもう一度押すと起きます');};
     const away=()=>{const m=Math.ceil((S.explore.end-now())/MIN),pl=PL(S.explore.p);say(pl.walk?`{n}はお散歩中… あと${m}分`:`{n}は${pl.n}を探検中… あと${m}分`)};
     if(k==='cook')return cookUI();
     if(S.explore){ if(k==='explore'&&!PL(S.explore.p).walk&&!PL(S.explore.p).unknown) return mapUI(); return away(); }
     if(k==='walk'){ if(S.sleep)return sleepNG();
-      ANA.track('walk_start');const st=now(),pl=PLACES.sanpo; S.explore={p:'sanpo',start:st,end:st+pl.min*MIN,bonus:[],ev:[{t:st+60000,k:wpick(pl.t)}].filter(v=>v.k)};S.justBack=false;delete S.backFrom;EX=null;x=4;save();ui();
+      ANA.track('walk_start');S.full=clamp((S.full||0)-1,0,FULL_MAX);const st=now(),pl=PLACES.sanpo; S.explore={p:'sanpo',start:st,end:st+pl.min*MIN,bonus:[],ev:[{t:st+60000,k:wpick(pl.t)}].filter(v=>v.k)};S.justBack=false;delete S.backFrom;EX=null;x=4;save();ui();
       say('{n}はお散歩に出かけた！ 2分で帰ってきます');setTimeout(()=>speak(lineOf('walk')),600);return }
     if(k==='sleep'){S.sleep=!S.sleep;ANA.track('sleep',{state:S.sleep?'sleep':'wake'});say(S.sleep?'{n}が寝た。寝ている間に元気が戻ります':'{n}が起きた！');speak(lineOf(S.sleep?'sleep':'wake'));save();ui();draw();return}
     if(S.sleep)return sleepNG();
@@ -1872,11 +2399,11 @@ const K=(()=>{
     if(k==='feed')return feedUI();
     if(k==='pet'){
       if(S.justBack){const bf=S.backFrom;S.justBack=false;delete S.backFrom;
-        const c2=['kinomi','ringo','kinoko','komugi'].filter(canGet),k2=c2.length?pick(c2):null;if(k2)add(S.inv,k2);ANA.track('pet',{bonus:true});prRec('pet');addAff(2);busy='happy';kfx($('kov'),'💗',2);SND.cry(ckey());
+        const c2=['kinomi','ringo','kinoko','komugi'].filter(canGet),k2=c2.length?pick(c2):null;if(k2)add(S.inv,k2);ANA.track('pet',{bonus:true});carePetRecord(true);earnAff(2,'back');careAction('pet');busy='happy';kfx($('kov'),'💗',2);SND.cry(ckey());
         const bm=bf==='walk'?'お散歩たのしかったね！':bf==='explore'?'探検おつかれさま！':'おかえりなさい！';   // 種類が分からない古いセーブは、どちらとも決めない
         speak(lineOf('pet'));say(k2?`{n}が${IT[k2].e}${IT[k2].n}をくれた！ ${bm}`:`{n}がうれしそうにすりよってきた！ ${bm}`)}
       else{const t=now();if(t-(S.petAt||0)>10*MIN){S.petAt=t;S.petN=0}S.petN++;
-        if(S.petN<=3){ANA.track('pet');prRec('pet');addAff(1);busy='happy';kfx($('kov'),'💗');SND.cry(ckey());speak(lineOf('pet'));say('なでた！ なかよし +1')}else{busy='normal';say('{n}はもう満足そう。少し時間をおいてね')}}
+        if(S.petN<=3){ANA.track('pet');carePetRecord(false);const gained=earnAff(1,'pet');careAction('pet');busy='happy';kfx($('kov'),'💗');SND.cry(ckey());speak(lineOf('pet'));say(gained?'なでた！ なかよし +1':'なでた！ 今日のなかよしの上限に達しています')}else{busy='normal';say('{n}はもう満足そう。少し時間をおいてね')}}
       setTimeout(()=>busy=null,1200);save();ui();
     }
   }
@@ -1886,7 +2413,7 @@ const K=(()=>{
       return `<button class="place" ${lock?'disabled':''} data-p="${k}"><em>${lock?'🔒':p.e}</em><span>${p.n}（${p.min}分）<small>${lock?`なかよし${p.need}で解放`:p.t.slice(0,3).map(([i])=>IT[i].e).join(' ')+' など'}</small></span></button>`}).join('');
     modal(`<h2>🗺️ どこへ行く？</h2><p>元気を♥1つ使います${S.lucky?'<br>🍀 ラッキー！ いつもよりたくさん拾える':''}</p>${html}<button class="pbtn gray" onclick="K.close()">やめる</button>`);
     $('kmbody').querySelectorAll('.place').forEach(b=>b.onclick=()=>{const p=PLACES[b.dataset.p];
-      ANA.track('explore_start',{place:b.dataset.p});S.genki-=1;{const st=now(),dur=p.min*MIN,n=2+Math.floor(Math.random()*3)+(S.lucky?1:0);S.explore={p:b.dataset.p,start:st,end:st+dur,bonus:[],map:makeMap(p),ev:Array.from({length:n},(_,i)=>({t:st+dur*(i+0.5+(Math.random()-.5)*.6)/n,k:wpick(p.t)})).filter(v=>v.k)}};EX=null;x=4;S.justBack=false;delete S.backFrom;if(S.tut===3){S.tut=0;setTimeout(()=>say(TUT[4]),2600)}save();close();say(`{n}は${p.n}へ出かけた！「すごろく」で遊ぶと、おまけや近道が見つかるよ`);setTimeout(()=>speak(lineOf('go')),600)});
+      ANA.track('explore_start',{place:b.dataset.p});S.genki-=1;S.full=clamp((S.full||0)-2,0,FULL_MAX);{const st=now(),dur=p.min*MIN,n=2+Math.floor(Math.random()*3)+(S.lucky?1:0);S.explore={p:b.dataset.p,start:st,end:st+dur,bonus:[],map:makeMap(p),ev:Array.from({length:n},(_,i)=>({t:st+dur*(i+0.5+(Math.random()-.5)*.6)/n,k:wpick(p.t)})).filter(v=>v.k)}};EX=null;x=4;S.justBack=false;delete S.backFrom;if(S.tut===3){S.tut=0;setTimeout(()=>say(TUT[4]),2600)}save();close();say(`{n}は${p.n}へ出かけた！「すごろく」で遊ぶと、おまけや近道が見つかるよ`);setTimeout(()=>speak(lineOf('go')),600)});
   }
   function cookUI(){
     let sel=[];
@@ -1901,7 +2428,7 @@ const K=(()=>{
       $('kcook').onclick=()=>{
         const key=[...sel].sort().join('+'), d=(R[key]&&!isRetired('dish',R[key].k)?R[key]:null)||FUSHIGI, isNew=!S.recipes.includes(d.k);
         sel.forEach(k=>add(S.inv,k,-1)); ANA.track('cook',{recipe:d.k,is_new:isNew}); if(S.tut===1)setTut(2); SND.sfx.ding(); if(S.stage!=='seed'&&!S.explore) speak(lineOf('cook')); add(S.dishes,d.k); if(isNew)S.recipes.push(d.k); const cg=isNew?coinDish(d.k):0; if(cg)try{SND.sfx.coin()}catch(e){} prFood('c',d.k); prRec('cook',d===FUSHIGI?['n_odd']:[]); save();
-        modal(`<h2>${isNew?'🎉 新しいレシピ！':'できた！'}</h2><div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b><br>元気 +${d.g}　なかよし +${d.a}</p>${cg?`<p class="kcoinl">${PCD('coin')} 新しい料理の発見 コイン +${cg}</p>`:''}
+        modal(`<h2>${isNew?'🎉 新しいレシピ！':'できた！'}</h2><div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b><br>元気 +${d.g}　なかよし +${foodAff(d)}</p>${cg?`<p class="kcoinl">${PCD('coin')} 新しい料理の発見 コイン +${cg}</p>`:''}
           <button class="pbtn" onclick="K.close()">OK</button>`);
         if(isNew)kfx($('kmbody'),'✨',3,20);
       };
@@ -1911,13 +2438,18 @@ const K=(()=>{
   function feedUI(){
     const ds=Object.keys(S.dishes).filter(hasDISH);   // 知らない料理はあげられない（データは残す）
     if(!ds.length){say('料理がありません。まずは「料理」で作ってみよう');return}
-    modal(`<h2>🍽️ どれをあげる？</h2><div class="items">${ds.map(k=>`<button class="item" data-d="${k}"><em><img class="pix" src="${dishPix(k)}"></em>${DISH[k].n}<br>×${S.dishes[k]}</button>`).join('')}</div><button class="pbtn gray" onclick="K.close()">やめる</button>`);
+    modal(`<h2>🍽️ どれをあげる？</h2><p class="kfull">おなか ${fullDots()}${S.full>=FULL_STOP?'　いっぱい！':S.full<=FULL_HUNGRY?'　ぺこぺこ':''}</p><div class="items">${ds.map(k=>`<button class="item" data-d="${k}"><em><img class="pix" src="${dishPix(k)}"></em>${DISH[k].n}<br>×${S.dishes[k]}</button>`).join('')}</div><button class="pbtn gray" onclick="K.close()">やめる</button>`);
     $('kmbody').querySelectorAll('.item').forEach(b=>b.onclick=()=>{
-      const d=DISH[b.dataset.d];
-      if(S.genki>=5){close();say('「おなかいっぱい！」 探検に行って、おなかをすかせよう');return}
+      if(LOCK||conflict()){if(!LOCK)enterConflict();return}
+      const raw=DISH[b.dataset.d];if(!raw||cnt(S.dishes,raw.k)<=0)return;
+      const d={...raw,a:foodAff(raw)};
+      if(S.full>=FULL_STOP){close();busy='normal';say('{n}「もうはいらないよ〜」 おなかがすくまで、少し待とう（探検やお散歩に行くと早くすくよ）');return}   // v2.4：おなかがいっぱいなら食べない（元気の満タンの代わり）
+      const amt=fullAmt(d), pon=(S.full+amt)>=FULL_PON; S.full=clamp(S.full+amt,0,FULL_MAX);
       add(S.dishes,d.k,-1);S.genki=clamp(S.genki+d.g,0,5);if(d.tag)S.tags[d.tag]=(S.tags[d.tag]||0)+1;prFood('e',d.k);prRec('feed');
+      d.a=earnAff(d.a,'feed');careAction('feed');
       ANA.track('feed',{dish:d.k});close();busy='eat';kfx($('kov'),'dish:'+d.k);SND.sfx.eat();setTimeout(()=>SND.cry(ckey()),500);say(`${d.n}を食べた！ 元気 +${d.g}　なかよし +${d.a}`);setTimeout(()=>speak(lineOf('feed'),'happy'),1300);
-      setTimeout(()=>{busy='happy';setTimeout(()=>busy=null,900)},1200);addAff(d.a);if(S.tut===2)setTut(3);save();ui();
+      setTimeout(()=>{busy='happy';setTimeout(()=>busy=null,900)},1200);if(S.tut===2)setTut(3);save();ui();
+      if(pon)setTimeout(()=>{busy='happy';kfx($('kov'),'💦');say('{n}「おなか、ぽんぽこ……！ もう食べられない〜」');setTimeout(()=>busy=null,1500)},2600);   // v2.4：食べすぎのかわいい反応
     });
   }
   // ---- つり ----
@@ -1942,7 +2474,7 @@ const K=(()=>{
       const fk=ok?wpick([['sakana',60],['oosakana',15],['kutsu',15],['takara',10]]):null; if(ok&&!fk){ok=false;txt='…何もかからなかった';} prRec('fish',ok?['n_fishok']:[]);
       if(ok){const k=fk;
         if(k==='takara'){add(S.decor,'takara');if(canGet('hoshi'))add(S.inv,'hoshi');txt='🎁 宝箱！ 中に⭐星のかけらが入っていた！'}
-        else{IT[k].d?add(S.decor,k):add(S.inv,k);txt=k==='kutsu'?'👢 長ぐつ… 飾りにしちゃおう':`${IT[k].e} ${IT[k].n}が釣れた！`}
+        else{IT[k].d?add(S.decor,k):add(S.inv,k);if(k==='kutsu'&&S.kind==='secret'){const v=sevFix(S);if(v)v.k.boot=Math.min(1e9,v.k.boot+1)}txt=k==='kutsu'?'👢 長ぐつ… 飾りにしちゃおう':`${IT[k].e} ${IT[k].n}が釣れた！`}
         if(k!=='kutsu'){S.lucky=true;txt+='　🍀次の探検はラッキー'}
         kfx($('kmbody'),'💦',2,20);SND.sfx.splash();$('ftalk').innerHTML=talkRow(k==='kutsu'?'…長ぐつ？ なんで？':k==='takara'?'宝箱だ！':k==='oosakana'?'大物だ〜！':lineOf('fish'),k==='kutsu'?'normal':'happy')} else {SND.sfx.miss();$('ftalk').innerHTML=talkRow(pick(['逃げられた〜。','早かったかな…']),'sad')}
       if(S.fishN>=3){S.fishN=0;S.fishRest=now()+10*MIN;txt+='\n{n}は疲れちゃった（10分休憩）';$('fbtn').disabled=true}
@@ -2002,7 +2534,7 @@ const K=(()=>{
       else if(q.t==='event'){
         const ev=pick(['jump','friend','nothing','friend','jump']);
         if(ev==='jump'&&M.pos<15){msg='❓ 追い風！ 2マス進む';talk='追い風だー！ 飛ばされる〜！';fe='happy';save();render();setTimeout(()=>move(Math.min(15,M.pos+2)),700);return}
-        if(ev==='friend'){addAff(2);const an=pick(['うさぎ','りす','たぬき','ことり']);msg=`❓ ${an}に会った！ なかよし+2`;talk=`${an}さん、こんにちは！`;fe='happy';SND.cry(ckey())}
+        if(ev==='friend'){const gained=earnAff(2,'other'),an=pick(['うさぎ','りす','たぬき','ことり']);careAction('other');msg=`❓ ${an}に会った！ なかよし+${gained}`;talk=`${an}さん、こんにちは！`;fe='happy';SND.cry(ckey())}
         else {msg='❓ どんぐりを踏んだ… 何もなかった';talk=pick(['…あれ？ 何もない。','いたっ。どんぐりだった。']);fe='sad';}
       }
       else if(q.t==='puzzle'){save();return puzzle()}
@@ -2161,17 +2693,37 @@ const K=(()=>{
     d.album.forEach(r=>{if(r&&r.live&&(r.id!==d.id||d.stage!=='adult'))INTEG_WARN.push('live:'+r.id)});
     if(d.fav!==null&&!d.album.some(r=>r&&r.id===d.fav))d.fav=null;
     coinFix(d);   // v2.2：コインがないデータは残高0で始める
+    secFix(d);   // v2.4：ひみつの種・かけら（ないデータは0で始める）
+    if(d.kind!=='secret')delete d.kind; else {
+      d.sdays=Array.isArray(d.sdays)?[...new Set(d.sdays.filter(v=>Number.isInteger(v)&&Math.abs(v)<1e7))].slice(-60):[];
+      sevFix(d); if(d.sfate!==undefined&&!(isO(d.sfate)&&SF_IDS.includes(d.sfate.f)))delete d.sfate;   // v2.4 STEP3
+      // ロールバック対策：ひみつっこになった子のID（sid）。古い版で「次の子」にしたとき印だけが新しい子に残る → アルバムに前の子がいれば印を外す。
+      // 古い版で「今の子だけやり直す」したとき（アルバムにいない）→ ひみつっことして最初から（出来事・遊んだ日・進化先は消す）
+      if(typeof d.sid!=='string'||!d.sid)d.sid=d.id;
+      else if(d.sid!==d.id){
+        if((d.album||[]).some(r=>r&&!r.live&&r.id===d.sid)){for(const k of SEC_PET_KEYS)delete d[k]}
+        else{d.sdays=[];delete d.sev;delete d.sfate;delete d.secretFixed;d.sid=d.id;if(d.stage!=='seed')sevFix(d)}
+      }
+      // 古い版で開いて、ふつうの大人の姿にされてしまったとき：子どもに戻す（なかよし・記録はそのまま。v2.4 の進化で正しく決め直す）
+      if(d.kind==='secret'&&d.stage==='adult'&&!SECRET_FORMS.includes(d.form)){d.stage=d.aff>=GROW.secret.child?'child':'baby';d.form=null;d.adultAt=null;d.secretFixed=1}
+      if(d.kind==='secret'&&d.stage!=='adult')d.album=d.album.filter(r=>!(r&&r.live&&r.id===d.id));   // 古い版で大人にされたときの「今の子」の目印は外す
+    }
+    if(typeof d.full!=='number'||!isFinite(d.full))d.full=5; d.full=Math.round(clamp(d.full,0,FULL_MAX)*100)/100;   // v2.4：おなか（ないデータは半分から）
+    if(isO(d.care)&&d.care.v===1&&d.care.of!==d.id)delete d.care;   // 旧版で次の子・やり直し：前の個体の新ルールを引き継がない
+    if(careNew(d))d.care.days=Array.isArray(d.care.days)?[...new Set(d.care.days.filter(x=>Number.isInteger(x)&&Math.abs(x)<1e7))].slice(-60):[];
+    careSync(d);
     return d;
   }
   // ===== 次の子を育てる（AL3）：今の大人をアルバムへ → 新しいたね。おうちのもの（持ち物・料理・飾り・レシピ・行ける場所）は引き継ぐ =====
-  const PET_KEEP=['id','name','form','aff','tags','taps','born','bornGuess','temper','traitVer','adultAt','seedGiven','log','logFixed','persRule','pers','hidden','memo','px'];   // アルバムに入れる、その子だけのもの
-  const PET_RESET=['backFrom','petN','petAt','fishN','fishRest','idle','born','bornGuess','adultAt','seedGiven','persRule','pers','hidden','memo','temper','traitVer','id','px'];  // 次の子では作り直す（消して、ensureIntegrity が新しく付ける）
+  const PET_KEEP=['id','name','form','aff','tags','taps','born','bornGuess','temper','traitVer','adultAt','seedGiven','log','logFixed','persRule','pers','hidden','memo','px','care'];   // アルバムに入れる、その子だけのもの
+  const SEC_PET_KEYS=['kind','sid','sdays','sev','sfate','secretFixed'];   // ひみつっこ1匹ぶんの記録
+  const PET_RESET=['kind','sid','sdays','sev','sfate','secretFixed','backFrom','petN','petAt','fishN','fishRest','idle','born','bornGuess','adultAt','seedGiven','persRule','pers','hidden','memo','temper','traitVer','id','px','care'];  // 次の子では作り直す（消して、ensureIntegrity が新しく付ける）
   const albumSaved=d=>(Array.isArray(d.album)?d.album:[]).filter(r=>r&&!r.live);
   function canNext(d){
     d=d||S; if(LOCK)return {ok:false,why:'lock'}; if(!d)return {ok:false,why:'none'};
     if(d.stage!=='adult')return {ok:false,why:'notadult'};
     if(d.explore)return {ok:false,why:'explore'};
-    if(!(d.seeds>=1))return {ok:false,why:'seed'};
+    if(!(d.seeds>=1)&&!(isO(d.secret)&&d.secret.seeds>=1))return {ok:false,why:'seed'};   // v2.4：ひみつの種でもよい
     if(albumSaved(d).length>=ALBUM_MAX)return {ok:false,why:'full'};
     if(albumSaved(d).some(r=>r.id===d.id))return {ok:false,why:'dup'};
     return {ok:true};
@@ -2184,18 +2736,21 @@ const K=(()=>{
     return r;
   }
   // name：新しい子の名前。withFav：前の子と一緒に暮らすか（true のときだけお気に入りにする。false は今のお気に入りを変えない）
-  function nextPet(name,withFav){
+  function nextPet(name,withFav,kind){
     const c=canNext(); if(!c.ok)return c;
+    const sec=kind==='secret'; if(sec&&!(secFix(S).seeds>=1))return {ok:false,why:'seed'}; if(!sec&&!(S.seeds>=1))return {ok:false,why:'seed'};
     if(conflict()){enterConflict();return {ok:false,why:'conflict'}}
     const n=clone(S), rec=petRecord(S);
     const i=n.album.findIndex(r=>r&&r.live&&r.id===S.id);
     if(i>=0)n.album[i]=rec; else n.album.push(rec);
     for(const k of PET_RESET)delete n[k];
     Object.assign(n,{name:String(name||'').trim().slice(0,12)||'ぽこ',stage:'seed',taps:0,form:null,genki:3,aff:0,tags:{},log:{},logFixed:null,
-      explore:null,sleep:false,lucky:false,justBack:false,seeds:n.seeds-1});
+      explore:null,sleep:false,lucky:false,justBack:false,seeds:sec?n.seeds:n.seeds-1});
+    if(sec){n.kind='secret';n.sdays=[];secFix(n);n.secret.seeds-=1}   // v2.4：ひみつの種を使う（ふつうのたねは減らない）。新しい子と同じ保存で書く
     n.id=newId(n);
     if(withFav===true)n.fav=rec.id;
     ensureIntegrity(n);
+    careInit(n);
     // 保存する前に、v1.9 と同じ厳しい検査に通す（通らなければ何も変えない）
     try{ const chk=checkSave2(clone(n)); if(chk.album.filter(r=>!r.live).length!==albumSaved(n).length)throw 0; }catch(e){return {ok:false,why:'check'}}
     if(new Set(allIds(n)).size!==allIds(n).length)return {ok:false,why:'dup'};
@@ -2213,7 +2768,8 @@ const K=(()=>{
     n.album=n.album.filter(r=>!(r&&r.live));   // 今の子の目印だけ外す（保存した子はそのまま）
     for(const k of PET_RESET)delete n[k];
     Object.assign(n,{name:String(name||'').trim().slice(0,12)||'ぽこ',stage:'seed',taps:0,form:null,genki:3,aff:0,tags:{},log:{},logFixed:null,explore:null,sleep:false,lucky:false,justBack:false});
-    n.id=newId(n); ensureIntegrity(n);
+    if(S.kind==='secret'){n.kind='secret';n.sdays=[]}   // v2.4：ひみつっこをやり直すときは、ひみつっことして最初から（種は使わない・戻らない）
+    n.id=newId(n); ensureIntegrity(n);careInit(n);
     try{checkSave2(clone(n))}catch(e){return {ok:false,why:'check'}}
     const r=commit(n,KEY+'_before_restart_'+Date.now()); if(r.ok){EX=null;x=34;busy=null} return r;
   }
@@ -2280,6 +2836,10 @@ const K=(()=>{
     if(d.logFixed!==undefined)c.logFixed=d.logFixed===null?null:logObj(d.logFixed,'育成記録');
     if(d.persRule!==undefined)c.persRule=num(d.persRule,1,99,'性格の版');
     if(d.hidden!==undefined&&d.hidden!==null)c.hidden=str(d.hidden,KEY_RE,'隠れた一面');
+    if(isO(d.care)&&d.care.v===1){
+      if(typeof d.care.of!=='string'||!ID_RE.test(d.care.of)||!Array.isArray(d.care.days)||d.care.days.length>60||d.care.days.some(x=>!Number.isInteger(x)||Math.abs(x)>=1e7))bad('お世話日数がおかしい');
+      c.care=clone(d.care);
+    }
     if(d.memo!==undefined){if(typeof d.memo!=='string'||d.memo.length>300)bad('メモがおかしい');c.memo=d.memo.replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g,'')}
     return c;
   }
@@ -2288,6 +2848,7 @@ const K=(()=>{
     if(!isO(d))bad('データの形がおかしい');
     if(d.ver!==undefined&&(typeof d.ver!=='number'||d.ver>SAVE_FORMAT))bad('新しいバージョンのデータです。ゲームを最新にしてから試してね');
     const c=checkSave(d,true);      // 今までの項目は今までどおり検査（知らないIDは形を確かめて残す）
+    if(d.careDaily!==undefined){const daily=careClean(d.careDaily);if(!daily)bad('今日のお世話の記録がおかしい');c.careDaily=daily}
     checkPetExtra(d,c,bad);
     c.ver=SAVE_FORMAT;
     c.seeds=d.seeds===undefined?0:(Number.isInteger(d.seeds)&&d.seeds>=0&&d.seeds<=999?d.seeds:bad('種の数がおかしい'));
@@ -2335,6 +2896,8 @@ const K=(()=>{
     if(backupKey&&prev!==null&&prev!=='null'){
       try{localStorage.setItem(backupKey,prev); if(localStorage.getItem(backupKey)!==prev)throw 0}catch(e){return {ok:false,why:'backup'}}
     }
+    if(next&&S&&(careClean(next.careDaily)||careClean(S.careDaily)))next.careDaily=careMerge(careClean(next.careDaily),careClean(S.careDaily));
+    careSync(next);
     let txt; try{txt=JSON.stringify(next)}catch(e){return {ok:false,why:'data'}}
     try{localStorage.setItem(KEY,txt)}catch(e){return {ok:false,why:'write'}}   // 書けなかったときは元のデータのまま
     let back=null; try{back=localStorage.getItem(KEY)}catch(e){}
@@ -2344,7 +2907,7 @@ const K=(()=>{
       catch(e){ storageBroken(); return {ok:false,why:'restorefail'} }
       return {ok:false,why:'verify'};
     }
-    KNOWN=txt; S=next; setSaveFail(false); saveLatest(txt); return {ok:true};
+    KNOWN=txt; S=next;careKeepWrite(S); setSaveFail(false); saveLatest(txt); return {ok:true};
   }
   // ===== 本体への書き込み（このタブで唯一の入口）と、別のタブとの競合の検知 =====
   // KNOWN：このタブが最後に読んだ・書いた本体の中身。保存の直前に保存場所と比べ、違えば別のタブ（や古い版）が書いたとみなして止まる
@@ -2358,7 +2921,7 @@ const K=(()=>{
     try{localStorage.setItem(KEY,txt)}catch(e){return {ok:false,why:'write'}}
     const back=readKey();
     if(back!==txt){enterConflict();return {ok:false,why:'conflict'}}   // 書いた直後に違う中身＝別のタブが書いた可能性
-    KNOWN=txt; saveLatest(txt); return {ok:true};
+    KNOWN=txt;careKeepWrite(S); saveLatest(txt); return {ok:true};
   }
   // 最新の形式2データの予備：本体に書けて確かめられた、形式2の正しいデータだけを書く。失敗しても前の予備は消さない
   let latestFailed=false;
@@ -2448,7 +3011,7 @@ const K=(()=>{
   function placeSF(){const el=$('ksavefail');if(!el||!el.classList.contains('on'))return;try{const p=el.offsetParent||el.parentElement,pr=p.getBoundingClientRect(),cr=cv.getBoundingClientRect();el.style.top=Math.max(8,Math.round(cr.top-pr.top+6))+'px'}catch(e){}}
   window.addEventListener('resize',()=>placeSF());
   function setSaveFail(on){
-    saveFailed=on; const want=on||latestFailed, el=$('ksavefail');
+    saveFailed=on; const want=on||latestFailed||careKeepFailed, el=$('ksavefail');
     if(!want){el.classList.remove('on');el.dataset.k='';return}
     const k=on?'main':'latest'; if(el.classList.contains('on')&&el.dataset.k===k)return; el.dataset.k=k;
     el.innerHTML=(on?'⚠ 保存できませんでした。ブラウザの保存がいっぱいか、使えない状態かもしれません。':'⚠ 予備の保存ができませんでした（本体は保存できています）。')+'今のうちにバックアップファイルを保存してください。<br><button id="sfbk">バックアップを保存</button>';
@@ -2603,6 +3166,7 @@ const K=(()=>{
     if(!r.ok)return false;
     try{DEXS=dexMerge(DEXS||dexNew(),IMPORT_DEX||dexNew());IMPORT_DEX=null;dexFromSave(S,true);dexDirty=true;dexFlush()}catch(e){}
     try{if(IMPORT_WORDS){WORDS=wordsMerge(wordsNow(),IMPORT_WORDS);wordsDirty=true;wordsFlush()}IMPORT_WORDS=null}catch(e){}   // v2.1：ことば帳は合わせる（減らさない）
+    try{bondScan()}catch(e){}   // v2.3：復元したデータの今の子・アルバムからも、きずなのしるしを記録
     EX=null; x=34; busy=null; return true;
   }
   const stageName=d=>d.stage==='seed'?'種':fnm(d.stage==='adult'?d.form:d.stage);
@@ -2739,7 +3303,16 @@ const K=(()=>{
     const c=canNext(); if(!c.ok)return pcNote(NEXT_WHY[c.why]);
     pcPage('次の子を育てる','album',`<div class="pcbox"><img class="pix apic" src="${charPic()}"><p class="tleft fm">「${esc(S.name)}」をアルバムに入れて、新しい子を育てます。<b>たねを1つ</b>使います（いま ${S.seeds}こ）。</p>
       <table class="atbl fm"><tr><td>そのまま</td><td>持ち物・料理・飾り・レシピ・行ける場所・進化図鑑</td></tr><tr><td>新しく</td><td>名前・なかよし・元気・食べた記録・気質</td></tr></table>
-      <button class="pcbtn pink" id="nx1">次へ</button><button class="pcbtn" id="nxno">やめる</button></div>`,()=>{$('nxno').onclick=pcBack; $('nx1').onclick=()=>nextUI2()});
+      <button class="pcbtn pink" id="nx1">次へ</button><button class="pcbtn" id="nxno">やめる</button></div>`,()=>{$('nxno').onclick=pcBack; $('nx1').onclick=()=>{nextKind='normal'; if(secFix(S).seeds>=1)nextUIseed(); else nextUI2()}});
+  }
+  let nextKind='normal';
+  function nextUIseed(){   // v2.4：ひみつの種があるときだけ、どちらの種を使うか選ぶ
+    const c=secFix(S);
+    pcPage('どの種を植える？','album',`<div class="pcbox"><p class="fm">次の子は、どちらの種から育てますか？</p>
+      <button class="pcbtn" id="nxsn" ${S.seeds>=1?'':'disabled'}>🌱 ふつうのたね（${S.seeds||0}こ）</button>
+      <button class="pcbtn pink" id="nxss">${PCD('sseed')} ひみつの種（${c.seeds}こ）</button>
+      <p class="fm pcsub">ひみつの種の子は、ゆっくり育つふしぎな子。大人になるまで、いっしょに何日もすごそう</p><button class="pcbtn" id="nxno">やめる</button></div>`,
+      ()=>{$('nxno').onclick=pcBack; $('nxsn').onclick=()=>{nextKind='normal';nextUI2()}; $('nxss').onclick=()=>{nextKind='secret';nextUI2()}});
   }
   function nextUI2(){
     pcPage('新しい子の名前','album',`<div class="pcbox"><p class="fm">生まれてくる子に名前をつけてください（12文字まで）</p><input id="nxname" class="pcin" maxlength="12" placeholder="ぽこ">
@@ -2750,8 +3323,8 @@ const K=(()=>{
     pcPage('一緒に暮らす？','album',`<div class="pcbox"><img class="pix apic" src="${charPic()}"><p class="tleft fm">「${esc(S.name)}」をお気に入りにして、新しい子と一緒におうちで暮らしますか？${cur?`<br>（いま一緒に暮らしている「${esc(cur.name)}」は、アルバムで休みます）`:''}<br>あとからアルバムで変えることもできます。</p>
       <button class="pcbtn pink" id="nxy">一緒に暮らす</button><button class="pcbtn" id="nxn">${cur?`今のまま（「${esc(cur.name)}」と暮らす）`:'暮らさない'}</button><button class="pcbtn" id="nxno">やめる</button></div>`,()=>{
       $('nxno').onclick=pcBack;
-      const go=fav=>{const prev=S.name, r=nextPet(name,fav); if(!r.ok){pcNote('⚠ '+(NEXT_WHY[r.why]||FAIL_MSG(r)));return}
-        pcClose(); close(); ui(); draw(); say(`「${prev}」はアルバムに入りました。新しいたねを植えたよ！ 種をタップして、芽を出させよう`)};
+      const go=fav=>{const prev=S.name, sec=nextKind==='secret', r=nextPet(name,fav,sec?'secret':'normal'); if(!r.ok){pcNote('⚠ '+(NEXT_WHY[r.why]||FAIL_MSG(r)));return}
+        pcClose(); close(); ui(); draw(); say(sec?`「${prev}」はアルバムに入りました。ひみつの種を植えたよ……！ 種をタップしてみよう`:`「${prev}」はアルバムに入りました。新しいたねを植えたよ！ 種をタップして、芽を出させよう`)};
       $('nxy').onclick=()=>go(true); $('nxn').onclick=()=>go(false)});
   }
   // ===== AL5：進化図鑑・発見記録 =====
@@ -2804,9 +3377,11 @@ const K=(()=>{
     check:['......KK','.....KGK','KK..KGK.','KGKKGK..','.KGGK...','..KK....'],
     heartE:['.KK...KK.','KLLK.KLLK','KLWLKLLLK','KLLLLLLLK','.KLLLLLK.','..KLLLK..','...KLK...','....K....'],   // v2.2b：元気がないところ
     gift:['....K.K....','...KPKPK...','KKKKKPKKKKK','KYYYYPYYYYK','KKKKKPKKKKK','.KYYYPYYYK.','.KYYYPYYYK.','.KYYYPYYYK.','.KKKKKKKKK.'],
+    sseed:['...KK...','..KNNK..','.KNYNNK.','KNNNNYNK','KNYNNNNK','KNNNNNNK','.KNNYNK.','..KKKK..'],   // v2.4：ひみつの種（夜空色に星）
+    kakera:['...K...','..KYK..','.KYWYK.','KYYYYYK','.KYOYK.','..KYK..','...K...'],   // v2.4：ひみつのかけら
     kira:['.....K.....','....KYK....','....KYK....','KKKKYWYKKKK','KPYYWWWYYPK','.KPYYWYYPK.','..KPYYYPK..','..KYYPYYK..','.KYYK.KYYK.','.KYK...KYK.','.KK.....KK.'],
   };
-  const PCD_COL={K:'#4B345A',P:'#f58bb0',L:'#ffd6e4',Y:'#ffd84d',W:'#ffffff',B:'#a87048',C:'#ffe8b0',G:'#8fd3a5',O:'#e0a22e'};
+  const PCD_COL={K:'#4B345A',P:'#f58bb0',L:'#ffd6e4',Y:'#ffd84d',W:'#ffffff',B:'#a87048',C:'#ffe8b0',G:'#8fd3a5',O:'#e0a22e',N:'#5b4b9a'};
   const _pcd={};
   function PCD(n){
     if(!_pcd[n]){const a=PCD_ART[n]||PCD_ART.star, c=document.createElement('canvas'); c.width=a[0].length; c.height=a.length; const g2=c.getContext('2d');
@@ -2819,7 +3394,7 @@ const K=(()=>{
   const pcShadow=k=>{const q='sh:'+k;if(!_pcPic.has(q))_pcPic.set(q,shadowPic(k));return _pcPic.get(q)};
   const pcSec=(icon,title,right,cls)=>`<div class="pcsec ${cls||''}"><span class="fd">${PCD(icon)} ${title}</span>${right?`<span class="fd pccnt">${right}</span>`:`<span class="pcspk">${PCD('sparkle')}${PCD('ribbon')}</span>`}</div>`;
   const pcStrip=()=>`<div class="pcstrip" aria-hidden="true"><i class="tp pk"></i>${PCD('heart')}${PCD('star')}${PCD('paw')}${PCD('cat')}${PCD('star')}${PCD('heart')}<i class="tp bl"></i></div>`;
-  const pcStage=d=>d.stage==='adult'?fnm(d.form):d.stage==='seed'?'種':fnm(d.stage);
+  const pcStage=d=>stageNm(d);
   const pcDate=t=>typeof t==='number'&&isFinite(t)?(d=>`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`)(new Date(t)):'？';
   const PCV={
     page:a=>({title:a.title,tab:a.tab,html:a.html,after:a.after}),
@@ -2835,7 +3410,7 @@ const K=(()=>{
           <span class="pcci"><b class="fm">${esc(S.name)}</b><small class="fm">${esc(pcStage(S))}</small><small class="fm">${PCD('heart')} なかよし ${S.aff}</small></span>${S.stage==='seed'?'':'<span class="pcgo">›</span>'}</button>
         ${c.ok?`<button class="pcbtn pink" id="alnext">🌱 アルバムに入れて、次の子を育てる</button>`:`<p class="pcwhy fm">${NEXT_WHY[c.why]||''}</p>`}
         ${pcSec('heart','保管中のぽこ',`${L.length} / ${ALBUM_MAX}匹`,'keep')}
-        <p class="pcsub fm">🌱たね ${S.seeds||0}こ</p>
+        <p class="pcsub fm">🌱たね ${S.seeds||0}こ</p>${secLine()}
         ${L.length?L.map(r=>`<button class="pccard" data-al="${esc(r.id)}"><span class="pcph"><img class="pix" src="${pcFormPic(r.form)}"></span>
           <span class="pcci"><b class="fm">${esc(r.name)}</b><small class="fm">${esc(fnm(r.form))}・${esc(tnm(r.temper))}</small>${r.pers&&PERS[r.pers]?`<small class="fm">せいかく：${esc(PERS[r.pers].n)}</small>`:''}<small class="fm">${pcDate(r.born)} 〜 ${pcDate(r.adultAt)}</small></span>
           ${r.id===S.fav?`<span class="pcfav">${PCD('star')}</span>`:''}<span class="pcgo">›</span></button>`).join(''):'<p class="pcempty fm">まだいないよ。大人になった子をアルバムに入れると、ここに並ぶよ</p>'}
@@ -2872,7 +3447,11 @@ const K=(()=>{
     zukan(a){
       const D=dexSaved(), pets=Object.entries(D.pets), found=ZUKAN.filter(([k])=>D.sp[k]).length, P=9, pages=Math.max(1,Math.ceil(ZUKAN.length/P)), pg=Math.min(pages-1,Math.max(0,(a&&a.pg)||0));
       const cells=ZUKAN.slice(pg*P,pg*P+P);
+      const bh=BOND_FORMS.filter(f=>bondOk(D,f)).length;
       return {title:'進化図鑑',tab:'zukan',html:`<div class="pcpill fd"><i class="tp pk tl"></i>見つけたすがた ${found} / ${ZUKAN.length}（${Math.floor(found/ZUKAN.length*100)}%）</div>
+        <div class="pcbond"><div class="pcbh"><span class="fd">${PCD('heart')} きずなのしるし</span><span class="fd">${bh} / 4</span></div>
+          <div class="pcbr">${BOND_FORMS.map(f=>{const ok=bondOk(D,f),sp=!!D.sp[f];return `<div class="pcbi${ok?' ok':''}"><img class="pix" alt="" src="${sp?pcFormPic(f):pcShadow(f)}"><i>${PCD(ok?'heart':'heartE')}</i><span class="fm">${sp?esc(fnm(f)):'？？？'}</span><span class="lbsr">${ok?'なかよし100 達成':'まだ'}</span></div>`}).join('')}</div>
+          <p class="fm">4つの絆が結ばれたとき、何かが起こるらしい……</p></div>
         <div class="pcgrid">${cells.map(([k],i)=>{const f=D.sp[k], no=String(pg*P+i+1).padStart(3,'0');
           return `<button class="pcz ${f?'':'un'}" data-z="${k}">${f&&i%2===0?`<i class="pcz-st">${PCD('star')}</i>`:''}<img class="pix" src="${f?pcFormPic(k):pcShadow(k)}"><span class="fd">No.${no}</span><span class="fd">${f?esc(fnm(k)):'？？？'}</span></button>`}).join('')}</div>
         <p class="pcsub fm">見つけたぽこの姿は、ここにずっと残るよ。「最初から」にしても、発見の記録は消えないよ。</p>${pcStrip()}`,
@@ -2888,7 +3467,7 @@ const K=(()=>{
       const by=f&&f.by&&D.pets[f.by]?D.pets[f.by].name:null, n=Object.values(D.pets).filter(v=>v.form===k).length;
       return {title:'進化図鑑',tab:'zukan',html:`<div class="pcbox"><div class="pcphoto big"><i class="tape t1"></i><img class="pix" src="${f?pcFormPic(k):pcShadow(k)}"></div>
         <p class="fd pcbig">No.${String(i+1).padStart(3,'0')}　${f?esc(fnm(k)):'？？？'}</p>
-        ${f?`<table class="atbl fm"><tr><td>はじめて</td><td>${f.at?dstr(f.at):'？'}${by?`・${esc(by)}`:''}</td></tr><tr><td>この姿になった子</td><td>${n}匹</td></tr></table>`:`<p class="fm pcsub">${esc(ZUKAN[i][1])}</p>`}</div>`};
+        ${f?`<table class="atbl fm"><tr><td>はじめて</td><td>${f.at?dstr(f.at):'？'}${by?`・${esc(by)}`:''}</td></tr><tr><td>この姿になった子</td><td>${n}匹</td></tr>${BOND_FORMS.includes(k)?`<tr><td>きずな</td><td>${bondOk(D,k)?`${PCD('heart')} なかよし100 達成！（${dstr(D.achv[bondK(k)])}）`:'なかよし100をめざそう'}</td></tr>`:''}</table>`:`<p class="fm pcsub">${esc(ZUKAN[i][1])}</p>`}</div>`};
     },
     kotoba(a){
       const tab=(a&&a.c)||'すべて', W=wordsSaved(), L=ALL_LINES.filter(lineUsable), has=x=>!!W.wl[x.id], found=L.filter(has).length, no=new Map(L.map((x,i)=>[x.id,i+1]));
@@ -2907,7 +3486,7 @@ const K=(()=>{
     if(LOCK)return; if(!S){$('kconfirm').classList.add('on');return}
     modal(`<h2>最初から</h2><p class="tleft">どちらにしますか？ どちらも、始める前に今のデータを退避します（せってい → データの復旧 で戻せます）。</p>
       <button class="place" id="rsone"><em>🌱</em><span>今の子だけやり直す<small>消える：今の子（${esc(S.name)}）の名前・なかよし・元気・食べた記録<br>残る：アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・コイン・進化図鑑</small></span></button>
-      <button class="place" id="rsall"><em>🧹</em><span>全部消して最初から<small>消える：今の子・アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・コイン<br>残る：進化図鑑（発見記録・思い出）・ことば図鑑・シール帳の進み</small></span></button>
+      <button class="place" id="rsall"><em>🧹</em><span>全部消して最初から<small>消える：今の子・アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・コイン<br>残る：進化図鑑（発見記録・思い出）・ことば図鑑・シール帳の進み・まだ使っていないひみつの種とかけら</small></span></button>
       <button class="pbtn gray" onclick="K.close()">やめる</button>`);
     $('rsone').onclick=()=>restartUI();
     $('rsall').onclick=()=>{close();$('kconfirm').classList.add('on')};
@@ -3051,24 +3630,27 @@ const K=(()=>{
   cv.onclick=(e)=>{
     if(!S||LOCK)return;
     if(S.explore){exTap(e);return}
-    if(S.stage==='seed'){S.taps++;
-      if(S.taps>=5){let n=0;const iv=setInterval(()=>{g.fillStyle=n%2?'#fff':'#bfe8a0';g.fillRect(0,0,64,48);if(++n>6){clearInterval(iv);
+    if(S.stage==='seed'){if(RX.hatch)return; S.taps++;   // v2.4：孵化の演出中のタップは数えない（二重に生まれない）
+      if(S.taps>=5){RX.hatch=true;flashThen(()=>{{RX.hatch=false;   // v2.4：速い点滅をやめ、1回だけ明るくなって戻る
         S.stage='baby';S.last=now();if(typeof S.born!=='number'){S.born=Date.now();S.bornGuess=false}ANA.track('hatch');
         const fresh=!Object.keys(S.inv||{}).length; if(fresh)S.inv={kinomi:2};   // AL4：はじめての子だけ木の実2つと案内（次の子では持ち物を上書きしない）
         save();ui();draw();kfx($('kov'),'🎉',3,30);SND.sfx.fanfare();
-        say('種から{n}が生まれた！');if(fresh)setTut(1)}},120)}
+        say('種から{n}が生まれた！');if(fresh)setTut(1)}})}
       else {SND.sfx.pop();} if(S.taps<5) say(['ぴくっ…','動いた！','芽が出た！','もう少し…！'][S.taps-1]);save();draw();return}
-    if(!present()||S.sleep)return;
+    if(!present())return;
+    if(S.sleep){sleepTap();return}   // v2.4：寝ているときは寝返りと Zz（起こさない）
     if(favTap(e))return;
-    speak(lineOf('tap'),'happy');SND.cry(ckey());
+    petTap();                        // v2.4：ジャンプ・ハート・セリフの出しすぎ防止
   };
   $('kstart').onclick=()=>{if(LOCK)return; if(BROKEN_KEPT&&!startConfirm){startConfirm=true;$('ksnote').innerHTML=pixify('⚠ 保管した読めないデータは、新しく始めても消えません。<br>本当に新しく始めるなら、もう一度「育てる！」を押してください');$('ksnote').style.display='block';return}
     const t=Date.now();
     S={name:$('kname').value.trim()||'ぽこ',stage:'seed',taps:0,form:null,genki:3,aff:0,inv:{},dishes:{},decor:{},recipes:[],tags:{},
        explore:null,sleep:false,lucky:false,justBack:false,last:t,skew:0,ver:SAVE_FORMAT,album:[],unlocked:[],seeds:0,fav:null,seen:{},book:{}};
     try{const kp=JSON.parse(localStorage.getItem(COINKEEP)||'null');if(isO(kp)){S.coin=kp;S.coin.n=0}}catch(e){}
+    try{const sk=JSON.parse(localStorage.getItem(SECKEEP)||'null');if(isO(sk))S.secret=sk}catch(e){}
     ensureIntegrity(S);
-    $('ksetup').classList.remove('on');if(save())try{localStorage.removeItem(COINKEEP)}catch(e){}coinWait=Date.now()+2500;ui();draw();say('種をタップして、芽を出させよう')};
+    careInit(S);
+    $('ksetup').classList.remove('on');if(save())try{localStorage.removeItem(COINKEEP);localStorage.removeItem(SECKEEP)}catch(e){}coinWait=Date.now()+2500;ui();draw();say('種をタップして、芽を出させよう')};
   $('kff').onclick=()=>{if(LOCK)return;if(!S||S.stage==='seed'){ktoast('先に種を育ててね');return}const st=S.explore?3:30;S.skew+=st*MIN;tick();save();ui();draw();ktoast(st+'分たった！')};
   $('kcolbtn').onclick=()=>{if(!LOCK&&S)pcOpen('album')};   // v2.1：アルバム・進化図鑑・ことば図鑑は「ぽこコレクション」1つから
   $('pcx').onclick=()=>pcClose(); $('pcback').onclick=()=>pcBack(); 
@@ -3083,7 +3665,8 @@ const K=(()=>{
     try{if(S)dexMark('removed',albumSaved(S).map(r=>r.id))}catch(e){}   // AL7：全部消した子は「アルバムの子を戻す」に出さない（図鑑の思い出には残る）
     try{const r=localStorage.getItem(KEY);if(r&&r!=='null'){const bk=KEY+'_before_reset_'+Date.now();localStorage.setItem(bk,r);if(localStorage.getItem(bk)!==r)throw 0}}
     catch(e){$('kconfirm').classList.remove('on');ktoast('今のデータを退避できなかったので、やめました');setSaveFail(true);return}
-    try{if(S){const k=Object.assign(clone(coinFix(S)),{n:0});localStorage.setItem(COINKEEP,JSON.stringify(k))}}catch(e){}   // v2.2：残高は0。シール帳の進み・受け取った日・発見報酬の記録は引き継ぐ（同じ日・同じ発見で二重にもらわない）
+    try{if(S){const k=Object.assign(clone(coinFix(S)),{n:0});localStorage.setItem(COINKEEP,JSON.stringify(k))}}catch(e){}
+    try{if(S){const c=clone(secFix(S));c.ka={};c.kb={};localStorage.setItem(SECKEEP,JSON.stringify(c))}}catch(e){}   // v2.4：未使用のひみつの種・かけら・受け取り記録・探検の週の記録は引き継ぐ（育てている途中のひみつっこは消える）   // v2.2：残高は0。シール帳の進み・受け取った日・発見報酬の記録は引き継ぐ（同じ日・同じ発見で二重にもらわない）
     const wr=writeMain('null'); if(!wr.ok){$('kconfirm').classList.remove('on');if(wr.why!=='conflict'){ktoast('保存できなかったので、やめました');setSaveFail(true)}return}
     S=null;setSaveFail(false);$('kconfirm').classList.remove('on');$('ksetup').classList.add('on');draw()};
   function open(){show('kid');
@@ -3111,7 +3694,7 @@ const K=(()=>{
       if(!r.ok){ lockScreen(r.why==='backup'?'backup':r.why==='restorefail'?'storage':'migrate',raw); draw(); return; }
       S=r.data;
     } else if(S){ ensureIntegrity(S); }
-    if(S){try{dexOpen()}catch(e){} ANA.track('game_start',{stage:S.stage}); setTimeout(maybeAskConsent,2500); setTimeout(()=>{try{lostAsk()}catch(e){}},1200); try{storeWarn()}catch(e){}}
+    if(S){try{dexOpen()}catch(e){} try{bondScan()}catch(e){} ANA.track('game_start',{stage:S.stage}); setTimeout(maybeAskConsent,2500); setTimeout(()=>{try{lostAsk()}catch(e){}},1200); try{storeWarn()}catch(e){}}
     if(!S){$('ksetup').classList.add('on')}
     else{tick();save();ui();if(!$('kmodal').classList.contains('on'))say(S.stage==='seed'?'種をタップして、芽を出させよう':S.explore?'{n}は探検中…':'おかえり！');if(S.stage!=='seed')setTimeout(()=>S&&!LOCK&&speak(lineOf(S.explore?(PL(S.explore.p).walk?'sanpo':S.explore.p):per())),1200)}
     draw()}
@@ -3120,7 +3703,7 @@ const K=(()=>{
     if(S&&present()&&!S.sleep&&!busy&&Math.random()<.18){const nx=x+(Math.random()<.5?-1:1),[lo,hi]=walkRange();if(nx>=lo&&nx<=hi){face=nx>x?1:-1;x=nx}}
     if(S&&S.explore&&!$('kmodal').classList.contains('on'))exStep();
     if(S){idleTalk();bubTick();}
-    if(S&&frame%5===0){try{coinTick()}catch(e){}}
+    if(S&&frame%5===0){try{findTick()}catch(e){} try{bondTick()}catch(e){} try{secTick()}catch(e){} try{sevTick()}catch(e){} try{coinTick()}catch(e){} try{hungryTick()}catch(e){}}
     SND.bgm(!S||S.stage==='seed'?'home':S.explore?(PLACES[S.explore.p]?S.explore.p:'mori'):(S.sleep||per()==='night')?'night':'home');
     if(S&&frame%25===0){tick();save()}
     if(frame%2===0)ui();draw()},200);
@@ -3134,12 +3717,13 @@ if(TEST_BUILD&&location.search.includes('debug'))$('kff').style.display='';
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 K.open();
 // v2.2b：セーフエリアがあるか（body の余白が0より大きいか）を見て印を付ける。回転したときも見直す
+try{const ua=navigator.userAgent,ios=/iP(hone|od|ad)/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),sa=navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);if(ios&&!sa)document.documentElement.classList.add('ios-br')}catch(e){}
 (function(){const f=()=>{try{const cs=getComputedStyle(document.body);document.documentElement.classList.toggle('sa-top',parseFloat(cs.paddingTop)>0);document.documentElement.classList.toggle('sa-bot',parseFloat(cs.paddingBottom)>0)}catch(e){}};f();window.addEventListener('resize',f);window.addEventListener('orientationchange',()=>setTimeout(f,300))})();
 // v2.2b：iPhone などの高精細の画面で、ドット絵の1マスがちょうど整数の画素になる大きさに合わせる（半端な倍率だと点がにじむ・ガタガタになる）。
 // 決めた大きさより大きくはしない。パソコンなど（devicePixelRatio が2より小さい）では何もしない（今までどおり）
 (function(){
   const dpr=window.devicePixelRatio||1; if(dpr<2)return;
-  const SEL='img.pcd,img.bi,img.ii,#kpfimg';
+  const SEL='img.pcd,img.bi,img.ii,#kpfimg,.pcbi img.pix';
   const snap=img=>{ if(img.dataset.cs===img.src)return;
     const go=()=>{ const nw=img.naturalWidth,nh=img.naturalHeight; if(!nw||!nh)return; img.style.width=''; img.style.height='';
       const cs=getComputedStyle(img), w=parseFloat(cs.width), h=parseFloat(cs.height); if(!(w>0&&h>0))return;
