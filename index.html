@@ -2534,7 +2534,7 @@ const K=(()=>{
       if(LOCK||conflict()){if(!LOCK)enterConflict();return}
       const raw=DISH[b.dataset.d];if(!raw||cnt(S.dishes,raw.k)<=0)return;
       const d={...raw,a:foodAff(raw)};
-      if(S.full>=FULL_STOP){close();busy='normal';say('{n}「もうはいらないよ〜」 おなかがすくまで、少し待とう（探検やお散歩に行くと早くすくよ）');return}   // v2.4：おなかがいっぱいなら食べない（元気の満タンの代わり）
+      if(S.full>=FULL_STOP){close();if(!busy){busy='normal';setTimeout(()=>{if(busy==='normal')busy=null},1400)}say('{n}「もうはいらないよ〜」 おなかがすくまで、少し待とう（探検やお散歩に行くと早くすくよ）');return}   // v2.4：おなかがいっぱいなら食べない（元気の満タンの代わり）。緊急修正：ほかの動きの最中は上書きせず、「normal」は1.4秒で自分だけ戻す（固まり防止）
       const amt=fullAmt(d), pon=(S.full+amt)>=FULL_PON; S.full=clamp(S.full+amt,0,FULL_MAX);
       add(S.dishes,d.k,-1);S.genki=clamp(S.genki+d.g,0,5);if(d.tag)S.tags[d.tag]=(S.tags[d.tag]||0)+1;prFood('e',d.k);prRec('feed');
       d.a=earnAff(d.a,'feed');careAction('feed');
