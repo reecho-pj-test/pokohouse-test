@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ぽこのおうち">
-<meta name="theme-color" content="#FFF4DF">
+<meta name="theme-color" content="#B8CDB1">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
 <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
@@ -539,12 +539,89 @@ img.pcd{image-rendering:pixelated}
 #kmbody [data-go] em img.ii{width:36px;height:36px}
 #kmodal.on:has(.knavok),#kcol.on{bottom:var(--knavb,0px)}   /* 持ち物・ぽこコレクションは下部ナビを覆わない（ロック・確認・ログインボーナスなどは全体を覆うまま） */
 @media (max-width:370px){#kid .kbtns{gap:4px}#kid .kbtns button{font-size:12px}#kid .knav{gap:4px;padding:5px 8px}#kid .knav button{font-size:12px}}
+/* ===== #30 共通の見た目（文字色・文字サイズ・余白・ボタン）。まずは持ち物（.kui）だけに使う。ほかの画面への適用は別 Issue（docs/ui_common.md） ===== */
+:root{--ui-ink:#79634F;--ui-fs-h:20px;--ui-fs-b:14px;--ui-fs-s:12px;--ui-sp:8px;--ui-sp-s:6px;--ui-pad:12px;--ui-r-s:8px;
+  --ui-btn-bg:#FFF4DF;--ui-btn-on:#ffd84d;--ui-btn-bd:#79634F;--ui-btn-bw:3px;--ui-btn-r:12px;--ui-btn-sh:0 3px 0 #79634F}
+#kmodal:has(.kui){overflow:hidden;padding:12px 10px}   /* 外側は動かさない（動くのは一覧の箱だけ） */
+#kmbody:has(>.kui){display:flex;flex-direction:column;max-height:100%;margin:0 auto;padding:var(--ui-pad);border-color:var(--ui-ink);box-shadow:6px 6px 0 var(--ui-ink)}
+.kui{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;color:var(--ui-ink)}
+.kuihd{flex:none;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:var(--ui-sp-s)}   /* タイトル・右上の×・タブ（動かない） */
+.kuihd h2{grid-column:2;margin:0;font-size:var(--ui-fs-h);color:var(--ui-ink);white-space:nowrap}
+.kuix{grid-column:3;width:44px;height:44px;padding:0;border:var(--ui-btn-bw) solid var(--ui-btn-bd);border-radius:var(--ui-btn-r);background:var(--ui-btn-bg);color:var(--ui-ink);
+  font-size:22px;font-weight:900;line-height:1;box-shadow:var(--ui-btn-sh);display:flex;align-items:center;justify-content:center}
+.kui .tabs{grid-column:1/-1;margin:var(--ui-sp-s) 0 3px;gap:var(--ui-sp-s)}
+.kui .tabs button{min-width:0;min-height:44px;padding:4px 2px;border:var(--ui-btn-bw) solid var(--ui-btn-bd);border-radius:var(--ui-btn-r);background:var(--ui-btn-bg);color:var(--ui-ink);
+  font-size:var(--ui-fs-b);font-weight:900;white-space:nowrap;box-shadow:var(--ui-btn-sh)}
+.kui .tabs button.on{background:var(--ui-btn-on)}
+.kuix:active,.kui .tabs button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ui-btn-bd)}
+.kuisw{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;margin-top:var(--ui-sp)}   /* 一覧の箱（ここだけ動く） */
+.kuisc{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:0 2px var(--ui-sp);scrollbar-width:thin;scrollbar-color:var(--ui-ink) transparent}
+.kuisw:before,.kuisw:after{content:'';position:absolute;left:0;right:0;height:28px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:1}
+.kuisw:before{top:0;background:linear-gradient(#fff,rgba(255,255,255,0))}
+.kuisw:after{bottom:0;background:linear-gradient(rgba(255,255,255,0),#fff 80%)}
+.kuisw.up:before,.kuisw.dn:after{opacity:1}   /* 上に戻れる・下に続きがある */
+.kuidn{position:absolute;left:50%;bottom:2px;margin-left:-8px;width:0;height:0;border:8px solid transparent;border-top:8px solid var(--ui-ink);border-bottom:0;opacity:0;pointer-events:none;z-index:2;transition:opacity .2s}
+.kuisw.dn .kuidn{opacity:1;animation:kuib 1.2s steps(2,end) infinite}
+@keyframes kuib{50%{transform:translateY(3px)}}
+.kui .kuisc p{font-size:var(--ui-fs-b);color:var(--ui-ink);line-height:1.5;margin:var(--ui-sp) 0 var(--ui-sp-s)}
+.kui .kuisc p:first-child{margin-top:0}
+.kui .items{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--ui-sp-s);margin:0 0 var(--ui-sp)}
+.kui .item{min-width:0;padding:6px 2px;border-radius:var(--ui-r-s);color:var(--ui-ink);font-size:var(--ui-fs-s)}
+.kui .item em{margin-bottom:2px}
+.kui .inm{display:block;word-break:keep-all;overflow-wrap:anywhere;line-height:1.3}   /* 名前は言葉の区切り（<wbr>）でだけ折り返す。3列（320pxでも6文字の言葉が1行に入る）。入りきらない1語だけ途中で折る */
+.kui .icn{display:block;word-break:keep-all;overflow-wrap:anywhere}   /* 個数・「飾ってる／しまってある」も言葉の区切りで */
+.kui .empty{font-size:var(--ui-fs-b);color:var(--ui-ink);opacity:.7}
+@media (prefers-reduced-motion:reduce){.kuisw.dn .kuidn{animation:none}}
 @media (max-height:520px){#kid .kbtns{margin-top:6px}#kid .kbtns button{min-height:50px;padding:2px 0 1px;line-height:1.25}#kid .knav{margin-top:6px;padding-top:4px;padding-bottom:4px}#kid .knav button{min-height:44px}}
+/* ===== #37 ホームの着せ替えテーマ：セージグリーン×クリームの絵本風（docs/home_theme.md・ADR 0004） =====
+   色・枠・飾りの絵は #kid の --th-* だけで決める。別のテーマは #kid[data-theme=…]{--th-…} で変数を差し替える（切り替えの機能はまだ無い）。
+   タイトルのぶんの高さは、プロフィールのカードの枠をやめる・すき間を詰めるで取り返し、部屋（ゲーム画面）は変更前より狭くしない（tests/v25_theme.py T11・T12） */
+@media (max-width:480px){html,body{background:#B8CDB1}}   /* スマホ：時計・ホームバーの所も外枠のセージに */
+#kid{--th-bg:var(--ui-btn-bg);--th-check:rgba(184,205,177,.22);--th-frame:#B8CDB1;--th-stitch:var(--ui-btn-bg);--th-ink:var(--ui-ink);   /* クリーム・茶は #30 の共通の値（--ui-*）を使う */
+--th-on:var(--th-frame);--th-nav:var(--th-frame);--th-nav-edge:var(--ic-bush,none);--th-fw:5px;
+  --th-gingham:linear-gradient(90deg,var(--th-check) 50%,transparent 50%),linear-gradient(var(--th-check) 50%,transparent 50%);
+  background-color:var(--th-bg);background-image:var(--th-gingham);background-size:16px 16px;padding:var(--th-fw) var(--th-fw) 0;box-shadow:inset 0 0 0 var(--th-fw) var(--th-frame)}   /* クリームの薄いチェック＋布風の外枠 */
+#kid:before{content:'';position:absolute;inset:1.5px 1.5px 0;border:2px dashed var(--th-stitch);border-bottom:0;pointer-events:none}   /* 外枠のステッチ */
+#ktitle{position:relative;flex:none;align-self:center;display:flex;align-items:center;gap:3px;height:26px;margin-top:calc(-1 * var(--th-fw));padding:0 10px 0 7px;
+  background:var(--th-bg);border:2px solid var(--th-ink);border-top:0;border-radius:0 0 14px 14px;box-shadow:0 2px 0 var(--th-ink);
+  color:var(--th-ink);font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;font-weight:900;font-size:16px;line-height:1;letter-spacing:1px;white-space:nowrap}   /* 上の枠から下がるタブ */
+#ktitle em{font-style:normal;display:flex}
+#ktitle img.bi{width:24px;height:24px;image-rendering:pixelated}
+#ktitle [data-ic=star] img.bi{width:12px;height:12px}
+#kid .kprof,.sa-top #kid .kprof,.ios-br #kid .kprof{margin-top:3px;padding:2px 4px;border:0;background:none;box-shadow:none}   /* プロフィールは地の上にじかに（カードの枠をやめた） */
+#kid .kpmain{gap:3px}
+#kid .kpr3{margin-top:4px}
+.sa-top #ktitle{margin-top:11px}
+.ios-br #ktitle{margin-top:15px}   /* 今までのプロフィールと同じだけ下げて、iOS のぼかしの帯をよける */
+@media (max-height:700px){   /* 高さが低い画面：タイトルを少し低く、プロフィールのすき間を詰めて部屋の高さを保つ */
+  #ktitle{height:22px;font-size:15px}#ktitle [data-ic=house] img.bi{margin-top:-3px}
+  #kid .kprof,.sa-top #kid .kprof,.ios-br #kid .kprof{margin-top:2px}#kid .kpmain{gap:2px}#kid .kpr3{margin-top:3px}}
+@media (max-height:520px){.ios-br #ktitle{margin-top:9px}}
+#kid .kscene{margin:6px 7px 0;border:4px solid var(--th-ink);box-shadow:0 0 0 4px var(--th-frame),0 0 0 5px var(--th-ink)}   /* 部屋の枠：茶の線＋セージの帯（帯は外側に描くので部屋の広さは変わらない） */
+#kid .kscene:after{content:'';position:absolute;inset:-7px;border:1.5px dashed var(--th-stitch);pointer-events:none;z-index:3}   /* 部屋の枠のステッチ */
+#kid .kdeco{position:absolute;z-index:4;display:flex;line-height:0;pointer-events:none}
+#kid .kdeco img.bi{width:24px;height:24px;image-rendering:pixelated}
+#kid .kdeco.s img.bi{width:12px;height:12px}
+#kid .kscene .d1{left:-15px;top:14%}   /* 枠の帯にかかる所（画面の端で切れない・部屋には少しだけかかる） */
+#kid .kscene .d2{right:-15px;top:48px}
+#kid .kscene .d3{left:-12px;bottom:-12px}
+#kid .kscene .d4{right:-12px;bottom:-12px}
+#kid #kmsg{border:2px dashed var(--th-ink);border-radius:12px;background:rgba(255,255,255,.75)}
+#kid .kbtns{margin-top:6px}
+#kid .kbtns button{outline:1.5px dashed var(--th-stitch);outline-offset:-5px;
+  background-image:linear-gradient(rgba(255,255,255,.55) 0 36%,transparent 36%),linear-gradient(90deg,rgba(255,255,255,.2) 50%,transparent 50%),linear-gradient(rgba(255,255,255,.2) 50%,transparent 50%);background-size:auto,8px 8px,8px 8px}   /* ファンシー雑貨風：内側のステッチと薄いチェック（色は今までのパステル5色） */
+#kid .knav{position:relative;margin-top:6px;border-top:0;background-color:var(--th-nav);background-image:var(--th-gingham);background-size:16px 16px}
+#kid .knav:before{content:'';position:absolute;left:0;right:0;top:-4px;height:10px;background:var(--th-nav-edge) 0 100%/24px 24px repeat-x;image-rendering:pixelated;pointer-events:none}   /* 上の端の草むら */
+#kid .knav button{background-color:var(--th-bg);outline:1.5px dashed var(--th-check);outline-offset:-5px}
+#kid:not(:has(#kmodal.on .knavok,#kcol.on)) #knav [data-nav=home],#kid:has(#kmodal.on .knavok) #kbag,#kid:has(#kcol.on) #kcolbtn{background-color:var(--th-on);background-image:var(--th-gingham);background-size:12px 12px;outline-color:var(--th-stitch)}   /* 今いる画面のボタン */
+#kid .knav .n1{left:3px;top:-11px}
+#kid .knav .n2{right:3px;top:-11px}
 </style>
 </head>
 <body>
 <!-- ================= こども ================= -->
 <div id="kid" class="screen on">
+  <div class="ktitle" id="ktitle"><em data-ic="house"></em>ぽこのおうち<em data-ic="star" aria-hidden="true"></em></div>
   <div class="kprof" id="kprof">
     <div class="kpface"><img class="pix" id="kpfimg" alt=""></div>
     <div class="kpmain">
@@ -554,7 +631,7 @@ img.pcd{image-rendering:pixelated}
     <div class="kpr3"><div class="knext" id="knext"><span class="kml" id="knextl">つぎ</span><span id="knextt"></span></div>
       <button id="klbbtn" aria-label="ログインボーナス"><span id="klbic"></span><span class="lbw"><small>ログイン</small><b>ボーナス</b></span></button></div>
   </div>
-  <div class="kscene"><canvas id="kcv" width="64" height="48"></canvas><button id="kset" aria-label="設定"><em data-ic="gear"></em>設定</button><button id="kff" style="display:none">⏩ テスト</button><div id="kov"><div id="kdecor"></div><div id="kzz"></div><div id="kbub"></div></div></div>
+  <div class="kscene"><canvas id="kcv" width="64" height="48"></canvas><button id="kset" aria-label="設定"><em data-ic="gear"></em>設定</button><button id="kff" style="display:none">⏩ テスト</button><div id="kov"><div id="kdecor"></div><div id="kzz"></div><div id="kbub"></div></div><i class="kdeco d1" data-ic="star" aria-hidden="true"></i><i class="kdeco d2" data-ic="moon" aria-hidden="true"></i><i class="kdeco s d3" data-ic="star" aria-hidden="true"></i><i class="kdeco s d4" data-ic="flower" aria-hidden="true"></i></div>
   <div id="kmsg"></div>
   <div class="kbtns" id="kbtns">
     <button data-k="feed"><em data-ic="feed"></em>ごはん</button>
@@ -563,7 +640,7 @@ img.pcd{image-rendering:pixelated}
     <button data-k="cook"><em data-ic="cook"></em>料理</button>
     <button data-k="out"><em data-ic="explore"></em>おでかけ</button>
   </div>
-  <nav class="foot knav" id="knav"><button data-nav="home"><em data-ic="house"></em>おうち</button><button id="kbag"><em data-ic="bag"></em>持ち物</button><button id="kcolbtn"><em data-ic="heart"></em>ぽこコレクション</button></nav>
+  <nav class="foot knav" id="knav"><button data-nav="home"><em data-ic="house"></em>ホーム</button><button id="kbag"><em data-ic="bag"></em>持ち物</button><button id="kcolbtn"><em data-ic="heart"></em>ぽこコレクション</button><i class="kdeco s n1" data-ic="flower" aria-hidden="true"></i><i class="kdeco s n2" data-ic="clover" aria-hidden="true"></i></nav>
   <div class="ov" id="kcol"><div class="pcn zk pc-album" id="kcolnote">
     <div class="pcrings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="pchead"><div class="pcrow"><button class="pcrb" id="pcback" aria-label="もどる">←</button><div id="pctitle"></div><button class="pcrb" id="pcx" aria-label="とじる">×</button></div>
@@ -881,6 +958,7 @@ const SND=(()=>{
 // ===== ボタン用ドット絵アイコン（12x12） =====
 const ICON=(()=>{
   const K='#3a2f45';
+  const PIX=(P,rows,pal)=>rows.forEach((r,y)=>[...r].forEach((c,x)=>{if(c!=='.')P(x,y,pal[c])}));   // #37：文字の並びで描く（. は透明）
   const draw={
     explore(P,R){ R(1,2,10,7,'#f3dca0'); R(0,2,1,7,K);R(11,2,1,7,K);R(1,1,10,1,K);R(1,9,10,1,K);
       [[2,3],[3,4],[4,5],[5,6],[6,7],[7,7]].forEach(([x,y])=>P(x,y,'#b88a50'));
@@ -925,6 +1003,11 @@ const ICON=(()=>{
     chart(P,R){ R(0,11,12,1,K); R(1,7,2,4,'#5fb0e8'); R(4,4,2,7,'#ff8fb8'); R(7,6,2,5,'#5bb85b'); R(10,1,2,10,'#ffd84d'); },
     bag(P,R){ const B='#c08a50',b='#8a5a3a'; R(2,3,8,8,B); R(1,4,1,6,K);R(10,4,1,6,K);R(2,11,8,1,K);R(2,2,8,1,K);
       R(4,0,4,1,K);P(3,1,K);P(8,1,K); R(2,3,8,3,b); R(5,6,2,1,'#ffd84d'); R(3,8,6,2,'#a87040'); },
+    // #37 ホームの飾り（12×12。輪郭はホームの茶）：星・月・花、下部ナビの上の端の草むら（下の3段だけ使う）
+    star(P){ PIX(P,[".....KK.....","....KYYK....","....KYWK....","KKKKYYYYKKKK","KYYYYWYYYYYK",".KYYYYYYYYK.","..KYYYYYYK..","..KYYYYYYK..",".KYYYKKYYYK.",".KYYK..KYYK.","KYKK....KKYK","KK........KK"],{K:'#79634F',Y:'#ffd84d',W:'#fff6c0'}) },
+    moon(P){ PIX(P,["...KKKK.....","..KYYYK.....",".KYYWK......",".KYYK.......","KYYYK.......","KYYYK.......","KYYYK.......","KYYYYK......",".KYYYYKKKKK.",".KYYYYYYYYK.","..KKYYYYKK..","....KKKK...."],{K:'#79634F',Y:'#ffd84d',W:'#fff6c0'}) },
+    flower(P){ PIX(P,["....KKKK....","...KPPPPK...",".KKKPpPPKKK.","KPPPKYYKPPPK","KPpPYYYYPPPK","KPPPKYYKPPPK",".KKKPPPPKKK.","...KPPPPK...","....KKKK....",".....GG.GG..","....GGGGG...",".....GG....."],{K:'#79634F',P:'#F3C4CE',p:'#fff',Y:'#ffd84d',G:'#6fa86a'}) },
+    bush(P){ PIX(P,["............","............","............","............","............","............","............","..KK....KK..",".KGGK..KGGK.","KGGGGKKGGGGK","GGGGGGGGGGGG","GGGGGGGGGGGG"],{K:'#79634F',G:'#B8CDB1'}) },
   };
   const cache={};
   return k=>{ if(cache[k])return cache[k];
@@ -3741,24 +3824,30 @@ const K=(()=>{
     analyticsUI(true);
   }
   // ---- もちもの ----
+  // #30：名前は言葉の区切りでだけ折り返す（例「木の実の／はちみつ漬け」）。区切りが分からないブラウザでは今までどおり
+  const SEGJ=(()=>{try{return new Intl.Segmenter('ja',{granularity:'word'})}catch(e){return null}})();
+  const wbr=n=>SEGJ?[...SEGJ.segment(String(n))].map(x=>esc(x.segment)).join('<wbr>'):esc(n), inm=n=>`<span class="inm">${wbr(n)}</span>`;
+  // #30：一覧に続きがあるとき下に、戻れるとき上に目印（ぼかし・▼）を出す
+  function kuiCue(){const w=$('kmbody').querySelector('.kuisw');if(!w)return;const sc=w.firstElementChild,f=()=>{w.classList.toggle('up',sc.scrollTop>2);w.classList.toggle('dn',sc.scrollTop+sc.clientHeight<sc.scrollHeight-2)};sc.onscroll=f;f();requestAnimationFrame(f)}
+  addEventListener('resize',kuiCue);
   function bagUI(tab='food'){
     if(!S||S.stage==='seed')return;
     let body='';
     if(tab==='food'){const a=Object.keys(S.inv),b=Object.keys(S.dishes);
-      body=(a.length?`<p>材料</p><div class="items">${a.map(k=>`<div class="item"><em>${IT[k].e}</em>${IT[k].n}<br>×${S.inv[k]}</div>`).join('')}</div>`:'')+
-        (b.length?`<p>料理</p><div class="items">${b.map(k=>`<div class="item"><em><img class="pix" src="${dishPix(k)}"></em>${DISH[k].n}<br>×${S.dishes[k]}</div>`).join('')}</div>`:'')||'<div class="empty">何も持っていません</div>'}
-    if(tab==='decor'){const d=Object.keys(S.decor);body=d.length?`<p>タップで「飾る／しまう」を切り替えられます</p><div class="items">${d.map(k=>{const off=(S.hideDecor||{})[k];return `<button class="item ${off?'dis':'on'}" data-dec="${k}"><em>${IT[k].e}</em>${IT[k].n}<br>${off?'しまってある':'飾ってる'}</button>`}).join('')}</div>`:'<div class="empty">まだありません。探検で見つけよう</div>'}
+      body=(a.length?`<p>材料</p><div class="items">${a.map(k=>`<div class="item"><em>${IT[k].e}</em>${inm(IT[k].n)}<span class="icn">×${S.inv[k]}</span></div>`).join('')}</div>`:'')+
+        (b.length?`<p>料理</p><div class="items">${b.map(k=>`<div class="item"><em><img class="pix" src="${dishPix(k)}"></em>${inm(DISH[k].n)}<span class="icn">×${S.dishes[k]}</span></div>`).join('')}</div>`:'')||'<div class="empty">何も持っていません</div>'}
+    if(tab==='decor'){const d=Object.keys(S.decor);body=d.length?`<p>タップで「飾る／しまう」を切り替えられます</p><div class="items">${d.map(k=>{const off=(S.hideDecor||{})[k];return `<button class="item ${off?'dis':'on'}" data-dec="${k}"><em>${IT[k].e}</em>${inm(IT[k].n)}<span class="icn">${wbr(off?'しまってある':'飾ってる')}</span></button>`}).join('')}</div>`:'<div class="empty">まだありません。探検で見つけよう</div>'}
     if(tab==='recipe'){body=`<p>見つけたレシピ ${S.recipes.filter(k=>k!=='fushigi').length} / ${Object.keys(R).length}</p><div class="items">${Object.entries(R).map(([key,d])=>{const has=S.recipes.includes(d.k);const hint=IT[key.split('+')[0]].e;
-      return `<div class="item ${has?'':'dis'}"><em>${has?`<img class="pix" src="${dishPix(d.k)}">`:'❓'}</em>${has?d.n:hint+' ＋ ？'}</div>`}).join('')}</div>`}
-    modal(`<h2>🎒 持ち物</h2><div class="tabs"><button data-t="food" class="${tab==='food'?'on':''}">食べ物</button><button data-t="decor" class="${tab==='decor'?'on':''}">飾り</button><button data-t="recipe" class="${tab==='recipe'?'on':''}">レシピ</button></div>${body}<button class="pbtn gray" onclick="K.close()">とじる</button>`);
-    $('kcol').classList.remove('on'); navFree(); $('kmbody').firstElementChild.classList.add('knavok');   // #21：下部ナビから行き来できる画面の印（ほかの画面に替わると中身ごと消える）
+      return `<div class="item ${has?'':'dis'}"><em>${has?`<img class="pix" src="${dishPix(d.k)}">`:'❓'}</em>${has?inm(d.n):`<span class="inm">${hint} ＋ ？</span>`}</div>`}).join('')}</div>`}
+    modal(`<div class="kui"><div class="kuihd"><h2>🎒 持ち物</h2><button class="kuix" aria-label="とじる" onclick="K.close()">×</button><div class="tabs"><button data-t="food" class="${tab==='food'?'on':''}">食べ物</button><button data-t="decor" class="${tab==='decor'?'on':''}">飾り</button><button data-t="recipe" class="${tab==='recipe'?'on':''}">レシピ</button></div></div><div class="kuisw"><div class="kuisc">${body}</div><i class="kuidn"></i></div></div>`);   // #30：タイトル・×・タブは動かさず、一覧の箱だけ動かす（下の「とじる」はやめた。ホームへは×か下部ナビ）
+    $('kcol').classList.remove('on'); navFree(); $('kmbody').firstElementChild.classList.add('knavok'); kuiCue();   // #21：下部ナビから行き来できる画面の印（ほかの画面に替わると中身ごと消える）
     $('kmbody').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>bagUI(b.dataset.t));
-    $('kmbody').querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>{const k=b.dataset.dec;S.hideDecor=S.hideDecor||{};S.hideDecor[k]=!S.hideDecor[k];save();SND.sfx.btn();bagUI('decor')});
+    $('kmbody').querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>{const k=b.dataset.dec;S.hideDecor=S.hideDecor||{};S.hideDecor[k]=!S.hideDecor[k];save();SND.sfx.btn();const y=$('kmbody').querySelector('.kuisc').scrollTop;bagUI('decor');$('kmbody').querySelector('.kuisc').scrollTop=y;kuiCue()});   // #30：切り替えても一覧の位置はそのまま
   }
 
   // ---- イベント ----
   document.querySelectorAll('#kbtns button[data-k]').forEach(b=>b.onclick=()=>{SND.sfx.btn();act(b.dataset.k)});
-  document.querySelector('#knav [data-nav=home]').onclick=()=>{SND.sfx.btn();if(!LOCK)close()};   // #21：下部ナビの「おうち」：開いている画面を閉じてホームに戻る
+  document.querySelector('#knav [data-nav=home]').onclick=()=>{SND.sfx.btn();if(!LOCK)close()};   // #21：下部ナビの「ホーム」（#29 で「おうち」から変更）：開いている画面を閉じてホームに戻る
   $('kset').onclick=()=>{if(LOCK)return;if(!S){ktoast('先にぽこを育て始めてね');return}SND.sfx.btn();settingsUI()};
   $('kmovein').onclick=()=>{if(!LOCK)moveUI()};
   $('kbag').onclick=()=>bagUI();
@@ -3847,6 +3936,7 @@ const K=(()=>{
 
 document.querySelectorAll('.kcard h2,#kmovein,#kset').forEach(h=>h.innerHTML=pixify(h.innerHTML));
 document.querySelectorAll('[data-ic]').forEach(e=>e.innerHTML=`<img class="pix bi" src="${ICON(e.dataset.ic)}">`);
+['bush'].forEach(k=>document.documentElement.style.setProperty('--ic-'+k,`url(${ICON(k)})`));   // #37：CSS で使うドット絵（下部ナビの上の端）。テーマは --th-nav-edge でこれを指す
 if(TEST_BUILD&&location.search.includes('debug'))$('kff').style.display='';
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 K.open();
