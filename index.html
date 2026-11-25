@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ぽこのおうち">
-<meta name="theme-color" content="#bfeccd">
+<meta name="theme-color" content="#FFF4DF">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
 <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
@@ -505,6 +505,41 @@ img.pcd{image-rendering:pixelated}
 #kmodal[data-place=yama] .mapg.p3>.mt{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAlklEQVR42mNkYGBgsNJ3/c9ABjh2cTcjo5W+6/+qzn5y9DO0lRcysMA41248IcsQFmSOloYMUZqQLWPBJ4kNoFvChE9xab47QdcwEdJMyBC8LgiP7WQIj+3EaxBWA86cuQDXCOMTFQv4FMMMRA9EDANMTAxISgdMDBQCFkLxTJQBBw6dY2BgYGB49eoVyS6g2AuMlGZnAADGLMXDB3UTAAAAAElFTkSuQmCC)}
 #kmodal .mapg.p3>.mt.open{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAARklEQVR42mNkYGBgsNJ3/c9ABjh2cTcjg5W+639ygZW+638WuHE/35LjCAYmBgrBqAGjBlDFABYGBgaGl3dPDpwLGCnNzgChV0e4uQMpQAAAAABJRU5ErkJggg==)}#kmodal .mapg.p3>.mt.got{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAbUlEQVR42mNkYGBgsNJ3/c9ABjh2cTcjo5W+6/9tjbfJ0c/gVa/KwALj8DstIE7Xs14GBqliho/7EhgYGBgYmEiy8lkvKk2yAVLFqDTJBqBpJs8ANDBqwGAwAJ6UPz47QJkBDDcWkGUAI6XZGQDayBptz8V2WwAAAABJRU5ErkJggg==);opacity:1}
 .mapg.p3>.mt img.ii{width:56%;height:56%;vertical-align:middle}
+/* ===== #21 ホーム画面のリニューアル：承認済み7色（#FFF4DF・#B8CDB1・#F3C4CE・#BCDCE8・#F5DDA0・#D8C9E8・#79634F）・5ボタン・下部ナビ・右上の設定 ===== */
+/* アイコンは既存の12×12ドット絵を2倍（24px）で表示（iPhone の2倍・3倍でも1マスが整数の画素） */
+@media (max-width:480px){html,body{background:#FFF4DF}}
+#kid{background:#FFF4DF}
+#kid .kprof,#kid .kpface,#kid .kscene,#kid #kmsg{border-color:#79634F}
+#kid .kprof{box-shadow:0 3px 0 #79634F}
+#kid .kscene{box-shadow:4px 4px 0 #79634F}
+#kid .kbtns{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:8px 10px 0}
+#kid .kbtns button{min-height:56px;padding:4px 0 3px;border:3px solid #79634F;border-radius:14px;color:#79634F;box-shadow:0 4px 0 #79634F;white-space:nowrap;
+  background-image:linear-gradient(rgba(255,255,255,.55) 0 36%,transparent 36%)}   /* 上が明るいパステルの立体ボタン */
+#kid .kbtns button em{height:24px}
+#kid .kbtns img.bi{width:24px;height:24px}
+#kid .kbtns [data-k=feed]{background-color:#F3C4CE}
+#kid .kbtns [data-k=pet]{background-color:#F5DDA0}
+#kid .kbtns [data-k=sleep]{background-color:#D8C9E8}
+#kid .kbtns [data-k=cook]{background-color:#BCDCE8}
+#kid .kbtns [data-k=out]{background-color:#B8CDB1}
+#kid .kbtns button:active{transform:translateY(3px);box-shadow:0 1px 0 #79634F}
+#kid .knav{display:grid;grid-template-columns:1fr 1fr 1.7fr;gap:6px;width:auto;max-width:none;margin:8px 0 0;padding:6px 10px;background:#B8CDB1;border-top:3px solid #79634F}
+#kid .knav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:48px;padding:2px;border:3px solid #79634F;border-radius:12px;
+  background:#FFF4DF;color:#79634F;font-size:13px;font-weight:900;line-height:1.2;white-space:nowrap;box-shadow:0 3px 0 #79634F}
+#kid .knav em{font-style:normal;height:24px;display:flex;align-items:center}
+#kid .knav img.bi{width:24px;height:24px;image-rendering:pixelated}
+#kid .knav button:active{transform:translateY(2px);box-shadow:0 1px 0 #79634F}
+#kset{position:absolute;top:4px;right:4px;display:flex;align-items:center;gap:2px;height:32px;padding:0 9px 0 4px;border:2px solid #79634F;border-radius:99px;
+  background:#FFF4DF;color:#79634F;font-size:13px;font-weight:900;white-space:nowrap;box-shadow:0 2px 0 #79634F}   /* 部屋の右上。z-index なし＝吹き出しはこの上に出る */
+#kset:before{content:'';position:absolute;inset:-6px}   /* 押せる範囲を44pxに */
+#kset em{font-style:normal;display:flex}
+#kset img.bi{width:24px;height:24px;image-rendering:pixelated}
+#kset:active{transform:translateY(2px);box-shadow:none}
+#kff{position:absolute;top:4px;left:4px;font-size:12px;border:2px solid #79634F;border-radius:99px;background:#FFF4DF;padding:4px 8px}
+#kmbody [data-go] em img.ii{width:36px;height:36px}
+#kmodal.on:has(.knavok),#kcol.on{bottom:var(--knavb,0px)}   /* 持ち物・ぽこコレクションは下部ナビを覆わない（ロック・確認・ログインボーナスなどは全体を覆うまま） */
+@media (max-width:370px){#kid .kbtns{gap:4px}#kid .kbtns button{font-size:12px}#kid .knav{gap:4px;padding:5px 8px}#kid .knav button{font-size:12px}}
+@media (max-height:520px){#kid .kbtns{margin-top:6px}#kid .kbtns button{min-height:50px;padding:2px 0 1px;line-height:1.25}#kid .knav{margin-top:6px;padding-top:4px;padding-bottom:4px}#kid .knav button{min-height:44px}}
 </style>
 </head>
 <body>
@@ -519,20 +554,16 @@ img.pcd{image-rendering:pixelated}
     <div class="kpr3"><div class="knext" id="knext"><span class="kml" id="knextl">つぎ</span><span id="knextt"></span></div>
       <button id="klbbtn" aria-label="ログインボーナス"><span id="klbic"></span><span class="lbw"><small>ログイン</small><b>ボーナス</b></span></button></div>
   </div>
-  <div class="kscene"><canvas id="kcv" width="64" height="48"></canvas><div id="kov"><div id="kdecor"></div><div id="kzz"></div><div id="kbub"></div></div></div>
+  <div class="kscene"><canvas id="kcv" width="64" height="48"></canvas><button id="kset" aria-label="設定"><em data-ic="gear"></em>設定</button><button id="kff" style="display:none">⏩ テスト</button><div id="kov"><div id="kdecor"></div><div id="kzz"></div><div id="kbub"></div></div></div>
   <div id="kmsg"></div>
   <div class="kbtns" id="kbtns">
-    <button data-k="explore"><em data-ic="explore"></em>探検</button>
-    <button data-k="walk"><em data-ic="walk"></em>お散歩</button>
-    <button data-k="fish"><em data-ic="fish"></em>釣り</button>
-    <button data-k="cook"><em data-ic="cook"></em>料理</button>
     <button data-k="feed"><em data-ic="feed"></em>ごはん</button>
     <button data-k="pet"><em data-ic="pet"></em>なでる</button>
     <button data-k="sleep"><em data-ic="sleep"></em>寝る</button>
-    <button id="kbag"><em data-ic="bag"></em>持ち物</button>
+    <button data-k="cook"><em data-ic="cook"></em>料理</button>
+    <button data-k="out"><em data-ic="explore"></em>おでかけ</button>
   </div>
-  <div class="kcolb"><button id="kcolbtn">ぽこコレクション</button></div>
-  <div class="foot"><button id="kset">⚙️ 設定</button><button id="ksnd">🔊 音あり</button><button id="kff" style="display:none">⏩ テスト</button><button id="kreset">最初から</button></div>
+  <nav class="foot knav" id="knav"><button data-nav="home"><em data-ic="house"></em>おうち</button><button id="kbag"><em data-ic="bag"></em>持ち物</button><button id="kcolbtn"><em data-ic="heart"></em>ぽこコレクション</button></nav>
   <div class="ov" id="kcol"><div class="pcn zk pc-album" id="kcolnote">
     <div class="pcrings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="pchead"><div class="pcrow"><button class="pcrb" id="pcback" aria-label="もどる">←</button><div id="pctitle"></div><button class="pcrb" id="pcx" aria-label="とじる">×</button></div>
@@ -559,7 +590,7 @@ img.pcd{image-rendering:pixelated}
 
 
 <script>
-const TEST_BUILD=false;   // 正式版は false。テスト用サイトだけ true にする（早送り・?debug を使えるのはテスト版だけ）
+const TEST_BUILD=true;   // 正式版は false。テスト用サイトだけ true にする（早送り・?debug を使えるのはテスト版だけ）
 
 // ================= 共通 =================
 const $=id=>document.getElementById(id);
@@ -1572,9 +1603,9 @@ const K=(()=>{
     let careEl=$('kcare');if(careNew(S)){if(!careEl){careEl=document.createElement('p');careEl.id='kcare';careEl.className='fm';careEl.style.cssText='font-size:12px;line-height:1.6;margin:6px 14px;color:#5a4868';$('kbtns').after(careEl)}const hint=careHint();if(careEl.textContent!==hint)careEl.textContent=hint;careEl.hidden=false}else if(careEl)careEl.hidden=true;
     const ds=Object.keys(S.decor), pos=[[24,70],[50,62],[6,90],[72,90],[40,92],[66,72]];
     $('kdecor').innerHTML='';
-    document.querySelectorAll('#kbtns button').forEach(b=>b.classList.toggle('hint',!!b.dataset.k&&b.dataset.k===({1:'cook',2:'feed',3:'explore'})[S.tut]));
-    {const eb=document.querySelector('#kbtns [data-k=explore]'), onMap=S.explore&&!PL(S.explore.p).walk&&!PL(S.explore.p).unknown&&!(S.explore.map&&S.explore.map.done);
-     const want=onMap?'sugoroku':'explore'; if(eb.dataset.cur!==want){eb.dataset.cur=want;eb.innerHTML=`<em><img class="pix bi" src="${ICON(want)}"></em>${onMap?'すごろく':'探検'}`;} if(onMap)eb.classList.add('hint');}
+    document.querySelectorAll('#kbtns button').forEach(b=>b.classList.toggle('hint',!!b.dataset.k&&b.dataset.k===({1:'cook',2:'feed',3:'out'})[S.tut]));   // #21：チュートリアル3（探検）は「おでかけ」を光らせる
+    {const eb=document.querySelector('#kbtns [data-k=out]'), onMap=S.explore&&!PL(S.explore.p).walk&&!PL(S.explore.p).unknown&&!(S.explore.map&&S.explore.map.done);   // #21：今までの「探検」ボタンの役目は「おでかけ」ボタンが引き継ぐ
+     const want=onMap?'sugoroku':'explore'; if(eb.dataset.cur!==want){eb.dataset.cur=want;eb.innerHTML=`<em><img class="pix bi" src="${ICON(want)}"></em>${onMap?'すごろく':'おでかけ'}`;} if(onMap)eb.classList.add('hint');}
     zzUI();
     coinUI();
   }
@@ -1781,6 +1812,7 @@ const K=(()=>{
   // ---- モーダル ----
   let fishTimer=null;
   function modal(html){$('kmbody').innerHTML=pixify(html);$('kmodal').classList.add('on')}
+  function navFree(){$('kid').style.setProperty('--knavb',Math.max(0,$('kid').clientHeight-$('knav').offsetTop)+'px')}   // #21：持ち物・ぽこコレクションは下部ナビの上で止めて、ナビを押せるようにする
   function close(){const wasFish=$('kmodal').classList.contains('on')&&!!$('fbtn'); $('kmodal').classList.remove('on');$('kcol').classList.remove('on');$('klb').classList.remove('on');clearInterval(fishTimer);fishTimer=null;ui();draw();
     try{if(wasFish&&!$('kfind').classList.contains('on'))findNext(500)}catch(e){}}   // v2.4：釣りの画面を閉じたら、待たせた発見カード（ほかは findTick が空いたときに出す）
 
@@ -2478,6 +2510,7 @@ const K=(()=>{
     if(S.stage==='seed'){say('まずは種をタップしてみよう');return}
     const sleepNG=()=>{say('{n}は寝ています。「寝る」でもう一度押すと起きます');};
     const away=()=>{const m=Math.ceil((S.explore.end-now())/MIN),pl=PL(S.explore.p);say(pl.walk?`{n}はお散歩中… あと${m}分`:`{n}は${pl.n}を探検中… あと${m}分`)};
+    if(k==='out'){ if(S.explore)k='explore'; else return S.sleep?sleepNG():outUI(); }   // #21：「おでかけ」。出かけている間は今までの「探検」ボタンと同じ（すごろく・あと○分）
     if(k==='cook')return cookUI();
     if(S.explore){ if(k==='explore'&&!PL(S.explore.p).walk&&!PL(S.explore.p).unknown) return mapUI(); return away(); }
     if(k==='walk'){ if(S.sleep)return sleepNG();
@@ -2497,6 +2530,11 @@ const K=(()=>{
         if(S.petN<=3){ANA.track('pet');carePetRecord(false);const gained=earnAff(1,'pet');careAction('pet');busy='happy';kfx($('kov'),'💗');SND.cry(ckey());speak(lineOf('pet'));say(gained?'なでた！ なかよし +1':'なでた！ 今日のなかよしの上限に達しています')}else{busy='normal';say('{n}はもう満足そう。少し時間をおいてね')}}
       setTimeout(()=>busy=null,1200);save();ui();
     }
+  }
+  function outUI(){   // #21：おでかけ先（お散歩・探検・釣り）を選ぶだけ。選んだあとは今までの act をそのまま呼ぶ
+    const L=[['walk','🐾','お散歩'],['explore','🗺️','探検'],['fish','🎣','釣り']];
+    modal(`<h2>おでかけ</h2>${L.map(([k,e,n])=>`<button class="place${S.tut===3&&k==='explore'?' hint':''}" data-go="${k}"><em>${e}</em><span>${n}</span></button>`).join('')}<button class="pbtn gray" onclick="K.close()">やめる</button>`);
+    $('kmbody').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{SND.sfx.btn();close();act(b.dataset.go)});
   }
   function exploreUI(){
     if(S.genki<1){say('元気が足りない… 料理を食べさせてあげよう');return}
@@ -3104,6 +3142,7 @@ const K=(()=>{
   const SAVED_NOTE='ファイルの保存を開始しました。iPhoneは「ファイル」アプリの「ダウンロード」で、保存できたか確認してください';
   function placeSF(){const el=$('ksavefail');if(!el||!el.classList.contains('on'))return;try{const p=el.offsetParent||el.parentElement,pr=p.getBoundingClientRect(),cr=cv.getBoundingClientRect();el.style.top=Math.max(8,Math.round(cr.top-pr.top+6))+'px'}catch(e){}}
   window.addEventListener('resize',()=>placeSF());
+  window.addEventListener('resize',()=>{try{navFree()}catch(e){}});   // #21
   function setSaveFail(on){
     saveFailed=on; const want=on||latestFailed||careKeepFailed, el=$('ksavefail');
     if(!want){el.classList.remove('on');el.dataset.k='';return}
@@ -3326,12 +3365,14 @@ const K=(()=>{
       <button class="place" id="ststo"><em>💾</em><span>保存の容量<small>使っている量・バックアップ・整理</small></span></button>
       <button class="place" id="stana"><em>📊</em><span>プレイ分析<small>${st}</small></span></button>
       <button class="place" id="stsnd"><em>${SND.on?'🔊':'🔇'}</em><span>音<small>${SND.on?'鳴らす':'鳴らさない'}</small></span></button>
+      <button class="place" id="kreset"><em>🌱</em><span>最初から</span></button>
       <button class="pbtn gray" onclick="K.close()">とじる</button>`);
+    $('kreset').onclick=()=>{if(!LOCK)resetUI()};   // #21：「最初から」はホームから設定の中へ（押したあとの流れは今までどおり）
     $('stmove').onclick=()=>moveUI();
     $('strcv').onclick=()=>recoverUI();
     $('stana').onclick=()=>analyticsUI();
     $('ststo').onclick=()=>storageUI();
-    $('stsnd').onclick=()=>{SND.toggle();sndLabel();settingsUI()};
+    $('stsnd').onclick=()=>{SND.toggle();settingsUI()};   // #21：音の切り替えは設定の中だけ（ホームの「音あり」ボタンはなくした）
   }
   // ===== AL4：ぽこアルバム・次の子の流れ =====
   const dstr=t=>{if(typeof t!=='number'||!isFinite(t))return '？';const d=new Date(t);return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`};
@@ -3349,7 +3390,7 @@ const K=(()=>{
   function pcOpen(view,arg){
     if(LOCK)return; if(view==='album'&&!S)return;
     $('kmodal').classList.remove('on'); clearInterval(fishTimer); fishTimer=null;
-    PC.stack=[{view,arg,sc:0}]; PC.more=20; $('kcol').classList.add('on'); pcRender(0);
+    PC.stack=[{view,arg,sc:0}]; PC.more=20; navFree(); $('kcol').classList.add('on'); pcRender(0);
   }
   function pcGo(view,arg){ const b=$('pcbody'); if(PC.stack.length)PC.stack[PC.stack.length-1].sc=b.scrollTop; PC.stack.push({view,arg,sc:0}); pcRender(0) }
   function pcBack(){ if(PC.stack.length<2)return pcClose(); PC.stack.pop(); const c=PC.stack[PC.stack.length-1]; pcRender(c.sc||0) }   // 直前の画面へ。一覧のスクロール位置も戻す
@@ -3710,14 +3751,14 @@ const K=(()=>{
     if(tab==='recipe'){body=`<p>見つけたレシピ ${S.recipes.filter(k=>k!=='fushigi').length} / ${Object.keys(R).length}</p><div class="items">${Object.entries(R).map(([key,d])=>{const has=S.recipes.includes(d.k);const hint=IT[key.split('+')[0]].e;
       return `<div class="item ${has?'':'dis'}"><em>${has?`<img class="pix" src="${dishPix(d.k)}">`:'❓'}</em>${has?d.n:hint+' ＋ ？'}</div>`}).join('')}</div>`}
     modal(`<h2>🎒 持ち物</h2><div class="tabs"><button data-t="food" class="${tab==='food'?'on':''}">食べ物</button><button data-t="decor" class="${tab==='decor'?'on':''}">飾り</button><button data-t="recipe" class="${tab==='recipe'?'on':''}">レシピ</button></div>${body}<button class="pbtn gray" onclick="K.close()">とじる</button>`);
+    $('kcol').classList.remove('on'); navFree(); $('kmbody').firstElementChild.classList.add('knavok');   // #21：下部ナビから行き来できる画面の印（ほかの画面に替わると中身ごと消える）
     $('kmbody').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>bagUI(b.dataset.t));
     $('kmbody').querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>{const k=b.dataset.dec;S.hideDecor=S.hideDecor||{};S.hideDecor[k]=!S.hideDecor[k];save();SND.sfx.btn();bagUI('decor')});
   }
 
   // ---- イベント ----
   document.querySelectorAll('#kbtns button[data-k]').forEach(b=>b.onclick=()=>{SND.sfx.btn();act(b.dataset.k)});
-  const sndLabel=()=>$('ksnd').innerHTML=pixify(SND.on?'🔊 音あり':'🔇 音なし'); sndLabel();
-  $('ksnd').onclick=()=>{SND.toggle();sndLabel()};
+  document.querySelector('#knav [data-nav=home]').onclick=()=>{SND.sfx.btn();if(!LOCK)close()};   // #21：下部ナビの「おうち」：開いている画面を閉じてホームに戻る
   $('kset').onclick=()=>{if(LOCK)return;if(!S){ktoast('先にぽこを育て始めてね');return}SND.sfx.btn();settingsUI()};
   $('kmovein').onclick=()=>{if(!LOCK)moveUI()};
   $('kbag').onclick=()=>bagUI();
@@ -3750,7 +3791,6 @@ const K=(()=>{
   $('pcx').onclick=()=>pcClose(); $('pcback').onclick=()=>pcBack(); 
   $('pctabs').querySelectorAll('[data-pt]').forEach(b=>b.onclick=()=>pcTab(b.dataset.pt));
   {const T={album:'heart',zukan:'book',kotoba:'chat'};$('pctabs').querySelectorAll('[data-pt]').forEach(b=>{b.innerHTML=PCD(T[b.dataset.pt])+b.textContent.replace(/^[❤📖💬]/u,'')})}
-  $('kreset').onclick=()=>{if(!LOCK)resetUI()};
   $('klbbtn').onclick=()=>{if(!LOCK&&S&&!modalOpen())lbOpen()};   // v2.2
   $('kcoinic').innerHTML=PCD('coin'); $('klbic').innerHTML=PCD('gift');
   $('kcn').onclick=()=>$('kconfirm').classList.remove('on');
