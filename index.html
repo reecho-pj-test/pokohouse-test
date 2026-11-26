@@ -546,7 +546,7 @@ img.pcd{image-rendering:pixelated}
 #kmbody:has(>.kui){display:flex;flex-direction:column;max-height:100%;margin:0 auto;padding:var(--ui-pad);border-color:var(--ui-ink);box-shadow:6px 6px 0 var(--ui-ink)}
 .kui{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;color:var(--ui-ink)}
 .kuihd{flex:none;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:var(--ui-sp-s)}   /* タイトル・右上の×・タブ（動かない） */
-.kuihd h2{grid-column:2;margin:0;font-size:var(--ui-fs-h);color:var(--ui-ink);white-space:nowrap}
+.kuihd h2{grid-column:2;margin:0;font-size:var(--ui-fs-h);color:var(--ui-ink);overflow-wrap:anywhere;word-break:auto-phrase}   /* 長い見出しは←・×の間で折り返す（320px でも重ならない） */
 .kuix{grid-column:3;width:44px;height:44px;padding:0;border:var(--ui-btn-bw) solid var(--ui-btn-bd);border-radius:var(--ui-btn-r);background:var(--ui-btn-bg);color:var(--ui-ink);
   font-size:22px;font-weight:900;line-height:1;box-shadow:var(--ui-btn-sh);display:flex;align-items:center;justify-content:center}
 .kui .tabs{grid-column:1/-1;margin:var(--ui-sp-s) 0 3px;gap:var(--ui-sp-s)}
@@ -572,6 +572,32 @@ img.pcd{image-rendering:pixelated}
 .kui .icn{display:block;word-break:keep-all;overflow-wrap:anywhere}   /* 個数・「飾ってる／しまってある」も言葉の区切りで */
 .kui .empty{font-size:var(--ui-fs-b);color:var(--ui-ink);opacity:.7}
 @media (prefers-reduced-motion:reduce){.kuisw.dn .kuidn{animation:none}}
+/* ===== #31 ごはん・料理・設定にも共通の形（kuiModal）。左上の←（もどる）・下の操作（固定）・報酬／状態／注意の枠（docs/ui_common.md 4章） ===== */
+#kmodal.on:has(.knavfree){bottom:var(--knavb,0px)}   /* ごはん・料理・設定は下部ナビを覆わない（ナビの印は「ホーム」のまま。確認の画面は今までどおり覆う） */
+.kuib{grid-column:1;width:44px;height:44px;padding:0;border:var(--ui-btn-bw) solid var(--ui-btn-bd);border-radius:var(--ui-btn-r);background:var(--ui-btn-bg);color:var(--ui-ink);
+  font-size:20px;font-weight:900;line-height:1;box-shadow:var(--ui-btn-sh);display:flex;align-items:center;justify-content:center}
+.kuib:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ui-btn-bd)}
+.kuihd .kuiex{grid-column:1/-1;margin-top:var(--ui-sp-s)}   /* 見出しの下に固定する状態（おなか・選んだ材料） */
+.kuihd .kuiex p{font-size:var(--ui-fs-b);color:var(--ui-ink);margin:0}
+.kuihd .kuiex .sel{margin:2px 0 0;min-height:0;font-size:20px;color:var(--ui-ink)}
+.kuift{flex:none;padding-top:var(--ui-sp)}   /* 下の操作（OK・作る！など）。一覧が長くても隠れない */
+.kuift .mmsg:empty{display:none}.kuift .mmsg{min-height:0;margin:0 0 var(--ui-sp-s);font-size:var(--ui-fs-b);color:var(--ui-ink)}
+.kui .pbtn{margin-top:var(--ui-sp);min-height:44px;padding:8px;border:var(--ui-btn-bw) solid var(--ui-btn-bd);border-radius:var(--ui-btn-r);color:var(--ui-ink);font-size:16px;font-weight:900;box-shadow:var(--ui-btn-sh)}
+.kui .kuift .pbtn:first-child{margin-top:0}
+.kui .pbtn.gray{background:var(--ui-btn-bg)}
+.kui .pbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ui-btn-bd)}
+.kui .place{border-color:var(--ui-ink);border-radius:var(--ui-r-s);color:var(--ui-ink);font-size:var(--ui-fs-b);margin-top:var(--ui-sp-s)}
+.kui .place small{color:var(--ui-ink);font-size:var(--ui-fs-s)}
+.kui .sbox,.kui .rcv{border-color:var(--ui-ink);color:var(--ui-ink)}
+.kui .kuisc p small,.kui .dsc,.kui .dsc p{color:var(--ui-ink)}
+.kui .got{margin:0 0 var(--ui-sp)}
+.knavfree .kuisc p{line-height:1.6}   /* 設定の中の長い説明は今までの行の高さのまま（tests/v21_impl.py F1） */
+.kui .kuisc .kuist,.kui .kuisc .kuirw,.kui .kuisc .kuint,.kuiex .kuist{border-radius:var(--ui-r-s);padding:6px 10px;margin:0 0 var(--ui-sp)}
+.kui .kuist{background:#FFF4DF;border:2px dashed var(--ui-ink)}   /* 状態（いまの様子：おなか・選んだ材料・使っている量） */
+.kui .kuirw{background:#F5DDA0;border:2px solid var(--ui-ink);font-weight:900}   /* 報酬（増えたもの：元気・なかよし・コイン） */
+.kui .kuint{background:#F3C4CE;border:2px solid var(--ui-ink)}   /* 注意（気をつけること：警告・上書き・教えないで） */
+.pcn{--ink:var(--ui-ink)}   /* #31：ぽこコレクションの文字色・枠線も共通の茶に（タブの色・飾り・文字の大きさはそのまま） */
+.pcn .pcrb{border-radius:var(--ui-btn-r);background:var(--ui-btn-bg)}
 @media (max-height:520px){#kid .kbtns{margin-top:6px}#kid .kbtns button{min-height:50px;padding:2px 0 1px;line-height:1.25}#kid .knav{margin-top:6px;padding-top:4px;padding-bottom:4px}#kid .knav button{min-height:44px}}
 /* ===== #37 ホームの着せ替えテーマ：セージグリーン×クリームの絵本風（docs/home_theme.md・ADR 0004） =====
    色・枠・飾りの絵は #kid の --th-* だけで決める。別のテーマは #kid[data-theme=…]{--th-…} で変数を差し替える（切り替えの機能はまだ無い）。
@@ -2627,21 +2653,30 @@ const K=(()=>{
     $('kmbody').querySelectorAll('.place').forEach(b=>b.onclick=()=>{const p=PLACES[b.dataset.p];
       ANA.track('explore_start',{place:b.dataset.p});S.genki-=1;S.full=clamp((S.full||0)-2,0,FULL_MAX);{const st=now(),dur=p.min*MIN,n=2+Math.floor(Math.random()*3)+(S.lucky?1:0);S.explore={p:b.dataset.p,start:st,end:st+dur,bonus:[],map:makeMap(p),ev:Array.from({length:n},(_,i)=>({t:st+dur*(i+0.5+(Math.random()-.5)*.6)/n,k:wpick(p.t)})).filter(v=>v.k)}};EX=null;x=4;S.justBack=false;delete S.backFrom;if(S.tut===3){S.tut=0;setTimeout(()=>say(TUT[4]),2600)}save();close();say(`{n}は${p.n}へ出かけた！「すごろく」で遊ぶと、おまけや近道が見つかるよ`);setTimeout(()=>speak(lineOf('go')),600)});
   }
+  // #31：共通の画面の形（docs/ui_common.md 4章）。見出し・右上の×は固定、中（body）だけ動く。ex＝見出しの下に固定する状態、foot＝下の操作（固定）、back＝左上の←（もどる）
+  // free:false のときだけ下部ナビを覆う（「最初から」の前の画面など、ナビの上に別の画面があるとき）
+  function kuiModal(o){
+    modal(`<div class="kui${o.free===false?'':' knavfree'}"><div class="kuihd">${o.back?`<button class="kuib" id="${o.backId||'kuibk'}" aria-label="もどる">←</button>`:''}<h2>${o.title||''}</h2><button class="kuix" aria-label="とじる" onclick="K.close()">×</button>${o.ex?`<div class="kuiex">${o.ex}</div>`:''}</div><div class="kuisw"><div class="kuisc">${o.body||''}</div><i class="kuidn"></i></div>${o.foot?`<div class="kuift">${o.foot}</div>`:''}</div>`);
+    if(o.back)$(o.backId||'kuibk').onclick=()=>{SND.sfx.btn();o.back()};
+    $('kcol').classList.remove('on'); navFree(); kuiCue();
+  }
   function cookUI(){
-    let sel=[];
+    let sel=[], done=false;   // #31：done＝この画面で作ったら、続けて押しても古いボタンを押しても作らない（材料の二重消費を防ぐ）
     const foods=Object.keys(S.inv);
     function render(){
       const left=k=>cnt(S.inv,k)-sel.filter(s=>s===k).length;
-      const grid=foods.length?`<div class="items">${foods.map(k=>`<button class="item ${left(k)<=0?'dis':''}" data-i="${k}"><em>${IT[k].e}</em>${IT[k].n}<br>×${left(k)}</button>`).join('')}</div>`:'<div class="empty">材料がありません。探検や釣りで集めよう</div>';
-      modal(`<h2>🍳 料理</h2><p>材料を2つ選んでください</p><div class="sel">${sel.map(k=>IT[k].e).join(' ＋ ')||'？ ＋ ？'}</div>${grid}
-        <button class="pbtn" id="kcook" ${sel.length<2?'disabled':''}>作る！</button><button class="pbtn gray" id="kclr">${sel.length?'選び直す':'閉じる'}</button>`);
-      $('kmbody').querySelectorAll('.item').forEach(b=>b.onclick=()=>{const k=b.dataset.i;if(sel.length<2&&left(k)>0){sel.push(k);render()}});
-      $('kclr').onclick=()=>{if(sel.length){sel=[];render()}else close()};
+      const grid=foods.length?`<div class="items">${foods.map(k=>`<button class="item ${left(k)<=0?'dis':''}" data-i="${k}"><em>${IT[k].e}</em>${inm(IT[k].n)}<span class="icn">×${left(k)}</span></button>`).join('')}</div>`:'<div class="empty">材料がありません。探検や釣りで集めよう</div>';
+      kuiModal({title:'🍳 料理',ex:`<div class="kuist"><p>材料を2つ選んでください</p><div class="sel">${sel.map(k=>IT[k].e).join(' ＋ ')||'？ ＋ ？'}</div></div>`,body:grid,
+        foot:`<button class="pbtn" id="kcook" ${sel.length<2?'disabled':''}>作る！</button>${sel.length?'<button class="pbtn gray" id="kclr">選び直す</button>':''}`});   // #31：何も選んでいないときの「閉じる」はやめた（×・下部ナビで閉じる）
+      $('kmbody').querySelectorAll('.item').forEach(b=>b.onclick=()=>{const k=b.dataset.i;if(!done&&b.isConnected&&sel.length<2&&left(k)>0){sel.push(k);render()}});
+      if($('kclr'))$('kclr').onclick=()=>{sel=[];render()};
       $('kcook').onclick=()=>{
+        if(done||sel.length<2||sel.some(k=>cnt(S.inv,k)<sel.filter(s=>s===k).length))return; done=true;
         const key=[...sel].sort().join('+'), d=(R[key]&&!isRetired('dish',R[key].k)?R[key]:null)||FUSHIGI, isNew=!S.recipes.includes(d.k);
         sel.forEach(k=>add(S.inv,k,-1)); ANA.track('cook',{recipe:d.k,is_new:isNew}); if(S.tut===1)setTut(2); SND.sfx.ding(); if(S.stage!=='seed'&&!S.explore) speak(lineOf('cook')); add(S.dishes,d.k); if(isNew)S.recipes.push(d.k); const cg=isNew?coinDish(d.k):0; if(cg)try{SND.sfx.coin()}catch(e){} prFood('c',d.k); prRec('cook',d===FUSHIGI?['n_odd']:[]); save();
-        modal(`<h2>${isNew?'🎉 新しいレシピ！':'できた！'}</h2><div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b><br>元気 +${d.g}　なかよし +${foodAff(d)}</p>${cg?`<p class="kcoinl">${PCD('coin')} 新しい料理の発見 コイン +${cg}</p>`:''}
-          <button class="pbtn" onclick="K.close()">OK</button>`);
+        kuiModal({title:isNew?'🎉 新しいレシピ！':'できた！',body:`<div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b></p><p class="kuirw">元気 +${d.g}　なかよし +${foodAff(d)}</p>${cg?`<p class="kcoinl kuirw">${PCD('coin')} 新しい料理の発見 コイン +${cg}</p>`:''}`,
+          foot:'<button class="pbtn" id="kcok">OK</button>'});
+        $('kcok').onclick=()=>cookUI();   // #31：OK で料理の画面に戻る（材料の数は作り直した最新）
         if(isNew)kfx($('kmbody'),'✨',3,20);
       };
     }
@@ -2650,18 +2685,25 @@ const K=(()=>{
   function feedUI(){
     const ds=Object.keys(S.dishes).filter(hasDISH);   // 知らない料理はあげられない（データは残す）
     if(!ds.length){say('料理がありません。まずは「料理」で作ってみよう');return}
-    modal(`<h2>🍽️ どれをあげる？</h2><p class="kfull">おなか ${fullDots()}${S.full>=FULL_STOP?'　いっぱい！':S.full<=FULL_HUNGRY?'　ぺこぺこ':''}</p><div class="items">${ds.map(k=>`<button class="item" data-d="${k}"><em><img class="pix" src="${dishPix(k)}"></em>${DISH[k].n}<br>×${S.dishes[k]}</button>`).join('')}</div><button class="pbtn gray" onclick="K.close()">やめる</button>`);
+    const full=S.full>=FULL_STOP; let done=false;   // #31：満腹のときはマスを灰色に（押しても食べない）。done＝続けて押しても1回だけ
+    kuiModal({title:'🍽️ どれをあげる？',ex:`<p class="kfull kuist">おなか ${fullDots()}${full?'　いっぱい！':S.full<=FULL_HUNGRY?'　ぺこぺこ':''}</p>`,
+      body:`<div class="items">${ds.map(k=>`<button class="item${full?' dis':''}"${full?' aria-disabled="true"':''} data-d="${k}"><em><img class="pix" src="${dishPix(k)}"></em>${inm(DISH[k].n)}<span class="icn">×${S.dishes[k]}</span></button>`).join('')}</div>`});
     $('kmbody').querySelectorAll('.item').forEach(b=>b.onclick=()=>{
+      if(done||!b.isConnected)return;
       if(LOCK||conflict()){if(!LOCK)enterConflict();return}
       const raw=DISH[b.dataset.d];if(!raw||cnt(S.dishes,raw.k)<=0)return;
       const d={...raw,a:foodAff(raw)};
       if(S.full>=FULL_STOP){close();if(!busy){busy='normal';setTimeout(()=>{if(busy==='normal')busy=null},1400)}say('{n}「もうはいらないよ〜」 おなかがすくまで、少し待とう（探検やお散歩に行くと早くすくよ）');return}   // v2.4：おなかがいっぱいなら食べない（元気の満タンの代わり）。緊急修正：ほかの動きの最中は上書きせず、「normal」は1.4秒で自分だけ戻す（固まり防止）
+      done=true;
       const amt=fullAmt(d), pon=(S.full+amt)>=FULL_PON; S.full=clamp(S.full+amt,0,FULL_MAX);
       add(S.dishes,d.k,-1);S.genki=clamp(S.genki+d.g,0,5);if(d.tag)S.tags[d.tag]=(S.tags[d.tag]||0)+1;prFood('e',d.k);prRec('feed');
       d.a=earnAff(d.a,'feed');careAction('feed');
-      ANA.track('feed',{dish:d.k});close();busy='eat';kfx($('kov'),'dish:'+d.k);SND.sfx.eat();setTimeout(()=>SND.cry(ckey()),500);say(`${d.n}を食べた！ 元気 +${d.g}　なかよし +${d.a}`);setTimeout(()=>speak(lineOf('feed'),'happy'),1300);
+      ANA.track('feed',{dish:d.k});busy='eat';kfx($('kov'),'dish:'+d.k);SND.sfx.eat();setTimeout(()=>SND.cry(ckey()),500);say(`${d.n}を食べた！ 元気 +${d.g}　なかよし +${d.a}`);setTimeout(()=>speak(lineOf('feed'),'happy'),1300);
       setTimeout(()=>{busy='happy';setTimeout(()=>busy=null,900)},1200);if(S.tut===2)setTut(3);save();ui();
       if(pon)setTimeout(()=>{busy='happy';kfx($('kov'),'💦');say('{n}「おなか、ぽんぽこ……！ もう食べられない〜」');setTimeout(()=>busy=null,1500)},2600);   // v2.4：食べすぎのかわいい反応
+      // #31：食べた結果（報酬の枠）と OK。OK でごはんの一覧に戻る（数・おなかは最新）。料理が無くなったら閉じて今までの案内
+      kuiModal({title:'🍽️ ごはん',body:`<div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b>を食べた！</p><p class="kuirw">元気 +${d.g}　なかよし +${d.a}</p>`,foot:'<button class="pbtn" id="kfok">OK</button>'});
+      $('kfok').onclick=()=>{if(!Object.keys(S.dishes).filter(hasDISH).length)close();feedUI()};
     });
   }
   // ---- つり ----
@@ -3393,8 +3435,8 @@ const K=(()=>{
     try{ta.select();document.execCommand('copy')?ok():ng()}catch(e){ng()}
   }
   function moveUI(note){
-    modal(`<h2>📦 ぽこのおひっこし</h2>
-      <p class="tleft">スマホを変えるときや、データが消えてしまったときのための しくみです。<br>
+    kuiModal({title:'📦 ぽこのおひっこし',back:S?settingsUI:null,backId:'mvback',free:!!S,body:`
+      <p class="tleft kuint">スマホを変えるときや、データが消えてしまったときのための しくみです。<br>
       コードやファイルは<b>どこにも自動では保存されません</b>。自分でメモや保存をしておいてね。<br>
       <b>コードを知っている人は、ぽこをコピーできます。</b>ほかの人には教えないでね。</p>
       ${S?`<div class="sbox"><b>① おひっこしコードを作る</b>
@@ -3410,9 +3452,8 @@ const K=(()=>{
         <details class="tleft dsc"><summary>保存できたか確かめるには</summary>
           <p>・iPhoneのSafari：ダウンロードの確認が出たら「ダウンロード」を選びます。そのあと「ファイル」アプリの「ダウンロード」フォルダに pokohouse_backup_（日付）.json があるか確かめてください。<br>
           ・LINEなど、アプリの中で開いているときは、保存できないことがあります。右上のメニューから「Safariで開く」を選んでから保存してください。<br>
-          ・それでも保存できないときは、①の「おひっこしコード」を作って、メモアプリに貼りつけて残してください。</p></details></div>
-      <p class="mmsg" id="mvmsg">${note||''}</p>
-      <button class="pbtn gray" id="mvback">もどる</button>`);
+          ・それでも保存できないときは、①の「おひっこしコード」を作って、メモアプリに貼りつけて残してください。</p></details></div>`,
+      foot:`<p class="mmsg" id="mvmsg">${note||''}</p>`});   // #31：「もどる」は左上の←（設定へ）。まだ育てていないときは×だけ
     const msg=t=>{$('mvmsg').innerHTML=pixify(esc(t))};
     if(S){$('mkcode').onclick=()=>{try{const c=makeCode();$('codeout').value=c;$('cpcode').disabled=false;msg('コードができました。コピーして、メモアプリなどに保存してね');ANA.track('transfer_code_issue')}catch(e){msg('コードを作れませんでした')}};
     $('cpcode').onclick=()=>copyText($('codeout').value,$('codeout'));}
@@ -3424,7 +3465,6 @@ const K=(()=>{
       if(f.size>MAX_IMPORT){msg('⚠ ファイルが大きすぎます。今のデータはそのままです');return}
       const r=new FileReader();r.onload=()=>{try{confirmRestore(readBackup(String(r.result)),'file')}catch(e){msg('⚠ '+e.message+'。今のデータはそのままです')}};
       r.onerror=()=>msg('⚠ ファイルを読めませんでした');r.readAsText(f)};
-    $('mvback').onclick=()=>S?settingsUI():close();
   }
   function confirmRestore(clean,via){
     modal(`<h2>📦 この子を呼びもどす？</h2>
@@ -3442,19 +3482,18 @@ const K=(()=>{
   // ---- せってい ----
   function settingsUI(){
     const st=!ANA.configured()?'まだ準備中（いまは何も送っていません）':ANA.consent==='granted'?'さんかしている':ANA.consent==='denied'?'さんかしていない':'まだ決めていない';
-    modal(`<h2>⚙️ せってい</h2>
+    kuiModal({title:'⚙️ せってい',body:`
       <button class="place" id="stmove"><em>📦</em><span>ぽこのおひっこし<small>引き継ぎコード・バックアップ</small></span></button>
       <button class="place" id="strcv"><em>🛟</em><span>データの復旧<small>この端末に残っている前のデータに戻す</small></span></button>
       <button class="place" id="ststo"><em>💾</em><span>保存の容量<small>使っている量・バックアップ・整理</small></span></button>
       <button class="place" id="stana"><em>📊</em><span>プレイ分析<small>${st}</small></span></button>
       <button class="place" id="stsnd"><em>${SND.on?'🔊':'🔇'}</em><span>音<small>${SND.on?'鳴らす':'鳴らさない'}</small></span></button>
-      <button class="place" id="kreset"><em>🌱</em><span>最初から</span></button>
-      <button class="pbtn gray" onclick="K.close()">とじる</button>`);
+      <button class="place" id="kreset"><em>🌱</em><span>最初から</span></button>`});   // #31：下の「とじる」はやめた（右上の×・下部ナビ「ホーム」で閉じる）
     $('kreset').onclick=()=>{if(!LOCK)resetUI()};   // #21：「最初から」はホームから設定の中へ（押したあとの流れは今までどおり）
     $('stmove').onclick=()=>moveUI();
     $('strcv').onclick=()=>recoverUI();
     $('stana').onclick=()=>analyticsUI();
-    $('ststo').onclick=()=>storageUI();
+    $('ststo').onclick=()=>storageUI(true);
     $('stsnd').onclick=()=>{SND.toggle();settingsUI()};   // #21：音の切り替えは設定の中だけ（ホームの「音あり」ボタンはなくした）
   }
   // ===== AL4：ぽこアルバム・次の子の流れ =====
@@ -3702,22 +3741,22 @@ const K=(()=>{
   // ===== AL7：「最初から」の2択・アルバムの子を戻す・保存の容量 =====
   function resetUI(){
     if(LOCK)return; if(!S){$('kconfirm').classList.add('on');return}
-    modal(`<h2>最初から</h2><p class="tleft">どちらにしますか？ どちらも、始める前に今のデータを退避します（せってい → データの復旧 で戻せます）。</p>
+    kuiModal({title:'最初から',back:settingsUI,body:`<p class="tleft">どちらにしますか？ どちらも、始める前に今のデータを退避します（せってい → データの復旧 で戻せます）。</p>
       <button class="place" id="rsone"><em>🌱</em><span>今の子だけやり直す<small>消える：今の子（${esc(S.name)}）の名前・なかよし・元気・食べた記録<br>残る：アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・コイン・進化図鑑</small></span></button>
       <button class="place" id="rsall"><em>🧹</em><span>全部消して最初から<small>消える：今の子・アルバム・お気に入り・持ち物・料理・飾り・レシピ・行ける場所・たね・コイン<br>残る：進化図鑑（発見記録・思い出）・ことば図鑑・シール帳の進み・まだ使っていないひみつの種とかけら</small></span></button>
-      <button class="pbtn gray" onclick="K.close()">やめる</button>`);
+`});   // #31：「やめる」は左上の←（設定へ）と右上の×に
     $('rsone').onclick=()=>restartUI();
     $('rsall').onclick=()=>{close();$('kconfirm').classList.add('on')};
   }
   function restartUI(){
-    if(S.explore){modal(`<h2>今の子だけやり直す</h2><p>探検・お散歩から帰ってきてからにしてね</p><button class="pbtn gray" onclick="K.close()">とじる</button>`);return}
+    if(S.explore){kuiModal({title:'今の子だけやり直す',back:resetUI,body:'<p class="kuint">探検・お散歩から帰ってきてからにしてね</p>'});return}
     const lost=S.stage==='adult'?'<br><b>この子はアルバムに入っていません。やり直すと、この子とはお別れになります（進化図鑑の思い出には残ります）。アルバムに入れたいときは「アルバム」から「次の子を育てる」を選んでね。</b>':'<br><b>今の子とはお別れになります。</b>';
     modal(`<h2>🌱 今の子だけやり直す</h2><img class="pix apic" src="${charPic()}"><p class="tleft">「${esc(S.name)}」の名前・なかよし・元気・食べた記録が消えて、新しいたねから育てます（たねは使いません）。${lost}</p>
       <input id="rsname" maxlength="12" placeholder="新しい子の名前（12文字まで）" style="width:100%;font-size:17px;padding:8px;border:3px solid #3a2f45;border-radius:10px">
       <button class="pbtn red" id="rsgo">やり直す</button><button class="pbtn gray" onclick="K.close()">やめる</button>`);
     $('rsgo').onclick=()=>{const nm=($('rsname').value||'').trim()||'ぽこ';
       modal(`<h2>本当にやり直しますか？</h2><p class="tleft">「${esc(S.name)}」とはお別れになります。<br>アルバム・持ち物・進化図鑑は残ります。</p><button class="pbtn red" id="rsok">やり直す</button><button class="pbtn gray" onclick="K.close()">やめる</button>`);
-      $('rsok').onclick=()=>{const prev=S.name,r=restartPet(nm);if(!r.ok){modal(`<p>⚠ ${FAIL_MSG(r)}</p><button class="pbtn gray" onclick="K.close()">とじる</button>`);return}
+      $('rsok').onclick=()=>{const prev=S.name,r=restartPet(nm);if(!r.ok){kuiModal({body:`<p class="kuint">⚠ ${FAIL_MSG(r)}</p>`});return}
         close();ui();draw();say(`新しいたねを植えたよ！ 種をタップして、芽を出させよう`)}};
   }
   function lostAsk(){
@@ -3744,20 +3783,19 @@ const K=(()=>{
       if(seen.has(x.v))out.push(Object.assign({dup:seen.get(x.v)},x)); else seen.set(x.v,x.k) }
     return out;
   }
-  function storageUI(){
+  function storageUI(bk){   // bk：設定から開いたとき（左上の←で設定へ戻る）。容量の警告で自動で開いたときは×だけ
     const {n}=storeUse(), T=tidyList(), pc=Math.round(n/STORE_CAP*100);
-    modal(`<h2>💾 保存の容量</h2><p>この端末で使っている量：${kb(n)}（目安 ${kb(STORE_CAP)} の ${pc}%）</p>
-      ${pc>=85?'<p class="tleft"><b>⚠ 保存がいっぱいに近づいています。先にバックアップファイルを保存してね。</b></p>':pc>=70?'<p class="tleft">保存が多くなってきました。バックアップファイルを保存しておくと安心です。</p>':''}
+    kuiModal({title:'💾 保存の容量',back:bk?settingsUI:null,body:`<p class="kuist">この端末で使っている量：${kb(n)}（目安 ${kb(STORE_CAP)} の ${pc}%）</p>
+      ${pc>=85?'<p class="tleft kuint"><b>⚠ 保存がいっぱいに近づいています。先にバックアップファイルを保存してね。</b></p>':pc>=70?'<p class="tleft kuint">保存が多くなってきました。バックアップファイルを保存しておくと安心です。</p>':''}
       <button class="pbtn" id="stbk">📄 バックアップファイルを保存する</button>
       <p class="tleft"><small>整理してよいもの（同じ中身の重複・古い予備）だけを選んで消せます。大事な退避（更新・復元・最初から・次の子などの前のデータ）はここでは消しません。</small></p>
-      ${T.length?T.map((x,i)=>`<label class="place"><input type="checkbox" data-td="${i}"><span>${esc(x.k.replace(KEY,''))}<small>${kb(x.b)}${x.dup?'・同じ中身が残ります':''}</small></span></label>`).join('')+'<button class="pbtn red" id="sttidy">選んだものを消す</button>':'<p>整理できるものはありません</p>'}
-      <button class="pbtn gray" onclick="K.close()">とじる</button>`);
+      ${T.length?T.map((x,i)=>`<label class="place"><input type="checkbox" data-td="${i}"><span>${esc(x.k.replace(KEY,''))}<small>${kb(x.b)}${x.dup?'・同じ中身が残ります':''}</small></span></label>`).join('')+'<button class="pbtn red" id="sttidy">選んだものを消す</button>':'<p>整理できるものはありません</p>'}`});   // #31：下の「とじる」はやめた
     $('stbk').onclick=()=>{try{downloadBackup(S);ktoast(SAVED_NOTE)}catch(e){ktoast('保存を開始できませんでした')}};
     if($('sttidy'))$('sttidy').onclick=()=>{const pick=[...document.querySelectorAll('[data-td]')].filter(c=>c.checked).map(c=>T[+c.dataset.td]);
       if(!pick.length){ktoast('消すものを選んでね');return}
       modal(`<h2>本当に消しますか？</h2><p class="tleft">${pick.map(x=>esc(x.k.replace(KEY,''))).join('<br>')}</p><button class="pbtn red" id="tdok">消す</button><button class="pbtn gray" id="tdno">やめる</button>`);
-      $('tdno').onclick=()=>storageUI();
-      $('tdok').onclick=()=>{let c=0;for(const x of pick){try{if(localStorage.getItem(x.k)===x.v){localStorage.removeItem(x.k);c++}}catch(e){}}storageUI();ktoast(`${c}こ消しました`)}};
+      $('tdno').onclick=()=>storageUI(bk);
+      $('tdok').onclick=()=>{let c=0;for(const x of pick){try{if(localStorage.getItem(x.k)===x.v){localStorage.removeItem(x.k);c++}}catch(e){}}storageUI(bk);ktoast(`${c}こ消しました`)}};
   }
   function storeWarn(){ if(LOCK||!S)return; const pc=storeUse().n/STORE_CAP*100;
     if(pc>=85)setTimeout(()=>{if(!$('kmodal').classList.contains('on'))storageUI()},3000); else if(pc>=70)setTimeout(()=>ktoast('保存が多くなってきました。せってい →「保存の容量」でバックアップを保存してね'),3000) }
@@ -3775,13 +3813,11 @@ const K=(()=>{
       const when=s.t?new Date(s.t).toLocaleString('ja-JP'):'';
       return `<div class="rcv"><b>${esc(s.l)}</b>${when?`<br><small>${esc(when)}</small>`:''}<br>${ok?summary(repairSave(clone(d))):d?'新しいバージョンのデータ（このままでは戻せません）':'読めないデータ'}
         ${ok?`<br><button class="pbtn" data-r="${i}">このデータに戻す</button>`:''}<button class="pbtn gray" data-b="${i}">ファイルに保存</button></div>`};
-    modal(`<h2>🛟 データの復旧</h2>
-      <p class="tleft">この端末の中に残っている、前のデータです。戻すと今のデータは上書きされますが、上書き前のデータもここに残ります。<br>
+    kuiModal({title:'🛟 データの復旧',back:S?settingsUI:null,backId:'rcvbk',body:`
+      <p class="tleft kuint">この端末の中に残っている、前のデータです。戻すと今のデータは上書きされますが、上書き前のデータもここに残ります。<br>
       <b>ブラウザの中のデータは、ブラウザの設定や機種変更で消えることがあります。</b>大事なデータは「ファイルに保存」もしておいてね。</p>
-      ${L.length?L.map(item).join(''):'<p>戻せるデータはありません</p>'}
-      <p class="mmsg" id="rcvmsg">${note||''}</p>
-      <button class="pbtn gray" id="rcvbk">もどる</button>`);
-    $('rcvbk').onclick=()=>S?settingsUI():close();
+      ${L.length?L.map(item).join(''):'<p>戻せるデータはありません</p>'}`,
+      foot:`<p class="mmsg" id="rcvmsg">${note||''}</p>`});   // #31：「もどる」は左上の←（設定へ）
     $('kmbody').querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const s=L[+b.dataset.b];try{downloadRaw(s.raw);ktoast(SAVED_NOTE)}catch(e){ktoast('保存を開始できませんでした')}});
     $('kmbody').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const s=L[+b.dataset.r];
       let next; try{const d=repairSave(clone(s.d)); next=(typeof d.ver==='number'&&d.ver>=2)?ensureIntegrity(d):ensureIntegrity(upgrade(d))}catch(e){recoverUI('⚠ このデータは戻せませんでした。今のデータはそのままです');return}
@@ -3796,7 +3832,7 @@ const K=(()=>{
   }
   function analyticsUI(first){
     const st=!ANA.configured()?'いまは まだ 準備中なので、何も送っていません。':ANA.consent==='granted'?'いまは「さんかする」になっています。':ANA.consent==='denied'?'いまは「さんかしない」になっています。':'まだ えらんでいません。';
-    modal(`<h2>📊 プレイ分析について</h2>
+    kuiModal({title:'📊 プレイ分析について',back:first?null:settingsUI,backId:'anabk',free:!first,body:`
       <p class="tleft">ぽこのおうちを もっと たのしく するために、<b>どの あそびが よく つかわれているか</b>を かぞえる しくみです。
       たとえば「つりが なんかい あそばれたか」「どのくらいの じかん あそんだか」を かぞえます。</p>
       <p class="tleft"><b>おくらないもの：</b>ぽこの なまえ、きみの なまえ、セーブデータ、おひっこしコード、きみの ことが わかる じょうほう</p>
@@ -3808,14 +3844,13 @@ const K=(()=>{
         「さんかしない」に変えると以後の送信を止め、保存された Cookie の削除を試みます。
         Google によるデータの扱いは <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google のサイトのページ</a> をご覧ください。</p>
       </details>
-      <p class="mmsg">${st}</p>
-      ${ANA.configured()?`<button class="pbtn" id="anaok">さんかする</button><button class="pbtn gray" id="anang">さんかしない</button>`:''}
-      <button class="pbtn gray" id="anabk">${first?'あとで決める':'もどる'}</button>`);
+      <p class="mmsg kuist">${st}</p>`,
+      foot:`${ANA.configured()?`<button class="pbtn" id="anaok">さんかする</button><button class="pbtn gray" id="anang">さんかしない</button>`:''}${first?'<button class="pbtn gray" id="analt">あとで決める</button>':''}`});   // #31：「もどる」は左上の←。最初に聞くときの「あとで決める」は残す
     if(ANA.configured()){
       $('anaok').onclick=()=>{ANA.set('granted');first?close():settingsUI();ktoast('ありがとう！ さんかするにしました')};
       $('anang').onclick=()=>{ANA.set('denied');first?close():settingsUI();ktoast('さんかしないにしました')};
     }
-    $('anabk').onclick=()=>first?close():settingsUI();
+    if(first)$('analt').onclick=()=>close();
   }
   // 分析の準備ができていて、まだ選んでいない人にだけ、最初に1回きく
   function maybeAskConsent(){
