@@ -597,6 +597,11 @@ img.pcd{image-rendering:pixelated}
 .kui .kuist{background:#FFF4DF;border:2px dashed var(--ui-ink)}   /* 状態（いまの様子：おなか・選んだ材料・使っている量） */
 .kui .kuirw{background:#F5DDA0;border:2px solid var(--ui-ink);font-weight:900}   /* 報酬（増えたもの：元気・なかよし・コイン） */
 .kui .kuint{background:#F3C4CE;border:2px solid var(--ui-ink)}   /* 注意（気をつけること：警告・上書き・教えないで） */
+/* ===== #56 ごはん・料理は画面の上下の中央に（一覧が長いときは今までどおり画面いっぱい）。共通の形でない画面も、閉じるのは右上の×（docs/ui_common.md 5章） ===== */
+#kmbody:has(>.kuictr){margin:auto}
+#kmbody:has(>.kmx){position:relative}
+.kmx{position:absolute;top:8px;right:8px;z-index:2}   /* すごろく・釣り・進化図鑑の登録：見た目は共通の×（.kuix）と同じ */
+#kmbody:has(>.kmx)>h2{padding:0 40px}   /* 見出しが×に重ならない */
 .pcn{--ink:var(--ui-ink)}   /* #31：ぽこコレクションの文字色・枠線も共通の茶に（タブの色・飾り・文字の大きさはそのまま） */
 .pcn .pcrb{border-radius:var(--ui-btn-r);background:var(--ui-btn-bg)}
 @media (max-height:520px){#kid .kbtns{margin-top:6px}#kid .kbtns button{min-height:50px;padding:2px 0 1px;line-height:1.25}#kid .knav{margin-top:6px;padding-top:4px;padding-bottom:4px}#kid .knav button{min-height:44px}}
@@ -1949,6 +1954,7 @@ const K=(()=>{
   // ---- モーダル ----
   let fishTimer=null;
   function modal(html){$('kmbody').innerHTML=pixify(html);$('kmodal').classList.add('on')}
+  const kmX=id=>`<button class="kuix kmx"${id?` id="${id}"`:' onclick="K.close()"'} aria-label="とじる">×</button>`;   // #56：共通の形でない画面の右上の×（id を渡したときは、押したときの処理をその画面で付ける）
   function navFree(){$('kid').style.setProperty('--knavb',Math.max(0,$('kid').clientHeight-$('knav').offsetTop)+'px')}   // #21：持ち物・ぽこコレクションは下部ナビの上で止めて、ナビを押せるようにする
   function close(){const wasFish=$('kmodal').classList.contains('on')&&!!$('fbtn'); $('kmodal').classList.remove('on');$('kcol').classList.remove('on');$('klb').classList.remove('on');clearInterval(fishTimer);fishTimer=null;ui();draw();
     try{if(wasFish&&!$('kfind').classList.contains('on'))findNext(500)}catch(e){}}   // v2.4：釣りの画面を閉じたら、待たせた発見カード（ほかは findTick が空いたときに出す）
@@ -2682,9 +2688,9 @@ const K=(()=>{
       ANA.track('explore_start',{place:b.dataset.p});S.genki-=1;S.full=clamp((S.full||0)-2,0,FULL_MAX);{const st=now(),dur=p.min*MIN,n=2+Math.floor(Math.random()*3)+(S.lucky?1:0);S.explore={p:b.dataset.p,start:st,end:st+dur,bonus:[],map:makeMap(p),ev:Array.from({length:n},(_,i)=>({t:st+dur*(i+0.5+(Math.random()-.5)*.6)/n,k:wpick(p.t)})).filter(v=>v.k)}};EX=null;x=4;S.justBack=false;delete S.backFrom;if(S.tut===3){S.tut=0;setTimeout(()=>say(TUT[4]),2600)}save();close();say(`{n}は${p.n}へ出かけた！「すごろく」で遊ぶと、おまけや近道が見つかるよ`);setTimeout(()=>speak(lineOf('go')),600)});
   }
   // #31：共通の画面の形（docs/ui_common.md 4章）。見出し・右上の×は固定、中（body）だけ動く。ex＝見出しの下に固定する状態、foot＝下の操作（固定）、back＝左上の←（もどる）
-  // free:false のときだけ下部ナビを覆う（「最初から」の前の画面など、ナビの上に別の画面があるとき）
+  // free:false のときだけ下部ナビを覆う（「最初から」の前の画面など、ナビの上に別の画面があるとき）。center:true は画面の上下の中央に出す（#56：ごはん・料理）
   function kuiModal(o){
-    modal(`<div class="kui${o.free===false?'':' knavfree'}"><div class="kuihd">${o.back?`<button class="kuib" id="${o.backId||'kuibk'}" aria-label="もどる">←</button>`:''}<h2>${o.title||''}</h2><button class="kuix" aria-label="とじる" onclick="K.close()">×</button>${o.ex?`<div class="kuiex">${o.ex}</div>`:''}</div><div class="kuisw"><div class="kuisc">${o.body||''}</div><i class="kuidn"></i></div>${o.foot?`<div class="kuift">${o.foot}</div>`:''}</div>`);
+    modal(`<div class="kui${o.free===false?'':' knavfree'}${o.center?' kuictr':''}"><div class="kuihd">${o.back?`<button class="kuib" id="${o.backId||'kuibk'}" aria-label="もどる">←</button>`:''}<h2>${o.title||''}</h2><button class="kuix" aria-label="とじる" onclick="K.close()">×</button>${o.ex?`<div class="kuiex">${o.ex}</div>`:''}</div><div class="kuisw"><div class="kuisc">${o.body||''}</div><i class="kuidn"></i></div>${o.foot?`<div class="kuift">${o.foot}</div>`:''}</div>`);
     if(o.back)$(o.backId||'kuibk').onclick=()=>{SND.sfx.btn();o.back()};
     $('kcol').classList.remove('on'); navFree(); kuiCue();
   }
@@ -2694,7 +2700,7 @@ const K=(()=>{
     function render(){
       const left=k=>cnt(S.inv,k)-sel.filter(s=>s===k).length;
       const grid=foods.length?`<div class="items">${foods.map(k=>`<button class="item ${left(k)<=0?'dis':''}" data-i="${k}"><em>${IT[k].e}</em>${inm(IT[k].n)}<span class="icn">×${left(k)}</span></button>`).join('')}</div>`:'<div class="empty">材料がありません。探検や釣りで集めよう</div>';
-      kuiModal({title:'🍳 料理',ex:`<div class="kuist"><p>材料を2つ選んでください</p><div class="sel">${sel.map(k=>IT[k].e).join(' ＋ ')||'？ ＋ ？'}</div></div>`,body:grid,
+      kuiModal({center:true,title:'🍳 料理',ex:`<div class="kuist"><p>材料を2つ選んでください</p><div class="sel">${sel.map(k=>IT[k].e).join(' ＋ ')||'？ ＋ ？'}</div></div>`,body:grid,
         foot:`<button class="pbtn" id="kcook" ${sel.length<2?'disabled':''}>作る！</button>${sel.length?'<button class="pbtn gray" id="kclr">選び直す</button>':''}`});   // #31：何も選んでいないときの「閉じる」はやめた（×・下部ナビで閉じる）
       $('kmbody').querySelectorAll('.item').forEach(b=>b.onclick=()=>{const k=b.dataset.i;if(!done&&b.isConnected&&sel.length<2&&left(k)>0){sel.push(k);render()}});
       if($('kclr'))$('kclr').onclick=()=>{sel=[];render()};
@@ -2702,7 +2708,7 @@ const K=(()=>{
         if(done||sel.length<2||sel.some(k=>cnt(S.inv,k)<sel.filter(s=>s===k).length))return; done=true;
         const key=[...sel].sort().join('+'), d=(R[key]&&!isRetired('dish',R[key].k)?R[key]:null)||FUSHIGI, isNew=!S.recipes.includes(d.k);
         sel.forEach(k=>add(S.inv,k,-1)); ANA.track('cook',{recipe:d.k,is_new:isNew}); if(S.tut===1)setTut(2); SND.sfx.ding(); if(S.stage!=='seed'&&!S.explore) speak(lineOf('cook')); add(S.dishes,d.k); if(isNew)S.recipes.push(d.k); const cg=isNew?coinDish(d.k):0; if(cg)try{SND.sfx.coin()}catch(e){} prFood('c',d.k); prRec('cook',d===FUSHIGI?['n_odd']:[]); save();
-        kuiModal({title:isNew?'🎉 新しいレシピ！':'できた！',body:`<div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b></p><p class="kuirw">元気 +${d.g}　なかよし +${foodAff(d)}</p>${cg?`<p class="kcoinl kuirw">${PCD('coin')} 新しい料理の発見 コイン +${cg}</p>`:''}`,
+        kuiModal({center:true,title:isNew?'🎉 新しいレシピ！':'できた！',body:`<div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b></p><p class="kuirw">元気 +${d.g}　なかよし +${foodAff(d)}</p>${cg?`<p class="kcoinl kuirw">${PCD('coin')} 新しい料理の発見 コイン +${cg}</p>`:''}`,
           foot:'<button class="pbtn" id="kcok">OK</button>'});
         $('kcok').onclick=()=>cookUI();   // #31：OK で料理の画面に戻る（材料の数は作り直した最新）
         if(isNew)kfx($('kmbody'),'✨',3,20);
@@ -2714,14 +2720,14 @@ const K=(()=>{
     const ds=Object.keys(S.dishes).filter(hasDISH);   // 知らない料理はあげられない（データは残す）
     if(!ds.length){say('料理がありません。まずは「料理」で作ってみよう');return}
     const full=S.full>=FULL_STOP; let done=false;   // #31：満腹のときはマスを灰色に（押しても食べない）。done＝続けて押しても1回だけ
-    kuiModal({title:'🍽️ どれをあげる？',ex:`<p class="kfull kuist">おなか ${fullDots()}${full?'　いっぱい！':S.full<=FULL_HUNGRY?'　ぺこぺこ':''}</p>`,
+    kuiModal({center:true,title:'🍽️ どれをあげる？',ex:`<p class="kfull kuist">おなか ${fullDots()}${full?'　いっぱい！':S.full<=FULL_HUNGRY?'　ぺこぺこ':''}</p>`,
       body:`<div class="items">${ds.map(k=>`<button class="item${full?' dis':''}"${full?' aria-disabled="true"':''} data-d="${k}"><em><img class="pix" src="${dishPix(k)}"></em>${inm(DISH[k].n)}<span class="icn">×${S.dishes[k]}</span></button>`).join('')}</div>`});
     $('kmbody').querySelectorAll('.item').forEach(b=>b.onclick=()=>{
       if(done||!b.isConnected)return;
       if(LOCK||conflict()){if(!LOCK)enterConflict();return}
       const raw=DISH[b.dataset.d];if(!raw||cnt(S.dishes,raw.k)<=0)return;
       const d={...raw,a:foodAff(raw)};
-      if(S.full>=FULL_STOP){close();if(!busy){busy='normal';setTimeout(()=>{if(busy==='normal')busy=null},1400)}say('{n}「もうはいらないよ〜」 おなかがすくまで、少し待とう（探検やお散歩に行くと早くすくよ）');return}   // v2.4：おなかがいっぱいなら食べない（元気の満タンの代わり）。緊急修正：ほかの動きの最中は上書きせず、「normal」は1.4秒で自分だけ戻す（固まり防止）
+      if(S.full>=FULL_STOP){close();if(!busy){busy='normal';setTimeout(()=>{if(busy==='normal')busy=null},1400)}say('おなかいっぱい！ ぽこはもう食べられないみたい。');return}   // #56：承認済みの文（「ぽこ」は文のまま。子の名前には替えない）。v2.4：おなかがいっぱいなら食べない（元気の満タンの代わり）。緊急修正：ほかの動きの最中は上書きせず、「normal」は1.4秒で自分だけ戻す（固まり防止）
       done=true;
       const amt=fullAmt(d), pon=(S.full+amt)>=FULL_PON; S.full=clamp(S.full+amt,0,FULL_MAX);
       add(S.dishes,d.k,-1);S.genki=clamp(S.genki+d.g,0,5);if(d.tag)S.tags[d.tag]=(S.tags[d.tag]||0)+1;prFood('e',d.k);prRec('feed');
@@ -2730,7 +2736,7 @@ const K=(()=>{
       setTimeout(()=>{busy='happy';setTimeout(()=>busy=null,900)},1200);if(S.tut===2)setTut(3);save();ui();
       if(pon)setTimeout(()=>{busy='happy';kfx($('kov'),'💦');say('{n}「おなか、ぽんぽこ……！ もう食べられない〜」');setTimeout(()=>busy=null,1500)},2600);   // v2.4：食べすぎのかわいい反応
       // #31：食べた結果（報酬の枠）と OK。OK でごはんの一覧に戻る（数・おなかは最新）。料理が無くなったら閉じて今までの案内
-      kuiModal({title:'🍽️ ごはん',body:`<div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b>を食べた！</p><p class="kuirw">元気 +${d.g}　なかよし +${d.a}</p>`,foot:'<button class="pbtn" id="kfok">OK</button>'});
+      kuiModal({center:true,title:'🍽️ ごはん',body:`<div class="got"><img class="pix" src="${dishPix(d.k)}"></div><p><b>${d.n}</b>を食べた！</p><p class="kuirw">元気 +${d.g}　なかよし +${d.a}</p>`,foot:'<button class="pbtn" id="kfok">OK</button>'});
       $('kfok').onclick=()=>{if(!Object.keys(S.dishes).filter(hasDISH).length)close();feedUI()};
     });
   }
@@ -2738,8 +2744,8 @@ const K=(()=>{
   function fishUI(){
     const t=now();
     if((S.fishRest||0)>t){say(`{n}は釣りで疲れています。あと${Math.ceil((S.fishRest-t)/MIN)}分休ませてあげよう`);return}
-    modal(`<h2>🎣 釣り</h2><div id="ftalk">${talkRow('静かに…静かに…','normal')}</div><canvas id="fcv" width="64" height="36"></canvas><p id="fmsg">浮きが沈んだら「引く！」をタップ</p>
-      <button class="pbtn" id="fbtn">引く！</button><button class="pbtn gray" id="fend">終わる</button>`);
+    modal(`${kmX('fend')}<h2>🎣 釣り</h2><div id="ftalk">${talkRow('静かに…静かに…','normal')}</div><canvas id="fcv" width="64" height="36"></canvas><p id="fmsg">浮きが沈んだら「引く！」をタップ</p>
+      <button class="pbtn" id="fbtn">引く！</button>`);   // #56：「終わる」は右上の×に（押したときの処理 fend はそのまま）
     const fc=$('fcv').getContext('2d'); let F;
     const start=()=>{F={ph:'wait',bite:Date.now()+1500+Math.random()*2500,fr:0};$('fmsg').textContent='じっと待って…';$('ftalk').innerHTML=talkRow(pick(['静かに…静かに…','魚さん、おいで〜。']),'normal');$('fbtn').textContent='引く！'};
     const drawF=()=>{F.fr++;fc.fillStyle='#9fd8ff';fc.fillRect(0,0,64,12);fc.fillStyle='#5ab4e6';fc.fillRect(0,12,64,24);
@@ -2790,14 +2796,13 @@ const K=(()=>{
     let target=null, busyM=false, msg=(M.done||M.rolls<=0)?'サイコロはもうないよ。続きは次の探検で！':'サイコロを振ってね', talk=M.done?'楽しかった！':'サイコロ、振ってみて！', fe='normal'; charImg=charPic();
     function render(){
       const left=Math.max(0,Math.ceil((E.end-now())/MIN));
-      modal(`<h2>🎲 ${PL(E.p).n}すごろく</h2><p>サイコロ残り <b>${M.rolls}</b>回　帰りまで あと${left}分</p>
+      modal(`${kmX()}<h2>🎲 ${PL(E.p).n}すごろく</h2><p>サイコロ残り <b>${M.rolls}</b>回　帰りまで あと${left}分</p>
         ${talkRow(talk,fe)}
         <div class="board">${order.map(i=>{const q=M.sq[i];const here=i===M.pos;
           return `<button class="sq ${M.seen.includes(i)?'seen':''} ${i===target?'tgt':''} ${q.t}" data-i="${i}" ${i===target&&!busyM?'':'disabled'}>
             <span class="no">${i===0?'':i}</span>${here?`<img class="pix me" src="${charImg}">`:`<span class="ic">${sqIcon(q)}</span>`}</button>`}).join('')}</div>
         <p class="mmsg">${msg}</p>
-        ${M.done?'':`<button class="pbtn" id="roll" ${target!==null||busyM||M.rolls<=0?'disabled':''}>🎲 サイコロを振る</button>`}
-        <button class="pbtn gray" onclick="K.close()">とじる</button>`);
+        ${M.done?'':`<button class="pbtn" id="roll" ${target!==null||busyM||M.rolls<=0?'disabled':''}>🎲 サイコロを振る</button>`}`);   // #56：下の「とじる」は右上の×に
       const r=$('roll'); if(r) r.onclick=roll;
       $('kmbody').querySelectorAll('.sq.tgt').forEach(b=>b.onclick=()=>move(+b.dataset.i));
     }
@@ -3620,10 +3625,9 @@ const K=(()=>{
     const D=dexSaved(); if(!D.sp[fm]){ if(tries<10)setTimeout(()=>newFormUI(fm,tries+1),1500); return; }
     const found=ZUKAN.filter(([k])=>D.sp[k]).length, left=ZUKAN.length-found;
     if($('kmodal').classList.contains('on'))close();
-    modal(`<h2>✨ 新しい子が<br>進化図鑑に登録されたよ！</h2><img class="pix apicl" src="${formPic(fm)}"><p><b>${fnm(fm)}</b></p>
+    modal(`${kmX('nfback')}<h2>✨ 新しい子が<br>進化図鑑に登録されたよ！</h2><img class="pix apicl" src="${formPic(fm)}"><p><b>${fnm(fm)}</b></p>
       <p>見つけた姿 ${found} / ${ZUKAN.length}</p>
-      <p class="tleft">${left?`あと${left}種類！ どんな姿がいるかな？<br>いろんなごはんを食べさせて、集めてみてね`:'全部の姿を見つけたよ！ すごい！'}</p>
-      <button class="pbtn" id="nfback">戻る</button>`);
+      <p class="tleft">${left?`あと${left}種類！ どんな姿がいるかな？<br>いろんなごはんを食べさせて、集めてみてね`:'全部の姿を見つけたよ！ すごい！'}</p>`);   // #56：「戻る」は右上の×に（押したときの処理 nfback はそのまま）
     $('nfback').onclick=()=>{close();say('📖 進化図鑑で、また見られるよ！');setTimeout(()=>speak('図鑑にのったよ、うれしいな','happy'),400)};
   }
   const ZUKAN=[['hana','くだものが大好きな子は、どんな姿になるのかな…'],['umi','海の幸をたくさん食べた子は…？'],['mori','森のめぐみ（きのこ）をよく食べた子は…？'],['okashi','あまいものばかり食べていると…？']];   // 今の版で見つけられる姿（隠し・特殊は、その版まで出さない）
