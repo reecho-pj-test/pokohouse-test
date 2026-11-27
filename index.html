@@ -407,6 +407,7 @@ img.pcd{image-rendering:pixelated}
 .lbc.fut{opacity:.8}.lbc.fut .lba{color:#8a7a98}
 .lbc.today{padding-top:9px;background:#fffbe6;box-shadow:0 0 0 3px #FFE08A;animation:lbglow 1.6s ease-in-out infinite}
 .lbc.today .lbs i{border-color:#f58bb0;background:#fff0f6}
+.lbc.today{cursor:pointer;-webkit-tap-highlight-color:transparent}.lbc.today:active{transform:translateY(2px)}.lbc.today:focus-visible{outline:3px solid var(--ink);outline-offset:2px}   /* #57 今日のマスも押せる */
 .lbtd{position:absolute;left:0;right:0;margin:0 auto;width:max-content;top:-11px;font-size:10.5px;font-weight:900;line-height:1;background:#f58bb0;color:#fff;border:2px solid var(--ink);border-radius:8px;padding:2px 5px;white-space:nowrap;z-index:2}
 @keyframes lbglow{0%,100%{box-shadow:0 0 0 3px #FFE08A}50%{box-shadow:0 0 0 5px #FFE08A}}
 .lbc.sp{background:radial-gradient(circle at 50% 45%,#fff 0 30%,#fff3c4 60%,#ffd6e4);border-width:3px}
@@ -2523,7 +2524,7 @@ const K=(()=>{
   function lbRender(got){
     const c=coinFix(S), can=lbCan(), s=c.lb.s, full=s>=7&&can, filled=full?0:s, today=can?(full?0:s):-1;
     const cell=i=>{const st=i<filled?'lbgot':i===today?'today':'fut', sp=i===6;
-      return `<div class="lbc ${st}${sp?' sp':''}">${i===today?'<span class="lbtd">きょう</span>':''}${st==='lbgot'?`<span class="lbck">${PCD('check')}</span>`:''}
+      return `<div class="lbc ${st}${sp?' sp':''}"${st==='today'?' role="button" tabindex="0"':''}>${i===today?'<span class="lbtd">きょう</span>':''}${st==='lbgot'?`<span class="lbck">${PCD('check')}</span>`:''}
         <span class="lbd">${i+1}日目${sp?'<br><b>とくべつ</b>':''}</span>
         <span class="lbs">${st==='lbgot'?`<span class="stk${got&&got.i===i?' peta':''}">${PCD(LB_ICONS[i])}</span>`:'<i></i>'}${got&&got.i===i?'<span class="lbpt">ペタッ！</span>':''}${sp?`<span class="lbkr k1">${PCD('sparkle')}</span><span class="lbkr k2">${PCD('sparkle')}</span><span class="lbkr k3">${PCD('sparkle')}</span>`:''}</span>
         <span class="lba">${PCD('coin')}${LB_COINS[i]}</span><span class="lbsr">${st==='lbgot'?'受け取りずみ':st==='today'?'今日の分':'まだ'}</span></div>`};
@@ -2536,10 +2537,13 @@ const K=(()=>{
       <button class="pcbtn pink" id="lbgo" ${can?'':'disabled'}>${can?'今日の分を受け取る':'今日の分は受け取りずみ'}</button>
       <p class="lbnote">${can?'受け取らずに閉じても、今日のうちならあとで受け取れるよ':'また明日、シールをはりにきてね'}${s>=7&&!can?'<br>7まい そろった！ 次は新しいシール帳の1日目から':''}</p>`;
     $('lbx').onclick=lbClose;
-    $('lbgo').onclick=()=>{ $('lbgo').disabled=true; const r=lbClaim(); if(!r){lbRender();return}
-      if(r.fail){if(S&&!LOCK){lbRender(); $('lbmsg').textContent='保存できなかったので、受け取りをやめました'} return}
-      lbRender(r); try{SND.sfx.peta();setTimeout(()=>SND.sfx.coin(),350)}catch(e){} ui(); };
+    $('lbgo').onclick=lbTake;
+    const td=$('klbnote').querySelector('.lbc.today');   // #57 今日のマスを押しても、ボタンと同じ受け取り
+    if(td){td.onclick=lbTake; td.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();lbTake()}}}
   }
+  function lbTake(){ $('lbgo').disabled=true; const r=lbClaim(); if(!r){lbRender();return}
+    if(r.fail){if(S&&!LOCK){lbRender(); $('lbmsg').textContent='保存できなかったので、受け取りをやめました'} return}
+    lbRender(r); try{SND.sfx.peta();setTimeout(()=>SND.sfx.coin(),350)}catch(e){} ui(); }
   // ホームのコイン表示・ログボの入口の印（ui から呼ぶ）
   let coinSeen=null;
   function coinUI(){
