@@ -572,6 +572,7 @@ img.pcd{image-rendering:pixelated}
 .kui .icn{display:block;word-break:keep-all;overflow-wrap:anywhere}   /* 個数・「飾ってる／しまってある」も言葉の区切りで */
 .kui .empty{font-size:var(--ui-fs-b);color:var(--ui-ink);opacity:.7}
 @media (prefers-reduced-motion:reduce){.kuisw.dn .kuidn{animation:none}}
+#kmbody:has(>.kuictr){margin:auto}   /* #68：持ち物・設定も、ごはん・料理（#56）と同じく画面の上下の中央に。入りきらないときは今までどおり下部ナビの上までいっぱい（中だけ動く） */
 /* ===== #31 ごはん・料理・設定にも共通の形（kuiModal）。左上の←（もどる）・下の操作（固定）・報酬／状態／注意の枠（docs/ui_common.md 4章） ===== */
 #kmodal.on:has(.knavfree){bottom:var(--knavb,0px)}   /* ごはん・料理・設定は下部ナビを覆わない（ナビの印は「ホーム」のまま。確認の画面は今までどおり覆う） */
 .kuib{grid-column:1;width:44px;height:44px;padding:0;border:var(--ui-btn-bw) solid var(--ui-btn-bd);border-radius:var(--ui-btn-r);background:var(--ui-btn-bg);color:var(--ui-ink);
@@ -3516,6 +3517,7 @@ const K=(()=>{
       <button class="place" id="stana"><em>📊</em><span>プレイ分析<small>${st}</small></span></button>
       <button class="place" id="stsnd"><em>${SND.on?'🔊':'🔇'}</em><span>音<small>${SND.on?'鳴らす':'鳴らさない'}</small></span></button>
       <button class="place" id="kreset"><em>🌱</em><span>最初から</span></button>`});   // #31：下の「とじる」はやめた（右上の×・下部ナビ「ホーム」で閉じる）
+    $('kmbody').firstElementChild.classList.add('kuictr');   // #68：設定（最初の画面）は画面の中央に。設定の中の画面（おひっこしなど）の位置は変えない
     $('kreset').onclick=()=>{if(!LOCK)resetUI()};   // #21：「最初から」はホームから設定の中へ（押したあとの流れは今までどおり）
     $('stmove').onclick=()=>moveUI();
     $('strcv').onclick=()=>recoverUI();
@@ -3904,7 +3906,7 @@ const K=(()=>{
     if(tab==='recipe'){body=`<p>見つけたレシピ ${S.recipes.filter(k=>k!=='fushigi').length} / ${Object.keys(R).length}</p><div class="items">${Object.entries(R).map(([key,d])=>{const has=S.recipes.includes(d.k);const hint=IT[key.split('+')[0]].e;
       return `<div class="item ${has?'':'dis'}"><em>${has?`<img class="pix" src="${dishPix(d.k)}">`:'❓'}</em>${has?inm(d.n):`<span class="inm">${hint} ＋ ？</span>`}</div>`}).join('')}</div>`}
     modal(`<div class="kui"><div class="kuihd"><h2>🎒 持ち物</h2><button class="kuix" aria-label="とじる" onclick="K.close()">×</button><div class="tabs"><button data-t="food" class="${tab==='food'?'on':''}">食べ物</button><button data-t="decor" class="${tab==='decor'?'on':''}">飾り</button><button data-t="recipe" class="${tab==='recipe'?'on':''}">レシピ</button></div></div><div class="kuisw"><div class="kuisc">${body}</div><i class="kuidn"></i></div></div>`);   // #30：タイトル・×・タブは動かさず、一覧の箱だけ動かす（下の「とじる」はやめた。ホームへは×か下部ナビ）
-    $('kcol').classList.remove('on'); navFree(); $('kmbody').firstElementChild.classList.add('knavok'); kuiCue();   // #21：下部ナビから行き来できる画面の印（ほかの画面に替わると中身ごと消える）
+    $('kcol').classList.remove('on'); navFree(); $('kmbody').firstElementChild.classList.add('knavok','kuictr'); kuiCue();   // #68：kuictr で画面の中央に   // #21：下部ナビから行き来できる画面の印（ほかの画面に替わると中身ごと消える）
     $('kmbody').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>bagUI(b.dataset.t));
     $('kmbody').querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>{const k=b.dataset.dec;S.hideDecor=S.hideDecor||{};S.hideDecor[k]=!S.hideDecor[k];save();SND.sfx.btn();const y=$('kmbody').querySelector('.kuisc').scrollTop;bagUI('decor');$('kmbody').querySelector('.kuisc').scrollTop=y;kuiCue()});   // #30：切り替えても一覧の位置はそのまま
   }
